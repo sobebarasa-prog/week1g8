@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#0c1d5e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Atiaket Edu Pro"/>
+<title>Atiaket Edu Pro — Tr. Sobe</title>
+<style>
+:root{
+  --ink:#0f172a;--sub:#475569;--border:#e2e8f0;--bg:#f1f5f9;--wh:#fff;
+  --b:#1d4ed8;--bl:#dbeafe;--g:#15803d;--gl:#dcfce7;
+  --go:#d97706;--gol:#fef3c7;--pu:#7c3aed;--pul:#ede9fe;
+  --r:#dc2626;--rl:#fee2e2;--t:#0f766e;--tl:#ccfbf1;
+  --nav:#0c1d5e;--sh:0 2px 12px rgba(0,0,0,.10);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;font-size:14px}
+.topbar{background:linear-gradient(135deg,#0c1d5e,#1d4ed8);padding:12px 16px 10px;color:#fff;flex-shrink:0;padding-top:max(12px,env(safe-area-inset-top,12px))}
+.tb-row{display:flex;justify-content:space-between;align-items:center}
+.tb-row h1{font-size:16px;font-weight:800}
+.tb-row p{font-size:10.5px;opacity:.8;margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:7px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#f87171;transition:background .3s;flex-shrink:0}
+.live-dot.on{background:#4ade80;box-shadow:0 0 5px #4ade80}
+.sync-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit}
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:13px 13px 88px;display:none;-webkit-overflow-scrolling:touch}
+.screen.on{display:block;animation:fu .2s ease}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.bnav{background:var(--wh);border-top:1px solid var(--border);display:flex;flex-shrink:0;box-shadow:0 -2px 8px rgba(0,0,0,.07);padding-bottom:var(--safe-b);overflow-x:auto;scrollbar-width:none}
+.bnav::-webkit-scrollbar{display:none}
+.nb{flex:0 0 auto;border:none;background:none;cursor:pointer;padding:7px 10px 9px;font-family:inherit;font-size:9px;font-weight:700;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:1px;min-width:52px}
+.nb .ico{font-size:19px;line-height:1}
+.nb.on{color:var(--b)}
+/* CARDS */
+.card{background:var(--wh);border-radius:13px;padding:14px;margin-bottom:11px;box-shadow:var(--sh)}
+.ch{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ch button{font-size:11px;font-weight:800;color:var(--b);background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
+/* STATS */
+.sg4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px}
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px}
+.st{background:var(--wh);border-radius:11px;padding:11px 5px;text-align:center;box-shadow:var(--sh);border-top:3px solid var(--b)}
+.st .n{font-size:24px;font-weight:900;line-height:1}
+.st .l{font-size:8.5px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+.sb{border-top-color:var(--b)}.sg{border-top-color:var(--g)}.sgo{border-top-color:var(--go)}.sr{border-top-color:var(--r)}.spu{border-top-color:var(--pu)}.st_{border-top-color:var(--t)}
+/* SEARCH / INPUT */
+.srch{width:100%;border:2px solid var(--border);border-radius:50px;padding:10px 16px;font-family:inherit;font-size:14px;font-weight:700;outline:none;background:var(--wh);margin-bottom:12px;transition:border-color .15s}
+.srch:focus{border-color:var(--b)}
+.fi{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:13.5px;font-weight:600;outline:none;background:var(--bg);transition:border-color .15s}
+.fi:focus{border-color:var(--b);background:#fff}
+.fsel{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:13.5px;font-weight:600;outline:none;background:var(--bg)}
+.fta{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:13px;font-weight:600;outline:none;background:var(--bg);resize:none;line-height:1.55}
+.fta:focus{border-color:var(--b);background:#fff}
+.fl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--sub);display:block;margin-bottom:4px}
+.fr{margin-bottom:11px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+/* BUTTONS */
+.btn{padding:10px 18px;border-radius:50px;border:none;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn:active{transform:scale(.97)}
+.btn-b{background:var(--b);color:#fff}.btn-g{background:var(--g);color:#fff}
+.btn-go{background:var(--go);color:#fff}.btn-r{background:var(--r);color:#fff}
+.btn-pu{background:var(--pu);color:#fff}.btn-t{background:var(--t);color:#fff}
+.btn-full{width:100%;justify-content:center;margin-bottom:8px}
+/* LEARNER CARD */
+.lcard{background:var(--wh);border-radius:13px;padding:13px;margin-bottom:9px;box-shadow:var(--sh);display:flex;align-items:center;gap:11px;cursor:pointer;transition:all .15s}
+.lcard:active{transform:scale(.98)}
+.lavatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;overflow:hidden}
+.lavatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.linfo{flex:1;min-width:0}
+.lname{font-size:14px;font-weight:800;margin-bottom:1px}
+.ladm{font-size:10.5px;color:var(--sub);font-weight:700;font-family:monospace}
+.lmeta{font-size:11px;color:var(--sub);margin-top:2px}
+.lbadges{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap}
+.lbg{font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px}
+.lscore{font-size:17px;font-weight:900;flex-shrink:0}
+/* DRAWER */
+.drawer{position:fixed;inset:0;z-index:200;display:none}
+.drawer.on{display:flex;flex-direction:column}
+.dback{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+.dpanel{position:absolute;bottom:0;left:0;right:0;background:var(--wh);border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;padding:0 0 calc(24px + var(--safe-b));animation:su .26s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:none}}
+.dhandle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:10px auto 13px}
+.dhead{padding:0 16px 13px;border-bottom:1px solid var(--border)}
+.dbody{padding:14px 16px}
+/* TABS inside drawer */
+.dtabs{display:flex;overflow-x:auto;gap:5px;margin-bottom:13px;padding-bottom:3px;scrollbar-width:none}
+.dtabs::-webkit-scrollbar{display:none}
+.dtab{flex:0 0 auto;padding:6px 13px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;color:var(--sub);white-space:nowrap}
+.dtab.on{background:var(--b);border-color:var(--b);color:#fff}
+.dtabcontent{display:none}.dtabcontent.on{display:block}
+/* BADGE PILLS */
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800}
+.pill-b{background:var(--bl);color:var(--b)}.pill-g{background:var(--gl);color:var(--g)}
+.pill-go{background:var(--gol);color:var(--go)}.pill-r{background:var(--rl);color:var(--r)}
+.pill-pu{background:var(--pul);color:var(--pu)}.pill-t{background:var(--tl);color:var(--t)}
+/* LEVEL BADGES — CBC Kenya */
+.lvl4{background:#dcfce7;color:#15803d;font-weight:900;padding:2px 8px;border-radius:8px;font-size:10px}
+.lvl3{background:#dbeafe;color:#1d4ed8;font-weight:900;padding:2px 8px;border-radius:8px;font-size:10px}
+.lvl2{background:#fef3c7;color:#d97706;font-weight:900;padding:2px 8px;border-radius:8px;font-size:10px}
+.lvl1{background:#fee2e2;color:#dc2626;font-weight:900;padding:2px 8px;border-radius:8px;font-size:10px}
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl th{padding:6px 8px;background:#1e293b;color:#94a3b8;font-size:9px;font-weight:800;text-transform:uppercase;text-align:left;white-space:nowrap}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:nth-child(even) td{background:var(--bg)}
+/* BARS */
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.blbl{font-size:10.5px;font-weight:700;width:80px;flex-shrink:0;color:var(--sub)}
+.btrack{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden}
+.bfill{height:100%;border-radius:5px;transition:width .6s}
+.bval{font-size:11px;font-weight:900;width:34px;text-align:right;flex-shrink:0}
+/* RECEIPT */
+.receipt{border:2px dashed var(--border);border-radius:12px;padding:16px;background:var(--bg);font-size:12px;line-height:1.8;margin-bottom:10px}
+.receipt .rh{font-size:14px;font-weight:900;text-align:center;color:var(--b);margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--border)}
+.receipt .rr{display:flex;justify-content:space-between;padding:2px 0}
+.receipt .rt{font-weight:800;font-size:13px;text-align:center;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:var(--g)}
+/* IEP */
+.iep-goal{background:var(--bl);border-radius:9px;padding:10px 12px;margin-bottom:7px;position:relative}
+.iep-goal .ig-title{font-size:12.5px;font-weight:800;color:var(--b);margin-bottom:3px}
+.iep-goal .ig-desc{font-size:12px;color:var(--ink);line-height:1.55}
+.iep-goal .ig-del{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--r);font-size:16px;cursor:pointer;font-family:inherit}
+/* RADAR CHART */
+canvas{display:block;max-width:100%}
+/* TODAY HERO */
+.today{background:linear-gradient(135deg,#0c1d5e,#1d4ed8 60%,#15803d);border-radius:14px;padding:16px;color:#fff;margin-bottom:11px}
+.today .tl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:5px}
+.today .tt{font-size:16px;font-weight:900;line-height:1.25;margin-bottom:3px}
+.today .ts{font-size:11.5px;opacity:.85}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+.chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700}
+/* ATTENDANCE DOTS */
+.adots{display:flex;gap:2px;margin-top:3px}
+.adot{width:7px;height:7px;border-radius:50%}
+.adp{background:var(--g)}.ada{background:var(--r)}.adu{background:var(--border)}
+/* TOAST */
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:8px 18px;border-radius:50px;font-size:12px;font-weight:800;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+/* EMPTY STATE */
+.empty{text-align:center;padding:36px 20px;color:var(--sub)}
+.empty .ei{font-size:44px;margin-bottom:10px}
+.empty p{font-size:12.5px;line-height:1.6}
+/* SECTION HDR */
+.shdr{font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:13px 0 8px;display:flex;align-items:center;justify-content:space-between}
+.shdr button{font-size:11px;font-weight:800;color:var(--b);background:none;border:none;cursor:pointer;font-family:inherit}
+/* REPORT CARD PRINT */
+@media print{
+  .bnav,.topbar,.no-print,.nb,.sync-btn{display:none!important}
+  .screen{padding:0;overflow:visible;position:static}
+  .screens{overflow:visible;position:static}
+  html,body{overflow:auto;height:auto}
+  .card,.lcard{box-shadow:none;border:1px solid #e2e8f0}
+}
+/* PLANNER */
+.pnav{display:flex;overflow-x:auto;gap:5px;margin-bottom:11px;padding-bottom:3px;scrollbar-width:none}
+.pnav::-webkit-scrollbar{display:none}
+.pnb{flex:0 0 auto;padding:5px 13px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;white-space:nowrap;color:var(--sub)}
+.pnb.on{background:var(--b);border-color:var(--b);color:#fff}
+.pw{background:var(--wh);border-radius:12px;overflow:hidden;margin-bottom:9px;box-shadow:var(--sh)}
+.pwh{background:#1e293b;color:#e2e8f0;padding:8px 13px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.pd{display:flex;gap:9px;padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer}
+.pd:last-child{border-bottom:none}
+.pd:active{background:var(--bg)}
+.pdl{font-size:9.5px;font-weight:800;color:var(--sub);width:28px;flex-shrink:0;text-transform:uppercase;margin-top:2px}
+.pdc{flex:1}
+.pds{font-size:9.5px;font-weight:800;padding:1px 7px;border-radius:8px;display:inline-block;margin-bottom:2px}
+.pdt{font-size:12.5px;font-weight:700;line-height:1.4}
+/* STRAND CLASS BADGES */
+.sls{background:var(--bl);color:var(--b)}.srd{background:var(--gl);color:var(--g)}
+.swr{background:var(--pul);color:var(--pu)}.sgr{background:var(--gol);color:var(--go)}.sad{background:var(--bg);color:var(--sub)}
+/* FEE TABLE */
+.fee-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.fee-row:last-child{border-bottom:none}
+.fee-label{font-size:12.5px;font-weight:700}
+.fee-val{font-size:13px;font-weight:900}
+.fee-cr{color:var(--g)}.fee-db{color:var(--r)}.fee-ba{color:var(--b)}
+/* SCROLLSNAP */
+.hscroll{display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:11px}
+.hscroll::-webkit-scrollbar{display:none}
+.hsc{flex:0 0 auto}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-row">
+    <div>
+      <h1>📚 Atiaket Edu <span style="font-size:11px;background:rgba(255,255,255,.2);padding:1px 7px;border-radius:10px;font-weight:700">PRO</span></h1>
+      <p id="topDate">Grade 8 English · Tr. Sobe</p>
+    </div>
+    <div class="tb-right">
+      <div class="live-dot" id="liveDot"></div>
+      <button class="sync-btn" onclick="syncAll()">⟳ Sync</button>
+    </div>
+  </div>
+</div>
+
+<div class="screens">
+  <!-- HOME -->
+  <div class="screen on" id="s-home">
+    <div class="today" id="todayCard">
+      <div class="tl">📅 Today's Lesson</div>
+      <div class="tt" id="todayTitle">Loading…</div>
+      <div class="ts" id="todaySub"></div>
+      <div class="chips" id="todayChips"></div>
+    </div>
+    <div class="sg4">
+      <div class="st sb"><div class="n">30</div><div class="l">Learners</div></div>
+      <div class="st sg"><div class="n" id="hPresent">—</div><div class="l">Present</div></div>
+      <div class="st sgo"><div class="n" id="hWeek">—</div><div class="l">Week</div></div>
+      <div class="st spu"><div class="n" id="hActive">—</div><div class="l">Active</div></div>
+    </div>
+    <div class="card">
+      <div class="ch">🔍 Quick Learner Lookup <span>by Admission No</span></div>
+      <input class="srch" id="homeSearch" placeholder="Type admission no or name…" oninput="homeSearchFn()"/>
+      <div id="homeResults"></div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ Quick Actions</div>
+      <div class="r2" style="gap:8px">
+        <button class="btn btn-g" style="justify-content:center;width:100%;font-size:12px" onclick="go('register');setTimeout(markAttMode,200)">✅ Take Attendance</button>
+        <button class="btn btn-b" style="justify-content:center;width:100%;font-size:12px" onclick="go('assessment')">📝 Enter Exam Marks</button>
+        <button class="btn btn-go" style="justify-content:center;width:100%;font-size:12px" onclick="go('reports')">📊 Generate Reports</button>
+        <button class="btn btn-r" style="justify-content:center;width:100%;font-size:12px" onclick="go('finance')">💰 Record Payment</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">📊 Class Activity — Firebase Live <span id="liveCount">0</span></div>
+      <div id="homeActivity"><div style="color:var(--sub);font-size:12px">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="screen" id="s-register">
+    <input class="srch" id="regSearch" placeholder="🔍 Search by name, admission no, assessment no…" oninput="renderRegister()"/>
+    <div class="shdr"><span id="regCount">All 30 Learners</span><button onclick="openNewLearner()">+ Add</button></div>
+    <div id="learnerList"></div>
+  </div>
+
+  <!-- ASSESSMENT -->
+  <div class="screen" id="s-assessment">
+    <div class="card">
+      <div class="ch">📝 Summative Assessment Entry</div>
+      <div class="fr"><label class="fl">Select Learner</label>
+        <select class="fsel" id="assLearnerSel" onchange="loadAssessment()">
+          <option value="">— Select Learner —</option>
+        </select>
+      </div>
+      <div class="fr"><label class="fl">Examination</label>
+        <select class="fsel" id="assExamSel" onchange="loadAssessment()">
+          <option value="CAT1">CAT 1</option>
+          <option value="CAT2">CAT 2</option>
+          <option value="EndTerm">End of Term</option>
+        </select>
+      </div>
+    </div>
+    <div id="assessmentForm">
+      <div class="empty"><div class="ei">📝</div><p>Select a learner and examination to enter marks.</p></div>
+    </div>
+    <div id="classExamSummary"></div>
+  </div>
+
+  <!-- REPORTS -->
+  <div class="screen" id="s-reports">
+    <div class="card no-print">
+      <div class="ch">📊 Select Learner for Report</div>
+      <input class="srch" id="repSearch" placeholder="Type admission no or name…" oninput="repSearchFn()" style="margin-bottom:8px"/>
+      <div id="repResults" style="max-height:200px;overflow-y:auto"></div>
+    </div>
+    <div id="reportContent">
+      <div class="empty"><div class="ei">📊</div><p>Search for a learner above to generate their full summative report card.</p></div>
+    </div>
+  </div>
+
+  <!-- FINANCE -->
+  <div class="screen" id="s-finance">
+    <div class="card">
+      <div class="ch">💰 Fee Structure — Term 1, 2026</div>
+      <div id="feeStructDisplay"></div>
+      <button class="btn btn-b" style="margin-top:9px;font-size:12px" onclick="openFeeStructure()">⚙️ Edit Fee Structure</button>
+    </div>
+    <div class="card">
+      <div class="ch">💳 Record Payment</div>
+      <div class="fr"><label class="fl">Learner</label>
+        <select class="fsel" id="finLearnerSel"><option value="">— Select Learner —</option></select>
+      </div>
+      <div class="r2">
+        <div class="fr"><label class="fl">Amount (KES)</label><input class="fi" type="number" id="finAmount" placeholder="0"/></div>
+        <div class="fr"><label class="fl">Date</label><input class="fi" type="date" id="finDate"/></div>
+      </div>
+      <div class="r2">
+        <div class="fr"><label class="fl">Mode</label>
+          <select class="fsel" id="finMode">
+            <option>Cash</option><option>M-Pesa</option><option>Bank</option><option>Cheque</option>
+          </select>
+        </div>
+        <div class="fr"><label class="fl">Receipt No</label><input class="fi" id="finReceipt" placeholder="Auto"/></div>
+      </div>
+      <div class="fr"><label class="fl">Notes</label><input class="fi" id="finNotes" placeholder="Optional"/></div>
+      <button class="btn btn-g btn-full" onclick="recordPayment()">💾 Record Payment &amp; Generate Receipt</button>
+    </div>
+    <div class="card">
+      <div class="ch">📋 Fee Statement <span id="finLearnerName">— select learner</span></div>
+      <select class="fsel" style="margin-bottom:10px" id="finViewSel" onchange="renderFeeStatement()"><option value="">— Select Learner —</option></select>
+      <div id="feeStatement"><div class="empty"><div class="ei">💰</div><p>Select a learner to view their fee statement.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="screen" id="s-analytics">
+    <div class="sg3">
+      <div class="st sg"><div class="n" id="an-avg">—</div><div class="l">Class Avg</div></div>
+      <div class="st sb"><div class="n" id="an-top">—</div><div class="l">Top Scorer</div></div>
+      <div class="st sr"><div class="n" id="an-risk">—</div><div class="l">Need Support</div></div>
+    </div>
+    <div class="card">
+      <div class="ch">📊 Performance by Strand</div>
+      <div id="strandAnalysis"></div>
+    </div>
+    <div class="card">
+      <div class="ch">🎯 Exam Comparison — CAT1 vs CAT2 vs End Term</div>
+      <div id="examComparison"></div>
+    </div>
+    <div class="card">
+      <div class="ch">📈 Class Distribution — Current Exam</div>
+      <canvas id="distChart" height="140"></canvas>
+    </div>
+    <div class="card">
+      <div class="ch">👥 Learner Ranking — All Exams</div>
+      <div id="learnerRanking"></div>
+    </div>
+    <div class="card">
+      <div class="ch">📅 Weekly Formative Activity Heatmap</div>
+      <div style="display:grid;grid-template-columns:repeat(11,1fr);gap:3px;margin-bottom:5px" id="heatmap"></div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--sub);font-weight:700">
+        <span>W1</span><span>W3</span><span>W5</span><span>W7</span><span>W9</span><span>W11</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANNER -->
+  <div class="screen" id="s-planner">
+    <div class="pnav" id="plannerNav"></div>
+    <div id="plannerContent"></div>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="nb on" onclick="go('home')"><span class="ico">🏠</span>Home</button>
+  <button class="nb" onclick="go('register')"><span class="ico">👥</span>Register</button>
+  <button class="nb" onclick="go('assessment')"><span class="ico">📝</span>Exams</button>
+  <button class="nb" onclick="go('reports')"><span class="ico">📊</span>Reports</button>
+  <button class="nb" onclick="go('finance')"><span class="ico">💰</span>Finance</button>
+  <button class="nb" onclick="go('analytics')"><span class="ico">📈</span>Analytics</button>
+  <button class="nb" onclick="go('planner')"><span class="ico">📅</span>Planner</button>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer"><div class="dback" onclick="closeDrawer()"></div><div class="dpanel" id="drawerPanel"></div></div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+"use strict";
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+var T={name:"Simon Omoit Barasa",short:"Tr. Sobe",email:"sobebarasa@gmail.com",school:"Atiaket Junior School",grade:"Grade 8",subject:"English Language",term:"Term 1, 2026",roll:30,pairs:15,groups:8};
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var GITHUB="https://sobebarasa-prog.github.io/g8_row3/";
+
+// CBC Kenya Level descriptors
+var LEVELS={
+  4:{label:"Exceeding Expectations",abbr:"EE",cls:"lvl4",min:80},
+  3:{label:"Meeting Expectations",abbr:"ME",cls:"lvl3",min:65},
+  2:{label:"Approaching Expectations",abbr:"AE",cls:"lvl2",min:50},
+  1:{label:"Below Expectations",abbr:"BE",cls:"lvl1",min:0}
+};
+var STRANDS=["Listening & Speaking","Reading","Writing","Grammar in Use","Overall"];
+var STRAND_SHORT=["L&S","Reading","Writing","Grammar","Overall"];
+var EXAMS=["CAT1","CAT2","EndTerm"];
+var EXAM_LABELS={CAT1:"CAT 1",CAT2:"CAT 2",EndTerm:"End of Term"};
+var STRAND_COLORS={
+  "Listening & Speaking":["var(--b)","var(--bl)"],
+  "Reading":["var(--g)","var(--gl)"],
+  "Writing":["var(--pu)","var(--pul)"],
+  "Grammar in Use":["var(--go)","var(--gol)"],
+  "Overall":["var(--t)","var(--tl)"]
+};
+
+// ══════════════════════════════════════════════════════════
+// LESSONS (54 rows)
+// ══════════════════════════════════════════════════════════
+var LESSONS=[
+  {idx:0,w:1,day:"Mon",lesson:"L1",strand:"admin",sub:"Term Opening",org:"class",date:"05 Jan"},
+  {idx:1,w:1,day:"Tue",lesson:"L2",strand:"listening",sub:"Telephone Etiquette: Polite Language",org:"pair",date:"06 Jan"},
+  {idx:2,w:1,day:"Wed",lesson:"L3",strand:"listening",sub:"Telephone Etiquette: Messages",org:"group",date:"07 Jan"},
+  {idx:3,w:1,day:"Thu",lesson:"L4",strand:"reading",sub:"Extensive Reading: Selecting Texts",org:"group",date:"08 Jan"},
+  {idx:4,w:1,day:"Fri",lesson:"L5",strand:"reading",sub:"Extensive Reading: Skimming & Scanning",org:"group",date:"09 Jan"},
+  {idx:5,w:2,day:"Mon",lesson:"L1",strand:"grammar",sub:"Compound Nouns",org:"group",date:"12 Jan"},
+  {idx:6,w:2,day:"Tue",lesson:"L2",strand:"grammar",sub:"Compound Nouns: Plurals",org:"pair",date:"13 Jan"},
+  {idx:7,w:2,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Stories: Events",org:"pair",date:"14 Jan"},
+  {idx:8,w:2,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Stories: Summary",org:"group",date:"15 Jan"},
+  {idx:9,w:2,day:"Fri",lesson:"L5",strand:"writing",sub:"Writing Legibly: Letter Shaping",org:"pair",date:"16 Jan"},
+  {idx:10,w:3,day:"Mon",lesson:"L1",strand:"writing",sub:"Writing Legibly: Spacing",org:"pair",date:"19 Jan"},
+  {idx:11,w:3,day:"Tue",lesson:"L2",strand:"listening",sub:"Songs: Features",org:"group",date:"20 Jan"},
+  {idx:12,w:3,day:"Wed",lesson:"L3",strand:"listening",sub:"Songs: Performance",org:"group",date:"21 Jan"},
+  {idx:13,w:3,day:"Thu",lesson:"L4",strand:"reading",sub:"Simple Poems: Meaning",org:"group",date:"22 Jan"},
+  {idx:14,w:3,day:"Fri",lesson:"L5",strand:"reading",sub:"Simple Poems: Messages",org:"group",date:"23 Jan"},
+  {idx:15,w:4,day:"Mon",lesson:"L1",strand:"grammar",sub:"Collective Nouns",org:"group",date:"26 Jan"},
+  {idx:16,w:4,day:"Tue",lesson:"L2",strand:"grammar",sub:"Collective Nouns: Plurals",org:"pair",date:"27 Jan"},
+  {idx:17,w:4,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Story: Setting",org:"group",date:"28 Jan"},
+  {idx:18,w:4,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Events",org:"group",date:"29 Jan"},
+  {idx:19,w:4,day:"Fri",lesson:"L5",strand:"writing",sub:"Punctuation: Comma & Apostrophe",org:"group",date:"30 Jan"},
+  {idx:20,w:5,day:"Mon",lesson:"L1",strand:"writing",sub:"Punctuation: Composing",org:"pair",date:"02 Feb"},
+  {idx:21,w:5,day:"Tue",lesson:"L2",strand:"listening",sub:"Listening: Main Ideas",org:"group",date:"03 Feb"},
+  {idx:22,w:5,day:"Wed",lesson:"L3",strand:"listening",sub:"Listening: Specific Details",org:"group",date:"04 Feb"},
+  {idx:23,w:5,day:"Thu",lesson:"L4",strand:"reading",sub:"Comprehension: Passage",org:"group",date:"05 Feb"},
+  {idx:24,w:5,day:"Fri",lesson:"L5",strand:"reading",sub:"Inferring Meaning",org:"group",date:"06 Feb"},
+  {idx:25,w:6,day:"Mon",lesson:"L1",strand:"grammar",sub:"Primary Auxiliaries",org:"group",date:"09 Feb"},
+  {idx:26,w:6,day:"Tue",lesson:"L2",strand:"grammar",sub:"Primary Auxiliaries: Functions",org:"group",date:"10 Feb"},
+  {idx:27,w:6,day:"Wed",lesson:"L3",strand:"reading",sub:"Poetry: Structure",org:"group",date:"11 Feb"},
+  {idx:28,w:6,day:"Thu",lesson:"L4",strand:"reading",sub:"Poetry: Messages",org:"group",date:"12 Feb"},
+  {idx:29,w:6,day:"Fri",lesson:"L5",strand:"writing",sub:"Paragraphing: Conjunctions",org:"group",date:"13 Feb"},
+  {idx:30,w:7,day:"Mon",lesson:"L1",strand:"writing",sub:"Paragraphing: Sequencing",org:"pair",date:"16 Feb"},
+  {idx:31,w:7,day:"Tue",lesson:"L2",strand:"listening",sub:"Selective Listening: Consumer Rights",org:"group",date:"17 Feb"},
+  {idx:32,w:7,day:"Wed",lesson:"L3",strand:"listening",sub:"Selective Listening: Info",org:"pair",date:"18 Feb"},
+  {idx:33,w:7,day:"Thu",lesson:"L4",strand:"reading",sub:"Comprehension: Mind Map",org:"group",date:"19 Feb"},
+  {idx:34,w:7,day:"Fri",lesson:"L5",strand:"reading",sub:"Comprehension: Answering",org:"pair",date:"20 Feb"},
+  {idx:35,w:7,day:"Sat",lesson:"L6",strand:"grammar",sub:"Verbs and Tense",org:"pair",date:"21 Feb"},
+  {idx:36,w:8,day:"Mon",lesson:"L1",strand:"grammar",sub:"Verbs: Digital Research",org:"group",date:"23 Feb"},
+  {idx:37,w:8,day:"Tue",lesson:"L2",strand:"reading",sub:"Short Story: Character Traits",org:"group",date:"24 Feb"},
+  {idx:38,w:8,day:"",lesson:"Half Term",strand:"admin",sub:"Half Term Break",org:"admin",date:"25–27 Feb"},
+  {idx:39,w:9,day:"Mon",lesson:"CAT",strand:"admin",sub:"CAT 2",org:"indiv",date:"02 Mar"},
+  {idx:40,w:9,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Role Play",org:"group",date:"05 Mar"},
+  {idx:41,w:9,day:"Fri",lesson:"",strand:"admin",sub:"Cluster Athletics",org:"admin",date:"06 Mar"},
+  {idx:42,w:10,day:"Mon",lesson:"L1",strand:"writing",sub:"Connectors of Sequence",org:"group",date:"09 Mar"},
+  {idx:43,w:10,day:"Tue",lesson:"L2",strand:"writing",sub:"Writing & Editing",org:"pair",date:"10 Mar"},
+  {idx:44,w:10,day:"Wed",lesson:"L3",strand:"listening",sub:"Pronunciation: Vowel Sounds",org:"pair",date:"11 Mar"},
+  {idx:45,w:10,day:"Thu",lesson:"L4",strand:"listening",sub:"Emphatic Stress",org:"group",date:"12 Mar"},
+  {idx:46,w:10,day:"Fri",lesson:"L5",strand:"reading",sub:"Reference Materials",org:"group",date:"13 Mar"},
+  {idx:47,w:10,day:"Sat",lesson:"L6",strand:"reading",sub:"Encyclopaedia & Synonyms",org:"group",date:"14 Mar"},
+  {idx:48,w:11,day:"Mon",lesson:"L1",strand:"grammar",sub:"Adjectives: Gradable",org:"group",date:"16 Mar"},
+  {idx:49,w:11,day:"Tue",lesson:"L2",strand:"grammar",sub:"Adjectives: Crossword",org:"group",date:"17 Mar"},
+  {idx:50,w:11,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Story: Dialogue",org:"group",date:"18 Mar"},
+  {idx:51,w:11,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Repetition",org:"group",date:"19 Mar"},
+  {idx:52,w:11,day:"Fri",lesson:"L5",strand:"writing",sub:"Apology Letters",org:"group",date:"20 Mar"},
+  {idx:53,w:11,day:"Sat",lesson:"L6",strand:"writing",sub:"Writing Letters",org:"group",date:"21 Mar"}
+];
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+var DB=null, IDB=null;
+var FBDATA={};
+var LEARNERS=[];
+var ATTENDANCE={};
+var SUMMATIVE={};
+var IEPS={};
+var FEES={};
+var FEE_STRUCTURE={termFee:0,items:[]};
+var CUR_SCREEN="home";
+var SEL_LEARNER=null;
+var PLAN_WEEK=1;
+var ATT_MODE=false;
+var RECEIPT_CTR=1000;
+
+// ══════════════════════════════════════════════════════════
+// INDEXEDDB
+// ══════════════════════════════════════════════════════════
+function openIDB(cb){
+  var req=indexedDB.open("AtiaketEduPro",3);
+  req.onupgradeneeded=function(e){
+    var d=e.target.result;
+    ["learners","attendance","summative","ieps","fees","settings","planner"].forEach(function(s){
+      if(!d.objectStoreNames.contains(s)) d.createObjectStore(s,{keyPath:"key"});
+    });
+  };
+  req.onsuccess=function(e){IDB=e.target.result;cb&&cb();};
+  req.onerror=function(){cb&&cb();};
+}
+function iGet(store,key,cb){
+  if(!IDB){cb(null);return;}
+  try{var tx=IDB.transaction(store,"readonly");var req=tx.objectStore(store).get(key);req.onsuccess=function(){cb(req.result||null);};req.onerror=function(){cb(null);};}catch(e){cb(null);}
+}
+function iGetAll(store,cb){
+  if(!IDB){cb([]);return;}
+  try{var tx=IDB.transaction(store,"readonly");var req=tx.objectStore(store).getAll();req.onsuccess=function(){cb(req.result||[]);};req.onerror=function(){cb([]);};}catch(e){cb([]);}
+}
+function iPut(store,data){
+  if(!IDB)return;
+  try{var tx=IDB.transaction(store,"readwrite");tx.objectStore(store).put(data);}catch(e){}
+}
+function iDel(store,key){
+  if(!IDB)return;
+  try{var tx=IDB.transaction(store,"readwrite");tx.objectStore(store).delete(key);}catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════
+// FIREBASE
+// ══════════════════════════════════════════════════════════
+function initFB(){
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(FBC);
+    DB=firebase.database();
+    DB.ref(".info/connected").on("value",function(s){document.getElementById("liveDot").classList.toggle("on",!!s.val());});
+    DB.ref("/").on("value",function(s){FBDATA=s.val()||{};renderHome();renderAnalytics();});
+  }catch(e){}
+}
+function syncAll(){
+  toast("🔄 Syncing…");
+  if(DB){DB.ref("/").once("value",function(s){FBDATA=s.val()||{};renderHome();renderAnalytics();toast("✅ Synced");});}
+  else toast("⚠️ Offline");
+}
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function toast(m,d){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("on");},(d||2200));}
+function getLevel(pct){return pct>=80?4:pct>=65?3:pct>=50?2:1;}
+function levelBadge(pct){var l=getLevel(pct);var lv=LEVELS[l];return '<span class="'+lv.cls+'">L'+l+' '+lv.abbr+'</span>';}
+function pctColor(pct){return pct>=80?"var(--g)":pct>=65?"var(--b)":pct>=50?"var(--go)":"var(--r)";}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function now(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return p(n.getDate())+"/"+p(n.getMonth()+1)+"/"+n.getFullYear();}
+function admNo(n){return "ATK/G8/2026/"+String(n).padStart(3,"0");}
+function assNo(n){return String(n).padStart(3,"0")+"/2026";}
+function fbKey(name){return name.replace(/ /g,"_");}
+function closeDrawer(){document.getElementById("drawer").classList.remove("on");}
+
+// Get learner formative score from Firebase
+function getFormativeScore(learner){
+  var fk=fbKey(learner.name);
+  var total=0,possible=0,done=0;
+  LESSONS.forEach(function(l){
+    if(l.strand==="admin")return;
+    var comp=((FBDATA["L"+l.idx]||{}).assess||{}).comp||{};
+    if(comp[fk]){
+      var sc=comp[fk].score||"0/4";
+      total+=parseInt(sc.split("/")[0]);
+      possible+=parseInt(sc.split("/")[1])||4;
+      done++;
+    }
+  });
+  return {total:total,possible:possible,done:done,pct:possible>0?Math.round(total/possible*100):0};
+}
+
+// Get summative scores for a learner
+function getSummativeScore(admNum,exam){
+  var key=admNum+"_"+exam;
+  return SUMMATIVE[key]||null;
+}
+function getLatestExamPct(admNum){
+  // Return highest completed exam percentage (Overall strand)
+  var best=0;
+  EXAMS.forEach(function(ex){
+    var d=getSummativeScore(admNum,ex);
+    if(d&&d.marks&&d.marks["Overall"]!=null){
+      var pct=parseFloat(d.marks["Overall"]);
+      if(pct>best)best=pct;
+    }
+  });
+  return best;
+}
+
+// ══════════════════════════════════════════════════════════
+// LEARNER INIT & CRUD
+// ══════════════════════════════════════════════════════════
+function initLearners(){
+  iGetAll("learners",function(stored){
+    if(stored.length===0){
+      LEARNERS=Array.from({length:30},function(_,i){
+        var n=i+1;
+        return {key:admNo(n),admNo:admNo(n),assNo:assNo(n),id:n,name:"Learner "+n,
+          dob:"",gender:"",pair:Math.ceil(n/2),group:Math.ceil(n/4),
+          parentName:"",parentPhone:"",parentContact:"WhatsApp",
+          gmail:"atiaketg8.learner"+n+"@gmail.com",photo:"",notes:"",
+          initials:"L"+n,stream:"East",iepStatus:false};
+      });
+      LEARNERS.forEach(function(l){iPut("learners",l);});
+    } else {
+      LEARNERS=stored.sort(function(a,b){return a.id-b.id;});
+    }
+    populateLearnerSelects();
+    renderRegister();
+    renderHome();
+  });
+  iGetAll("attendance",function(r){r.forEach(function(x){ATTENDANCE[x.key]=x;});});
+  iGetAll("summative",function(r){r.forEach(function(x){SUMMATIVE[x.key]=x;});});
+  iGetAll("ieps",function(r){r.forEach(function(x){IEPS[x.key]=x;});});
+  iGetAll("fees",function(r){r.forEach(function(x){FEES[x.key]=x;});});
+  iGet("settings","feeStructure",function(d){if(d)FEE_STRUCTURE=d.value;renderFeeStructureDisplay();});
+  iGet("settings","receiptCtr",function(d){if(d)RECEIPT_CTR=d.value;});
+}
+
+function populateLearnerSelects(){
+  var opts=LEARNERS.map(function(l){return '<option value="'+l.admNo+'">'+l.admNo+' — '+l.name+'</option>';}).join("");
+  ["assLearnerSel","finLearnerSel","finViewSel"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.innerHTML='<option value="">— Select Learner —</option>'+opts;
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
+function go(id){
+  CUR_SCREEN=id;
+  document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("on");});
+  document.querySelectorAll(".nb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")>-1);});
+  document.getElementById("s-"+id).classList.add("on");
+  if(id==="register")renderRegister();
+  if(id==="planner")renderPlanner();
+  if(id==="analytics")renderAnalytics();
+  if(id==="finance")renderFeeStructureDisplay();
+}
+
+// ══════════════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════════════
+function renderHome(){
+  // Today's lesson
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var td=days[new Date().getDay()];
+  var tl=LESSONS.find(function(l){return l.day===td&&l.strand!=="admin";})||LESSONS[1];
+  document.getElementById("todayTitle").textContent=tl.sub;
+  document.getElementById("todaySub").textContent="Week "+tl.w+" · "+tl.day+" · "+tl.lesson+" · "+tl.date;
+  document.getElementById("todayChips").innerHTML='<span class="chip">'+tl.strand+'</span><span class="chip">'+tl.org+'</span>';
+
+  // Week
+  document.getElementById("hWeek").textContent="W"+getCurrentWeek();
+
+  // Live count
+  var act=0;
+  Object.keys(FBDATA).forEach(function(k){var d=FBDATA[k]||{};act+=Object.keys((d.assess||{}).comp||{}).length;});
+  document.getElementById("hActive").textContent=act;
+  document.getElementById("liveCount").textContent=act+" responses";
+
+  // Activity bars
+  var actData=LESSONS.filter(function(l){return l.strand!=="admin";}).map(function(l){
+    var cnt=Object.keys(((FBDATA["L"+l.idx]||{}).assess||{}).comp||{}).length;
+    return {sub:l.sub.substring(0,20),cnt:cnt,strand:l.strand};
+  }).filter(function(x){return x.cnt>0;}).sort(function(a,b){return b.cnt-a.cnt;}).slice(0,5);
+  var strandC={listening:"var(--b)",reading:"var(--g)",writing:"var(--pu)",grammar:"var(--go)",admin:"var(--sub)"};
+  document.getElementById("homeActivity").innerHTML=actData.length?actData.map(function(l){
+    var col=strandC[l.strand]||"var(--sub)";var pct=Math.round(l.cnt/30*100);
+    return '<div class="brow"><div class="blbl" style="font-size:9.5px">'+l.sub+'</div><div class="btrack"><div class="bfill" style="width:'+pct+'%;background:'+col+'"></div></div><div class="bval" style="color:'+col+'">'+l.cnt+'/30</div></div>';
+  }).join(""):'<div style="font-size:12px;color:var(--sub)">No Firebase data yet.</div>';
+}
+
+function getCurrentWeek(){
+  var now=new Date();var months={Jan:0,Feb:1,Mar:2,Apr:3};var best=1;
+  LESSONS.forEach(function(l){
+    if(!l.date||!l.date.includes(" "))return;
+    var p=l.date.split(" ");if(p.length<2)return;
+    var mo=months[p[1]];if(mo===undefined)return;
+    var d=new Date(2026,mo,parseInt(p[0]));
+    if(d<=now)best=l.w;
+  });
+  return best;
+}
+
+function homeSearchFn(){
+  var q=document.getElementById("homeSearch").value.toLowerCase().trim();
+  if(!q){document.getElementById("homeResults").innerHTML="";return;}
+  var res=LEARNERS.filter(function(l){return l.name.toLowerCase().includes(q)||l.admNo.toLowerCase().includes(q)||l.assNo.toLowerCase().includes(q);}).slice(0,5);
+  document.getElementById("homeResults").innerHTML=res.map(function(l){
+    var fs=getFormativeScore(l);var lp=getLatestExamPct(l.admNo);
+    var pct=lp||fs.pct;var col=pctColor(pct);
+    return '<div class="lcard" onclick="openLearner(\''+l.admNo+'\')">'+
+      '<div class="lavatar" style="background:linear-gradient(135deg,'+col+',var(--pu))">'+(l.photo?'<img src="'+l.photo+'"/>':l.initials)+'</div>'+
+      '<div class="linfo"><div class="lname">'+l.name+'</div><div class="ladm">'+l.admNo+' · Ass: '+l.assNo+'</div></div>'+
+      '<div class="lscore" style="color:'+col+'">'+(pct?pct+'%':'—')+'</div></div>';
+  }).join("")||'<div style="color:var(--sub);font-size:12px;padding:8px 0">No learner found.</div>';
+}
+
+// ══════════════════════════════════════════════════════════
+// REGISTER
+// ══════════════════════════════════════════════════════════
+function renderRegister(){
+  var q=(document.getElementById("regSearch")||{}).value||"";
+  q=q.toLowerCase().trim();
+  var filtered=LEARNERS.filter(function(l){
+    return !q||l.name.toLowerCase().includes(q)||l.admNo.toLowerCase().includes(q)||l.assNo.toLowerCase().includes(q)||(l.parentName||"").toLowerCase().includes(q);
+  });
+  document.getElementById("regCount").textContent="Showing "+filtered.length+" of 30";
+  document.getElementById("learnerList").innerHTML=filtered.map(function(l){
+    var fs=getFormativeScore(l);var lp=getLatestExamPct(l.admNo);
+    var pct=lp||fs.pct;var col=pctColor(pct);
+    // Attendance dots — last 5 lessons
+    var last5=LESSONS.filter(function(x){return x.strand!=="admin";}).slice(-5);
+    var dots=last5.map(function(les){var att=ATTENDANCE[l.admNo+"_"+les.idx];var cls=att?att.status==="P"?"adp":att.status==="A"?"ada":"adu":"adu";return '<div class="adot '+cls+'"></div>';}).join("");
+    return '<div class="lcard" onclick="openLearner(\''+l.admNo+'\')">'+
+      '<div class="lavatar" style="background:linear-gradient(135deg,'+col+',var(--pu))">'+(l.photo?'<img src="'+l.photo+'"/>':l.initials)+'</div>'+
+      '<div class="linfo">'+
+        '<div class="lname">'+l.name+'</div>'+
+        '<div class="ladm">'+l.admNo+' · Ass: '+l.assNo+'</div>'+
+        '<div class="lmeta">P'+l.pair+' · G'+l.group+(l.parentName?' · '+l.parentName:'')+'</div>'+
+        '<div class="lbadges"><span class="lbg pill-b">P'+l.pair+'</span><span class="lbg pill-g">G'+l.group+'</span>'+(l.iepStatus?'<span class="lbg pill-r">IEP</span>':'')+'</div>'+
+        '<div class="adots">'+dots+'</div>'+
+      '</div>'+
+      '<div class="lscore" style="color:'+col+'">'+(pct?pct+'%':'—')+'</div>'+
+    '</div>';
+  }).join("")||'<div class="empty"><div class="ei">🔍</div><p>No learners found.</p></div>';
+}
+
+function markAttMode(){toast("Tap any learner card to mark attendance.");}
+
+// ══════════════════════════════════════════════════════════
+// LEARNER DRAWER — FULL PROFILE
+// ══════════════════════════════════════════════════════════
+function openLearner(admNum){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});
+  if(!l)return;
+  SEL_LEARNER=admNum;
+  var fs=getFormativeScore(l);var pct=getLatestExamPct(admNum)||fs.pct;var col=pctColor(pct);
+  var iep=IEPS[admNum];
+
+  var html='<div class="dhandle"></div>';
+  // Head
+  html+='<div class="dhead"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">';
+  html+='<div class="lavatar" style="width:52px;height:52px;font-size:20px;background:linear-gradient(135deg,'+col+',var(--pu));cursor:pointer" onclick="capturePhoto(\''+admNum+'\')">'+(l.photo?'<img src="'+l.photo+'"/>':l.initials)+'</div>';
+  html+='<div><div style="font-size:17px;font-weight:900">'+l.name+'</div>';
+  html+='<div style="font-size:10.5px;color:var(--sub);font-family:monospace">'+l.admNo+' · Ass: '+l.assNo+'</div>';
+  html+='<div style="font-size:11px;color:var(--sub)">'+l.gmail+'</div></div></div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+  ['<span class="pill pill-b">P'+l.pair+'</span>','<span class="pill pill-g">G'+l.group+'</span>',
+   pct?'<span class="pill" style="background:'+col+';color:#fff">'+pct+'% overall</span>':'',
+   l.iepStatus?'<span class="pill pill-r">IEP Active</span>':'',
+   fs.done?'<span class="pill pill-t">'+fs.done+' lessons done</span>':''
+  ].forEach(function(p){if(p)html+=p;});
+  html+='</div></div>';
+
+  html+='<div class="dbody">';
+  // Tabs
+  html+='<div class="dtabs">';
+  var tabDefs=[["profile","👤 Profile"],["attend","📋 Attendance"],["exams","📝 Exams"],["iep","🎯 IEP"],["fees","💰 Fees"]];
+  tabDefs.forEach(function(t,i){html+='<button class="dtab'+(i===0?" on":"")+'" onclick="dTab(this,\'dt-'+t[0]+'\')">'+t[1]+'</button>';});
+  html+='</div>';
+
+  // Profile Tab
+  html+='<div class="dtabcontent on" id="dt-profile">';
+  html+='<div class="r2"><div class="fr"><label class="fl">Full Name</label><input class="fi" id="dp-name" value="'+l.name+'"/></div>';
+  html+='<div class="fr"><label class="fl">Gender</label><select class="fsel" id="dp-gender"><option'+(l.gender==="Male"?" selected":"")+'>Male</option><option'+(l.gender==="Female"?" selected":"")+'>Female</option></select></div></div>';
+  html+='<div class="r2"><div class="fr"><label class="fl">Admission No</label><input class="fi" id="dp-adm" value="'+l.admNo+'"/></div>';
+  html+='<div class="fr"><label class="fl">Assessment No</label><input class="fi" id="dp-ass" value="'+l.assNo+'"/></div></div>';
+  html+='<div class="r3"><div class="fr"><label class="fl">Pair</label><select class="fsel" id="dp-pair">';
+  for(var p=1;p<=15;p++)html+='<option'+(l.pair==p?" selected":"")+'>'+p+'</option>';
+  html+='</select></div><div class="fr"><label class="fl">Group</label><select class="fsel" id="dp-group">';
+  for(var g=1;g<=8;g++)html+='<option'+(l.group==g?" selected":"")+'>'+g+'</option>';
+  html+='</select></div><div class="fr"><label class="fl">DOB</label><input class="fi" type="date" id="dp-dob" value="'+(l.dob||'')+'"/></div></div>';
+  html+='<div class="r2"><div class="fr"><label class="fl">Parent/Guardian Name</label><input class="fi" id="dp-parent" value="'+(l.parentName||'')+'"/></div>';
+  html+='<div class="fr"><label class="fl">Parent Phone</label><input class="fi" id="dp-phone" value="'+(l.parentPhone||'')+'"/></div></div>';
+  html+='<div class="r2"><div class="fr"><label class="fl">Contact Preference</label><select class="fsel" id="dp-contact"><option'+(l.parentContact==="WhatsApp"?" selected":"")+'>WhatsApp</option><option'+(l.parentContact==="SMS"?" selected":"")+'>SMS</option><option'+(l.parentContact==="Call"?" selected":"")+'>Call</option></select></div>';
+  html+='<div class="fr"><label class="fl">Gmail</label><input class="fi" id="dp-gmail" value="'+(l.gmail||'')+'"/></div></div>';
+  html+='<div class="fr"><label class="fl">Teacher Notes</label><textarea class="fta" id="dp-notes" rows="2">'+(l.notes||'')+'</textarea></div>';
+  html+='<button class="btn btn-g btn-full" onclick="saveLearner(\''+admNum+'\')">💾 Save Profile</button>';
+  html+='</div>';
+
+  // Attendance Tab
+  html+='<div class="dtabcontent" id="dt-attend">';
+  html+='<div style="font-size:11px;font-weight:800;color:var(--sub);margin-bottom:8px">Tap to toggle attendance for today\'s lesson.</div>';
+  var todayLes=LESSONS.filter(function(l){return l.strand!=="admin";})[0];
+  var attStats={P:0,A:0,total:0};
+  var attRows=LESSONS.filter(function(les){return les.strand!=="admin";}).slice(0,20).map(function(les){
+    var att=ATTENDANCE[admNum+"_"+les.idx];var st=att?att.status:"";attStats.total++;
+    if(st==="P")attStats.P++;else if(st==="A")attStats.A++;
+    var pBtn=function(s,lbl,cls){return '<button class="att-btn '+cls+(st===s?" on":"")+'" onclick="setAtt(\''+admNum+'\','+les.idx+',\''+s+'\',this)">'+lbl+'</button>';};
+    return '<div class="fee-row"><span class="fee-label" style="font-size:11.5px">W'+les.w+' '+les.day+' '+les.lesson+'</span>'+
+      '<div style="display:flex;gap:4px">'+pBtn("P","✅ P","ap")+pBtn("A","❌ A","aa")+pBtn("H","⚡ H","ah")+'</div></div>';
+  }).join("");
+  var attPct=attStats.total>0?Math.round(attStats.P/attStats.total*100):0;
+  html+='<div style="background:var(--gl);border-radius:9px;padding:10px;margin-bottom:10px;display:flex;gap:10px">';
+  html+='<div style="text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--g)">'+attPct+'%</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">ATTENDANCE</div></div>';
+  html+='<div style="text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--g)">'+attStats.P+'</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">PRESENT</div></div>';
+  html+='<div style="text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--r)">'+attStats.A+'</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">ABSENT</div></div>';
+  html+='</div>';
+  html+=attRows;
+  html+='</div>';
+
+  // Exams Tab
+  html+='<div class="dtabcontent" id="dt-exams">';
+  EXAMS.forEach(function(ex){
+    var d=getSummativeScore(admNum,ex);
+    html+='<div style="margin-bottom:14px"><div style="font-size:12px;font-weight:900;color:var(--b);margin-bottom:7px">'+EXAM_LABELS[ex]+'</div>';
+    if(d&&d.marks){
+      html+='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Strand</th><th>Marks/100</th><th>Level</th><th>Points</th></tr></thead><tbody>';
+      STRANDS.forEach(function(s){
+        var mk=d.marks[s]!=null?d.marks[s]:"—";var pt=d.points?d.points[s]||"—":"—";
+        var lb=mk!=="—"?levelBadge(parseFloat(mk)):"";
+        html+='<tr><td style="font-weight:700">'+s+'</td><td style="font-weight:800">'+mk+'</td><td>'+lb+'</td><td>'+pt+'</td></tr>';
+      });
+      html+='</tbody></table></div>';
+    } else {
+      html+='<div style="font-size:11.5px;color:var(--sub);font-style:italic">No marks entered yet. Use the Exams tab to enter marks.</div>';
+    }
+    html+='</div>';
+  });
+  html+='<button class="btn btn-b btn-full" onclick="closeDrawer();go(\'assessment\');setTimeout(function(){document.getElementById(\'assLearnerSel\').value=\''+admNum+'\';loadAssessment();},300)">📝 Enter / Edit Exam Marks</button>';
+  html+='</div>';
+
+  // IEP Tab
+  var iepData=IEPS[admNum]||{key:admNum,goals:[],accommodations:[],reviewDate:"",notes:""};
+  html+='<div class="dtabcontent" id="dt-iep">';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
+  html+='<div style="font-size:13px;font-weight:900;color:var(--pu)">Individual Education Plan</div>';
+  html+='<label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;cursor:pointer"><input type="checkbox" id="iep-active"'+(l.iepStatus?" checked":"")+' onchange="toggleIEP(\''+admNum+'\',this.checked)"/> IEP Active</label></div>';
+  html+='<div class="fr"><label class="fl">Review Date</label><input class="fi" type="date" id="iep-review" value="'+(iepData.reviewDate||'')+'"/></div>';
+  html+='<div class="fr"><label class="fl">Learning Goals</label>';
+  html+='<div id="iep-goals-list">'+((iepData.goals||[]).map(function(g,i){return '<div class="iep-goal"><div class="ig-title">Goal '+(i+1)+'</div><div class="ig-desc">'+esc(g)+'</div><button class="ig-del" onclick="removeIEPGoal(\''+admNum+'\','+i+')">✕</button></div>';}).join(""))+'</div>';
+  html+='<div style="display:flex;gap:7px;margin-top:7px"><input class="fi" id="iep-new-goal" placeholder="Add new goal…" style="flex:1"/><button class="btn btn-pu" style="padding:8px 12px;font-size:12px" onclick="addIEPGoal(\''+admNum+'\')">+ Add</button></div></div>';
+  html+='<div class="fr"><label class="fl">Accommodations & Support</label><textarea class="fta" id="iep-acc" rows="3">'+(iepData.accommodations||[]).join(", ")+'</textarea></div>';
+  html+='<div class="fr"><label class="fl">Additional Notes</label><textarea class="fta" id="iep-notes" rows="2">'+(iepData.notes||'')+'</textarea></div>';
+  html+='<button class="btn btn-pu btn-full" onclick="saveIEP(\''+admNum+'\')">💾 Save IEP</button>';
+  html+='</div>';
+
+  // Fees Tab
+  html+='<div class="dtabcontent" id="dt-fees">';
+  html+=buildFeeTabHTML(admNum);
+  html+='</div>';
+
+  html+='</div>';// dbody
+
+  document.getElementById("drawerPanel").innerHTML=html;
+  document.getElementById("drawer").classList.add("on");
+  // Add att-btn styles dynamically
+  if(!document.getElementById("att-btn-style")){
+    var s=document.createElement("style");s.id="att-btn-style";
+    s.textContent=".att-btn{padding:4px 9px;border-radius:15px;border:2px solid var(--border);background:var(--wh);font-family:inherit;font-size:10.5px;font-weight:800;cursor:pointer;color:var(--sub)}.att-btn.ap.on{background:var(--g);border-color:var(--g);color:#fff}.att-btn.aa.on{background:var(--r);border-color:var(--r);color:#fff}.att-btn.ah.on{background:var(--go);border-color:var(--go);color:#fff}";
+    document.head.appendChild(s);
+  }
+}
+
+function dTab(btn,id){
+  btn.closest(".dtabs").querySelectorAll(".dtab").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  btn.closest(".dbody").querySelectorAll(".dtabcontent").forEach(function(d){d.classList.remove("on");});
+  document.getElementById(id).classList.add("on");
+}
+
+function setAtt(admNum,lessonIdx,status,btn){
+  var key=admNum+"_"+lessonIdx;
+  ATTENDANCE[key]={key:key,admNum:admNum,lessonIdx:lessonIdx,status:status,date:new Date().toDateString()};
+  iPut("attendance",ATTENDANCE[key]);
+  btn.parentElement.querySelectorAll(".att-btn").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  toast(status==="P"?"✅ Present":status==="A"?"❌ Absent":"⚡ Half Day");
+  renderRegister();
+}
+
+function saveLearner(admNum){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  l.name=document.getElementById("dp-name").value.trim()||l.name;
+  l.gender=document.getElementById("dp-gender").value;
+  l.admNo=document.getElementById("dp-adm").value.trim();
+  l.assNo=document.getElementById("dp-ass").value.trim();
+  l.key=l.admNo;
+  l.pair=parseInt(document.getElementById("dp-pair").value);
+  l.group=parseInt(document.getElementById("dp-group").value);
+  l.dob=document.getElementById("dp-dob").value;
+  l.parentName=document.getElementById("dp-parent").value.trim();
+  l.parentPhone=document.getElementById("dp-phone").value.trim();
+  l.parentContact=document.getElementById("dp-contact").value;
+  l.gmail=document.getElementById("dp-gmail").value.trim();
+  l.notes=document.getElementById("dp-notes").value.trim();
+  l.initials=l.name.split(" ").map(function(w){return w[0];}).join("").substring(0,2).toUpperCase();
+  iPut("learners",l);
+  populateLearnerSelects();
+  renderRegister();
+  closeDrawer();
+  toast("✅ "+l.name+" saved");
+}
+
+function capturePhoto(admNum){
+  var inp=document.createElement("input");inp.type="file";inp.accept="image/*";inp.capture="environment";
+  inp.onchange=function(e){
+    var file=e.target.files[0];if(!file)return;
+    var fr=new FileReader();
+    fr.onload=function(ev){
+      var l=LEARNERS.find(function(x){return x.admNo===admNum;});
+      if(l){l.photo=ev.target.result;iPut("learners",l);}
+      var av=document.querySelector(".dpanel .lavatar");
+      if(av)av.innerHTML='<img src="'+ev.target.result+'"/>';
+      toast("📸 Photo saved");
+    };fr.readAsDataURL(file);
+  };inp.click();
+}
+
+function openNewLearner(){toast("Tap any learner card to edit. Use the fields to update name, admission no, parent details.");}
+
+// ══════════════════════════════════════════════════════════
+// IEP
+// ══════════════════════════════════════════════════════════
+function toggleIEP(admNum,val){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});
+  if(l){l.iepStatus=val;iPut("learners",l);}
+  toast(val?"🎯 IEP activated":"IEP deactivated");
+}
+function addIEPGoal(admNum){
+  var inp=document.getElementById("iep-new-goal");var g=inp.value.trim();if(!g)return;
+  var iep=IEPS[admNum]||{key:admNum,goals:[],accommodations:[],reviewDate:"",notes:""};
+  iep.goals.push(g);IEPS[admNum]=iep;iPut("ieps",iep);inp.value="";
+  var list=document.getElementById("iep-goals-list");
+  if(list) list.innerHTML+=('<div class="iep-goal"><div class="ig-title">Goal '+(iep.goals.length)+'</div><div class="ig-desc">'+esc(g)+'</div><button class="ig-del" onclick="removeIEPGoal(\''+admNum+'\','+(iep.goals.length-1)+')">✕</button></div>');
+  toast("🎯 Goal added");
+}
+function removeIEPGoal(admNum,i){
+  var iep=IEPS[admNum];if(!iep)return;
+  iep.goals.splice(i,1);IEPS[admNum]=iep;iPut("ieps",iep);
+  openLearner(admNum);// re-render drawer — find current tab
+}
+function saveIEP(admNum){
+  var rev=(document.getElementById("iep-review")||{}).value||"";
+  var acc=(document.getElementById("iep-acc")||{}).value||"";
+  var notes=(document.getElementById("iep-notes")||{}).value||"";
+  var iep=IEPS[admNum]||{key:admNum,goals:[],accommodations:[],reviewDate:"",notes:""};
+  iep.reviewDate=rev;iep.accommodations=acc.split(",").map(function(s){return s.trim();}).filter(Boolean);iep.notes=notes;
+  IEPS[admNum]=iep;iPut("ieps",iep);toast("💾 IEP saved");
+}
+
+// ══════════════════════════════════════════════════════════
+// ASSESSMENT — SUMMATIVE
+// ══════════════════════════════════════════════════════════
+function loadAssessment(){
+  var admNum=document.getElementById("assLearnerSel").value;
+  var exam=document.getElementById("assExamSel").value;
+  if(!admNum||!exam){document.getElementById("assessmentForm").innerHTML='<div class="empty"><div class="ei">📝</div><p>Select learner and exam.</p></div>';return;}
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  var key=admNum+"_"+exam;
+  var existing=SUMMATIVE[key]||{key:key,admNo:admNum,exam:exam,marks:{},levels:{},points:{},grades:{}};
+
+  var html='<div class="card"><div class="ch">'+l.name+' — '+EXAM_LABELS[exam]+'</div>';
+  html+='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Strand</th><th>Marks /100</th><th>Level</th><th>Points</th></tr></thead><tbody>';
+  STRANDS.forEach(function(s,i){
+    var mk=existing.marks[s]!=null?existing.marks[s]:"";var pt=existing.points[s]||"";
+    var lb=mk!==""?levelBadge(parseFloat(mk)):"";
+    html+='<tr><td style="font-weight:800;font-size:12px">'+s+'</td>';
+    html+='<td><input class="fi" type="number" min="0" max="100" id="am_'+i+'" value="'+mk+'" placeholder="0–100" style="width:80px;padding:5px 8px;font-size:13px" oninput="autoCalcLevel('+i+')"/></td>';
+    html+='<td id="al_'+i+'" style="min-width:80px">'+lb+'</td>';
+    html+='<td><input class="fi" type="number" min="0" max="12" id="ap_'+i+'" value="'+pt+'" placeholder="0–12" style="width:70px;padding:5px 8px;font-size:13px"/></td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  html+='<button class="btn btn-g btn-full" style="margin-top:12px" onclick="saveAssessment(\''+admNum+'\',\''+exam+'\')">💾 Save Marks</button>';
+  html+='</div>';
+  document.getElementById("assessmentForm").innerHTML=html;
+  renderClassExamSummary(exam);
+}
+
+function autoCalcLevel(i){
+  var mk=parseFloat(document.getElementById("am_"+i).value);
+  var lbl=document.getElementById("al_"+i);
+  if(!isNaN(mk)&&mk>=0&&mk<=100){lbl.innerHTML=levelBadge(mk);}else{lbl.innerHTML="";}
+}
+
+function saveAssessment(admNum,exam){
+  var key=admNum+"_"+exam;
+  var data={key:key,admNo:admNum,exam:exam,marks:{},levels:{},points:{},saved:now()};
+  STRANDS.forEach(function(s,i){
+    var mk=document.getElementById("am_"+i).value;var pt=document.getElementById("ap_"+i).value;
+    if(mk!==""){data.marks[s]=parseFloat(mk);data.levels[s]=getLevel(parseFloat(mk));data.points[s]=pt?parseFloat(pt):"";}
+  });
+  SUMMATIVE[key]=data;iPut("summative",data);
+  toast("✅ Marks saved for "+admNum+" — "+EXAM_LABELS[exam]);
+  renderClassExamSummary(exam);renderAnalytics();
+}
+
+function renderClassExamSummary(exam){
+  if(!exam)return;
+  var rows=LEARNERS.map(function(l){
+    var d=getSummativeScore(l.admNo,exam);
+    var ov=d&&d.marks?d.marks["Overall"]:null;
+    return {name:l.name,admNo:l.admNo,ov:ov};
+  }).filter(function(r){return r.ov!=null;}).sort(function(a,b){return b.ov-a.ov;});
+  if(!rows.length){document.getElementById("classExamSummary").innerHTML="";return;}
+  var html='<div class="card"><div class="ch">📊 Class Summary — '+EXAM_LABELS[exam]+' <span>'+rows.length+' entered</span></div>';
+  html+='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Rank</th><th>Name</th><th>Overall %</th><th>Level</th></tr></thead><tbody>';
+  rows.forEach(function(r,i){
+    var col=pctColor(r.ov);
+    html+='<tr><td style="font-weight:800">'+(i+1)+'</td><td>'+r.name+'</td><td style="font-weight:900;color:'+col+'">'+r.ov+'%</td><td>'+levelBadge(r.ov)+'</td></tr>';
+  });
+  html+='</tbody></table></div></div>';
+  document.getElementById("classExamSummary").innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════════
+// REPORT CARD
+// ══════════════════════════════════════════════════════════
+function repSearchFn(){
+  var q=document.getElementById("repSearch").value.toLowerCase().trim();
+  if(!q){document.getElementById("repResults").innerHTML="";return;}
+  var res=LEARNERS.filter(function(l){return l.name.toLowerCase().includes(q)||l.admNo.toLowerCase().includes(q)||l.assNo.toLowerCase().includes(q);}).slice(0,8);
+  document.getElementById("repResults").innerHTML=res.map(function(l){
+    return '<div class="lcard" style="margin-bottom:6px" onclick="generateReport(\''+l.admNo+'\')">'+'<div class="lavatar" style="background:linear-gradient(135deg,var(--b),var(--pu));width:36px;height:36px;font-size:14px">'+(l.photo?'<img src="'+l.photo+'"/>':l.initials)+'</div>'+'<div class="linfo"><div class="lname" style="font-size:13px">'+l.name+'</div><div class="ladm">'+l.admNo+'</div></div><span style="color:var(--b);font-size:20px">›</span></div>';
+  }).join("")||'<div style="color:var(--sub);font-size:12px;padding:6px">Not found.</div>';
+}
+
+function generateReport(admNum){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  SEL_LEARNER=admNum;
+  document.getElementById("repResults").innerHTML="";
+  document.getElementById("repSearch").value="";
+
+  var fs=getFormativeScore(l);
+  var iep=IEPS[admNum]||null;
+  var fees=buildFeeBalance(admNum);
+
+  // Summative table
+  var sumTable='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Strand</th>';
+  EXAMS.forEach(function(ex){sumTable+='<th>'+EXAM_LABELS[ex]+' %</th><th>Level</th>';});
+  sumTable+='</tr></thead><tbody>';
+  STRANDS.forEach(function(s){
+    sumTable+='<tr><td style="font-weight:800">'+s+'</td>';
+    EXAMS.forEach(function(ex){
+      var d=getSummativeScore(admNum,ex);
+      var mk=d&&d.marks?d.marks[s]:null;
+      sumTable+='<td style="font-weight:800;color:'+(mk!=null?pctColor(mk):"var(--sub)")+'">'+(mk!=null?mk:'—')+'</td>';
+      sumTable+='<td>'+(mk!=null?levelBadge(mk):'—')+'</td>';
+    });
+    sumTable+='</tr>';
+  });
+  sumTable+='</tbody></table></div>';
+
+  // Attendance
+  var attP=0,attA=0,attT=0;
+  LESSONS.filter(function(x){return x.strand!=="admin";}).forEach(function(les){
+    var att=ATTENDANCE[admNum+"_"+les.idx];attT++;
+    if(att){if(att.status==="P")attP++;else if(att.status==="A")attA++;}
+  });
+  var attPct=attT>0?Math.round(attP/attT*100):0;
+
+  // Performance bars per strand (latest exam)
+  var latestEx=EXAMS.slice().reverse().find(function(ex){var d=getSummativeScore(admNum,ex);return d&&d.marks&&Object.keys(d.marks).length>0;});
+  var perfBars="";
+  if(latestEx){
+    var ld=getSummativeScore(admNum,latestEx);
+    STRANDS.forEach(function(s){
+      var mk=ld.marks[s];if(mk==null)return;
+      var col=pctColor(mk);
+      perfBars+='<div class="brow"><div class="blbl" style="font-size:9.5px;width:90px">'+s.substring(0,10)+'</div><div class="btrack"><div class="bfill" style="width:'+mk+'%;background:'+col+'"></div></div><div class="bval" style="color:'+col+'">'+mk+'%</div></div>';
+    });
+  }
+
+  // Auto comment
+  var latestOv=getLatestExamPct(admNum)||fs.pct;
+  var autoComment=latestOv>=80?l.name+" has demonstrated exceptional performance this term across all strands of English Language. Their consistent effort and dedication is commendable. Keep up the outstanding work.":
+    latestOv>=65?l.name+" has shown commendable progress this term. They are meeting the expected learning outcomes and show good understanding across most strands. With continued effort, even greater achievement is within reach.":
+    latestOv>=50?l.name+" is making progress but needs to strengthen certain areas. I encourage consistent completion of all lesson activities and regular revision at home to consolidate learning.":
+    latestOv>0?l.name+" requires additional support to meet the expected learning outcomes. I recommend targeted intervention and close monitoring. Please contact me to discuss a support plan.":
+    l.name+" has limited recorded data this term. Please ensure they engage consistently with all digital lesson packs and classroom activities.";
+
+  var html='<div class="card" id="reportCard">';
+  // Report Header
+  html+='<div style="background:linear-gradient(135deg,#0c1d5e,#1d4ed8);border-radius:11px;padding:16px;color:#fff;margin-bottom:14px">';
+  html+='<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;opacity:.75;margin-bottom:4px">'+T.school+'</div>';
+  html+='<div style="font-size:17px;font-weight:900;margin-bottom:2px">SUMMATIVE PROGRESS REPORT</div>';
+  html+='<div style="font-size:11.5px;opacity:.85">'+T.grade+' English · '+T.term+' · '+T.short+'</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;background:rgba(255,255,255,.12);border-radius:9px;padding:10px">';
+  html+='<div><div style="font-size:9px;opacity:.65;text-transform:uppercase;font-weight:800">Learner Name</div><div style="font-size:13px;font-weight:900">'+l.name+'</div></div>';
+  html+='<div><div style="font-size:9px;opacity:.65;text-transform:uppercase;font-weight:800">Admission No</div><div style="font-size:13px;font-weight:900;font-family:monospace">'+l.admNo+'</div></div>';
+  html+='<div><div style="font-size:9px;opacity:.65;text-transform:uppercase;font-weight:800">Assessment No</div><div style="font-size:13px;font-weight:900;font-family:monospace">'+l.assNo+'</div></div>';
+  html+='<div><div style="font-size:9px;opacity:.65;text-transform:uppercase;font-weight:800">Pair / Group</div><div style="font-size:13px;font-weight:900">P'+l.pair+' / G'+l.group+'</div></div>';
+  html+='</div></div>';
+
+  // Summary Stats
+  html+='<div class="sg4" style="margin-bottom:12px">';
+  html+='<div class="st sb"><div class="n" style="font-size:20px;color:var(--b)">'+latestOv+(latestOv?"%":"")+'</div><div class="l">Overall</div></div>';
+  html+='<div class="st" style="border-top-color:'+pctColor(attPct)+'"><div class="n" style="font-size:20px;color:'+pctColor(attPct)+'">'+attPct+'%</div><div class="l">Attendance</div></div>';
+  html+='<div class="st sg"><div class="n" style="font-size:20px;color:var(--g)">'+fs.done+'</div><div class="l">Lessons Done</div></div>';
+  html+='<div class="st spu"><div class="n" style="font-size:20px">'+levelBadge(latestOv)+'</div><div class="l">Level</div></div>';
+  html+='</div>';
+
+  // Summative Exam Results
+  html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:8px">📝 Summative Examination Results</div>';
+  html+=sumTable;
+
+  // Performance Bars
+  if(perfBars){
+    html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:12px 0 8px">📊 Performance by Strand — '+(latestEx?EXAM_LABELS[latestEx]:'')+'</div>';
+    html+=perfBars;
+  }
+
+  // Attendance summary
+  html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:12px 0 8px">📋 Attendance</div>';
+  html+='<div style="display:flex;gap:10px;margin-bottom:10px">';
+  html+='<div style="background:var(--gl);border-radius:9px;padding:10px;text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--g)">'+attPct+'%</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">RATE</div></div>';
+  html+='<div style="background:var(--gl);border-radius:9px;padding:10px;text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--g)">'+attP+'</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">PRESENT</div></div>';
+  html+='<div style="background:var(--rl);border-radius:9px;padding:10px;text-align:center;flex:1"><div style="font-size:22px;font-weight:900;color:var(--r)">'+attA+'</div><div style="font-size:9.5px;font-weight:800;color:var(--sub)">ABSENT</div></div>';
+  html+='</div>';
+
+  // IEP note
+  if(l.iepStatus&&iep&&iep.goals&&iep.goals.length>0){
+    html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:12px 0 8px">🎯 IEP Summary</div>';
+    html+='<div style="background:var(--pul);border-radius:9px;padding:10px;margin-bottom:10px">';
+    html+='<div style="font-size:12px;font-weight:800;color:var(--pu);margin-bottom:5px">Learning Goals:</div>';
+    iep.goals.forEach(function(g){html+='<div style="font-size:12px;padding:2px 0">• '+esc(g)+'</div>';});
+    if(iep.accommodations&&iep.accommodations.length>0){html+='<div style="font-size:11.5px;color:var(--sub);margin-top:5px">Accommodations: '+iep.accommodations.join(", ")+'</div>';}
+    html+='</div>';
+  }
+
+  // Fees Balance
+  html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:12px 0 8px">💰 Fee Balance</div>';
+  html+='<div style="background:'+(fees.balance>0?"var(--rl)":"var(--gl)")+';border-radius:9px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+  html+='<span style="font-size:12.5px;font-weight:800">Balance Outstanding</span>';
+  html+='<span style="font-size:16px;font-weight:900;color:'+(fees.balance>0?"var(--r)":"var(--g)")+'">KES '+fees.balance.toLocaleString()+'</span></div>';
+
+  // Teacher Comment
+  html+='<div style="font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:12px 0 8px">💬 Teacher\'s Comment</div>';
+  html+='<textarea class="fta" id="rc-comment" rows="4">'+autoComment+'</textarea>';
+
+  // Signature line
+  html+='<div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+  html+='<div><div style="font-size:10px;font-weight:800;color:var(--sub);margin-bottom:20px">CLASS TEACHER\'S SIGNATURE</div><div style="border-top:1px solid var(--ink);padding-top:4px;font-size:11px;font-weight:700">'+T.name+'</div></div>';
+  html+='<div><div style="font-size:10px;font-weight:800;color:var(--sub);margin-bottom:20px">PARENT/GUARDIAN SIGNATURE</div><div style="border-top:1px solid var(--ink);padding-top:4px;font-size:11px;font-weight:700">Date: ___________</div></div>';
+  html+='</div>';
+
+  html+='<div class="no-print" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px">';
+  html+='<button class="btn btn-g" onclick="window.print()">🖨 Print Report</button>';
+  html+='<button class="btn" style="background:#25d366;color:#fff" onclick="waReport(\''+admNum+'\')">💬 WhatsApp</button>';
+  html+='</div>';
+  html+='</div>';
+  html+='<div style="font-size:9.5px;color:var(--sub);text-align:center;margin-top:8px">Generated by Atiaket Edu Pro · '+T.school+' · '+now()+'</div>';
+
+  document.getElementById("reportContent").innerHTML=html;
+}
+
+function waReport(admNum){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  var comment=(document.getElementById("rc-comment")||{}).value||"";
+  var fees=buildFeeBalance(admNum);var ov=getLatestExamPct(admNum);
+  var text="*"+T.grade+" English Report — "+l.name+"*\n*"+T.school+" · "+T.term+"*\n\n"+
+    "📋 Adm No: "+l.admNo+"\n📊 Overall: "+(ov?ov+"%":"—")+"\n"+levelBadge(ov).replace(/<[^>]*>/g,"")+"\n💰 Fee Balance: KES "+fees.balance.toLocaleString()+"\n\n"+comment+"\n\n— "+T.short+" · "+T.email;
+  if(navigator.share){navigator.share({title:"Report — "+l.name,text:text}).catch(function(){});}
+  else{navigator.clipboard.writeText(text).then(function(){toast("✅ Copied for WhatsApp");});}
+}
+
+// ══════════════════════════════════════════════════════════
+// FINANCE
+// ══════════════════════════════════════════════════════════
+function renderFeeStructureDisplay(){
+  var fs=FEE_STRUCTURE;
+  if(!fs||!fs.termFee){
+    document.getElementById("feeStructDisplay").innerHTML='<div style="color:var(--sub);font-size:12px;font-style:italic">No fee structure set. Click Edit to configure.</div>';
+    return;
+  }
+  var html='<div class="fee-row"><span class="fee-label">Total Term Fee</span><span class="fee-val fee-b">KES '+fs.termFee.toLocaleString()+'</span></div>';
+  (fs.items||[]).forEach(function(item){
+    html+='<div class="fee-row"><span class="fee-label">'+esc(item.name)+'</span><span class="fee-val">KES '+item.amount.toLocaleString()+'</span></div>';
+  });
+  document.getElementById("feeStructDisplay").innerHTML=html;
+}
+
+function openFeeStructure(){
+  var fs=FEE_STRUCTURE;
+  var html='<div class="dhandle"></div><div class="dbody">';
+  html+='<div style="font-size:16px;font-weight:900;color:var(--b);margin-bottom:14px">⚙️ Fee Structure — '+T.term+'</div>';
+  html+='<div class="fr"><label class="fl">Total Term Fee (KES)</label><input class="fi" type="number" id="fs-total" value="'+(fs.termFee||"")+'"/></div>';
+  html+='<div style="font-size:10.5px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:8px">Fee Line Items</div>';
+  html+='<div id="fs-items">';
+  (fs.items||[]).forEach(function(item,i){
+    html+='<div class="r2" id="fsi-'+i+'"><div class="fr"><input class="fi" id="fsn-'+i+'" value="'+esc(item.name)+'" placeholder="Fee name"/></div><div class="fr"><input class="fi" type="number" id="fsa-'+i+'" value="'+item.amount+'" placeholder="Amount"/></div></div>';
+  });
+  html+='</div>';
+  html+='<button class="btn btn-b" onclick="addFeeItem()" style="margin-bottom:12px;font-size:12px">+ Add Item</button>';
+  html+='<button class="btn btn-g btn-full" onclick="saveFeeStructure()">💾 Save Fee Structure</button>';
+  html+='</div>';
+  document.getElementById("drawerPanel").innerHTML=html;
+  document.getElementById("drawer").classList.add("on");
+  document.getElementById("fs-items")._count=(fs.items||[]).length;
+}
+
+function addFeeItem(){
+  var list=document.getElementById("fs-items");var i=list._count||list.querySelectorAll(".r2").length;
+  var div=document.createElement("div");div.className="r2";div.id="fsi-"+i;
+  div.innerHTML='<div class="fr"><input class="fi" id="fsn-'+i+'" placeholder="Fee name"/></div><div class="fr"><input class="fi" type="number" id="fsa-'+i+'" placeholder="Amount KES"/></div>';
+  list.appendChild(div);list._count=i+1;
+}
+
+function saveFeeStructure(){
+  var total=parseFloat(document.getElementById("fs-total").value)||0;
+  var items=[];
+  document.querySelectorAll("#fs-items .r2").forEach(function(row){
+    var n=row.querySelector('[id^=fsn]').value.trim();var a=parseFloat(row.querySelector('[id^=fsa]').value)||0;
+    if(n&&a)items.push({name:n,amount:a});
+  });
+  FEE_STRUCTURE={termFee:total,items:items};
+  iPut("settings",{key:"feeStructure",value:FEE_STRUCTURE});
+  closeDrawer();renderFeeStructureDisplay();toast("✅ Fee structure saved");
+}
+
+function recordPayment(){
+  var admNum=document.getElementById("finLearnerSel").value;
+  if(!admNum){toast("⚠️ Select a learner");return;}
+  var amount=parseFloat(document.getElementById("finAmount").value);
+  if(!amount||amount<=0){toast("⚠️ Enter a valid amount");return;}
+  var date=document.getElementById("finDate").value||now();
+  var mode=document.getElementById("finMode").value;
+  var rNo=document.getElementById("finReceipt").value.trim()||"REC"+(++RECEIPT_CTR);
+  var notes=document.getElementById("finNotes").value.trim();
+  iPut("settings",{key:"receiptCtr",value:RECEIPT_CTR});
+  var key=admNum+"_"+rNo;
+  var rec={key:key,admNo:admNum,amount:amount,date:date,mode:mode,receiptNo:rNo,notes:notes,recorded:now()};
+  FEES[key]=rec;iPut("fees",rec);
+  // Reset fields
+  ["finAmount","finReceipt","finNotes"].forEach(function(id){document.getElementById(id).value="";});
+  toast("✅ Payment recorded — "+rNo);
+  printReceipt(admNum,rec);
+  renderFeeStatement();
+}
+
+function printReceipt(admNum,rec){
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  var bal=buildFeeBalance(admNum);
+  var win=window.open("","_blank","width=400,height=500");
+  win.document.write('<html><head><title>Receipt '+rec.receiptNo+'</title><style>body{font-family:Arial,sans-serif;padding:20px;font-size:13px}h2{text-align:center;color:#0c1d5e}table{width:100%;border-collapse:collapse}td{padding:6px 4px;border-bottom:1px solid #e2e8f0}.total{font-weight:900;font-size:16px;color:#15803d}.bal{color:'+(bal.balance>0?"#dc2626":"#15803d")+';font-weight:900}</style></head><body>');
+  win.document.write('<h2>'+T.school+'</h2><p style="text-align:center;font-size:11px;color:#64748b">'+T.term+' · Official Receipt</p><hr/>');
+  win.document.write('<table><tr><td>Receipt No</td><td><b>'+rec.receiptNo+'</b></td></tr>');
+  win.document.write('<tr><td>Date</td><td>'+rec.date+'</td></tr>');
+  win.document.write('<tr><td>Learner</td><td>'+l.name+'</td></tr>');
+  win.document.write('<tr><td>Admission No</td><td>'+l.admNo+'</td></tr>');
+  win.document.write('<tr><td>Payment Mode</td><td>'+rec.mode+'</td></tr>');
+  if(rec.notes)win.document.write('<tr><td>Notes</td><td>'+esc(rec.notes)+'</td></tr>');
+  win.document.write('<tr><td>Amount Paid</td><td class="total">KES '+rec.amount.toLocaleString()+'</td></tr>');
+  win.document.write('<tr><td>Term Fee</td><td>KES '+(FEE_STRUCTURE.termFee||0).toLocaleString()+'</td></tr>');
+  win.document.write('<tr><td>Total Paid</td><td style="font-weight:800;color:#1d4ed8">KES '+bal.paid.toLocaleString()+'</td></tr>');
+  win.document.write('<tr><td>Balance</td><td class="bal">KES '+bal.balance.toLocaleString()+'</td></tr>');
+  win.document.write('</table><hr/><p style="text-align:center;font-size:10px;color:#64748b">'+T.name+' ('+T.short+') · '+T.email+'</p>');
+  win.document.write('<p style="text-align:center;font-size:10px;color:#64748b">Generated by Atiaket Edu Pro · '+now()+'</p>');
+  win.document.write('</body></html>');
+  win.document.close();
+  setTimeout(function(){win.print();},400);
+}
+
+function buildFeeBalance(admNum){
+  var totalFee=FEE_STRUCTURE.termFee||0;
+  var paid=Object.values(FEES).filter(function(f){return f.admNo===admNum;}).reduce(function(s,f){return s+(f.amount||0);},0);
+  return {termFee:totalFee,paid:paid,balance:Math.max(0,totalFee-paid)};
+}
+
+function renderFeeStatement(){
+  var admNum=document.getElementById("finViewSel").value;
+  if(!admNum){document.getElementById("feeStatement").innerHTML='<div class="empty"><div class="ei">💰</div><p>Select a learner.</p></div>';return;}
+  var l=LEARNERS.find(function(x){return x.admNo===admNum;});if(!l)return;
+  document.getElementById("finLearnerName").textContent="— "+l.name;
+  var payments=Object.values(FEES).filter(function(f){return f.admNo===admNum;}).sort(function(a,b){return a.date>b.date?-1:1;});
+  var bal=buildFeeBalance(admNum);
+  var html='<div class="fee-row"><span class="fee-label">Term Fee</span><span class="fee-val">KES '+bal.termFee.toLocaleString()+'</span></div>';
+  html+='<div class="fee-row"><span class="fee-label">Total Paid</span><span class="fee-val fee-cr">KES '+bal.paid.toLocaleString()+'</span></div>';
+  html+='<div class="fee-row"><span class="fee-label" style="font-weight:900">Balance</span><span class="fee-val '+(bal.balance>0?"fee-db":"fee-cr")+'">KES '+bal.balance.toLocaleString()+'</span></div>';
+  if(payments.length){
+    html+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--sub);margin:12px 0 6px">Payment History</div>';
+    html+='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Date</th><th>Mode</th><th>Amount</th><th>Receipt</th></tr></thead><tbody>';
+    payments.forEach(function(p){
+      html+='<tr><td>'+p.date+'</td><td>'+p.mode+'</td><td style="font-weight:800;color:var(--g)">KES '+p.amount.toLocaleString()+'</td><td><button onclick="printReceipt(\''+admNum+'\',FEES[\''+p.key+'\'])" style="background:none;border:none;color:var(--b);font-size:11px;font-weight:800;cursor:pointer">🖨 '+p.receiptNo+'</button></td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  document.getElementById("feeStatement").innerHTML=html;
+}
+
+function buildFeeTabHTML(admNum){
+  var bal=buildFeeBalance(admNum);
+  var payments=Object.values(FEES).filter(function(f){return f.admNo===admNum;});
+  var html='<div style="background:'+(bal.balance>0?"var(--rl)":"var(--gl)")+';border-radius:9px;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">';
+  html+='<span style="font-size:12px;font-weight:800">Fee Balance</span>';
+  html+='<span style="font-size:18px;font-weight:900;color:'+(bal.balance>0?"var(--r)":"var(--g)")+'">KES '+bal.balance.toLocaleString()+'</span></div>';
+  html+='<div class="fee-row"><span class="fee-label">Term Fee</span><span>KES '+bal.termFee.toLocaleString()+'</span></div>';
+  html+='<div class="fee-row"><span class="fee-label">Total Paid</span><span style="color:var(--g);font-weight:800">KES '+bal.paid.toLocaleString()+'</span></div>';
+  if(payments.length){
+    html+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--sub);margin:9px 0 5px">Payments</div>';
+    payments.slice(-5).forEach(function(p){
+      html+='<div class="fee-row"><span class="fee-label" style="font-size:11px">'+p.date+' · '+p.mode+'</span><span class="fee-val fee-cr" style="font-size:12px">KES '+p.amount.toLocaleString()+'</span></div>';
+    });
+  }
+  html+='<button class="btn btn-go btn-full" style="margin-top:10px" onclick="closeDrawer();go(\'finance\');setTimeout(function(){document.getElementById(\'finLearnerSel\').value=\''+admNum+'\';document.getElementById(\'finViewSel\').value=\''+admNum+'\';renderFeeStatement();},200)">💰 Go to Finance Screen</button>';
+  return html;
+}
+
+// ══════════════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════════════
+function renderAnalytics(){
+  // Gather all learner summative data
+  var allScores=LEARNERS.map(function(l){
+    var ov=getLatestExamPct(l.admNo);
+    var fs=getFormativeScore(l);
+    return {name:l.name,admNo:l.admNo,ov:ov||fs.pct,examScores:{}};
+  });
+  EXAMS.forEach(function(ex){
+    allScores.forEach(function(ls){
+      var d=getSummativeScore(ls.admNo,ex);
+      ls.examScores[ex]=d&&d.marks?d.marks["Overall"]:null;
+    });
+  });
+  var withData=allScores.filter(function(x){return x.ov>0;});
+  if(withData.length){
+    var avg=Math.round(withData.reduce(function(s,x){return s+x.ov;},0)/withData.length);
+    var sorted=withData.slice().sort(function(a,b){return b.ov-a.ov;});
+    var atRisk=withData.filter(function(x){return x.ov<50;}).length;
+    document.getElementById("an-avg").textContent=avg+"%";
+    document.getElementById("an-top").textContent=sorted[0].name.replace("Learner","L");
+    document.getElementById("an-risk").textContent=atRisk;
+  } else {
+    document.getElementById("an-avg").textContent="—";
+    document.getElementById("an-top").textContent="—";
+    document.getElementById("an-risk").textContent="—";
+  }
+
+  // Strand analysis
+  var strandHTML="";
+  STRANDS.forEach(function(s){
+    var vals=[];
+    EXAMS.forEach(function(ex){
+      LEARNERS.forEach(function(l){
+        var d=getSummativeScore(l.admNo,ex);
+        if(d&&d.marks&&d.marks[s]!=null)vals.push(d.marks[s]);
+      });
+    });
+    var avg2=vals.length?Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length):0;
+    var sc=STRAND_COLORS[s]||["var(--sub)","var(--bg)"];
+    if(avg2>0||vals.length>0){
+      strandHTML+='<div class="brow"><div class="blbl" style="width:90px;font-size:9.5px">'+s.substring(0,11)+'</div><div class="btrack"><div class="bfill" style="width:'+avg2+'%;background:'+sc[0]+'"></div></div><div class="bval" style="color:'+sc[0]+'">'+avg2+'%</div></div>';
+    }
+  });
+  document.getElementById("strandAnalysis").innerHTML=strandHTML||'<div style="color:var(--sub);font-size:12px">No exam data yet. Enter marks in the Exams tab.</div>';
+
+  // Exam comparison
+  var compHTML='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Exam</th><th>Entries</th><th>Class Avg</th><th>Highest</th><th>Lowest</th></tr></thead><tbody>';
+  EXAMS.forEach(function(ex){
+    var vals=LEARNERS.map(function(l){var d=getSummativeScore(l.admNo,ex);return d&&d.marks?d.marks["Overall"]:null;}).filter(function(x){return x!=null;});
+    if(!vals.length){compHTML+='<tr><td style="font-weight:800">'+EXAM_LABELS[ex]+'</td><td colspan="4" style="color:var(--sub);font-style:italic">No data</td></tr>';return;}
+    var avg3=Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length);
+    var hi=Math.max.apply(null,vals),lo=Math.min.apply(null,vals);
+    compHTML+='<tr><td style="font-weight:800">'+EXAM_LABELS[ex]+'</td><td>'+vals.length+'</td><td style="font-weight:900;color:'+pctColor(avg3)+'">'+avg3+'%</td><td style="color:var(--g);font-weight:800">'+hi+'%</td><td style="color:var(--r);font-weight:800">'+lo+'%</td></tr>';
+  });
+  compHTML+='</tbody></table></div>';
+  document.getElementById("examComparison").innerHTML=compHTML;
+
+  // Distribution chart
+  drawDistChart(allScores);
+
+  // Learner ranking
+  var rankHTML='<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Rank</th><th>Name</th>';
+  EXAMS.forEach(function(ex){rankHTML+='<th>'+EXAM_LABELS[ex]+'</th>';});
+  rankHTML+='<th>Best</th></tr></thead><tbody>';
+  var ranked=allScores.slice().sort(function(a,b){return b.ov-a.ov;});
+  ranked.slice(0,15).forEach(function(l,i){
+    var col=pctColor(l.ov);
+    rankHTML+='<tr><td style="font-weight:800">'+(i+1)+'</td><td>'+l.name+'</td>';
+    EXAMS.forEach(function(ex){var v=l.examScores[ex];rankHTML+='<td style="font-weight:800;color:'+(v?pctColor(v):"var(--sub)")+'">'+(v!=null?v+"%" :"—")+'</td>';});
+    rankHTML+='<td style="font-weight:900;color:'+col+'">'+(l.ov?l.ov+"%":"—")+'</td></tr>';
+  });
+  rankHTML+='</tbody></table></div>';
+  document.getElementById("learnerRanking").innerHTML=rankHTML;
+
+  // Heatmap
+  var hmHTML="";
+  for(var w=1;w<=11;w++){
+    var wl=LESSONS.filter(function(l){return l.w==w&&l.strand!=="admin";});
+    var cnt=0,mx=0;
+    wl.forEach(function(l){cnt+=Object.keys(((FBDATA["L"+l.idx]||{}).assess||{}).comp||{}).length;mx+=30;});
+    var p=mx>0?cnt/mx:0;
+    var bg=p>=.7?"#15803d":p>=.4?"#d97706":p>0?"#1d4ed8":"#e2e8f0";
+    var tc=p>0?"#fff":"#94a3b8";
+    hmHTML+='<div style="aspect-ratio:1;border-radius:3px;background:'+bg+';color:'+tc+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800">'+w+'</div>';
+  }
+  document.getElementById("heatmap").innerHTML=hmHTML;
+}
+
+function drawDistChart(allScores){
+  var canvas=document.getElementById("distChart");if(!canvas||!canvas.getContext)return;
+  var ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);
+  var bands=[{label:"80-100 (L4)",min:80,max:101,col:"#15803d"},{label:"65-79 (L3)",min:65,max:80,col:"#1d4ed8"},{label:"50-64 (L2)",min:50,max:65,col:"#d97706"},{label:"0-49 (L1)",min:0,max:50,col:"#dc2626"}];
+  var counts=bands.map(function(b){return allScores.filter(function(x){return x.ov>=b.min&&x.ov<b.max;}).length;});
+  var max=Math.max.apply(null,counts)||1;
+  var W=canvas.width,H=canvas.height,pad=30,bw=(W-pad*2)/4-6;
+  ctx.fillStyle="#f1f5f9";ctx.fillRect(0,0,W,H);
+  bands.forEach(function(b,i){
+    var barH=Math.max(4,(counts[i]/max)*(H-pad*2));
+    var x=pad+i*(bw+6),y=H-pad-barH;
+    ctx.fillStyle=b.col;ctx.beginPath();ctx.roundRect(x,y,bw,barH,4);ctx.fill();
+    ctx.fillStyle="#0f172a";ctx.font="bold 10px Arial";ctx.textAlign="center";
+    ctx.fillText(counts[i],x+bw/2,y-4);
+    ctx.font="9px Arial";ctx.fillStyle="#64748b";
+    ctx.fillText(b.label,x+bw/2,H-8);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// PLANNER
+// ══════════════════════════════════════════════════════════
+function renderPlannerNav(){
+  var html="";
+  for(var w=1;w<=11;w++)html+='<button class="pnb'+(PLAN_WEEK===w?" on":"")+'" onclick="setPW('+w+')">W'+w+'</button>';
+  document.getElementById("plannerNav").innerHTML=html;
+}
+function setPW(w){PLAN_WEEK=w;renderPlanner();}
+function renderPlanner(){
+  renderPlannerNav();
+  var wl=LESSONS.filter(function(l){return l.w==PLAN_WEEK;});
+  var strandClass={listening:"sls",reading:"srd",writing:"swr",grammar:"sgr",admin:"sad"};
+  var strandLabel={listening:"Listening & Speaking",reading:"Reading",writing:"Writing",grammar:"Grammar in Use",admin:"Admin"};
+  var html='<div class="pw"><div class="pwh">📅 Week '+PLAN_WEEK+' — '+T.term+'</div>';
+  wl.forEach(function(l){
+    var cnt=Object.keys(((FBDATA["L"+l.idx]||{}).assess||{}).comp||{}).length;
+    html+='<div class="pd"><div class="pdl">'+l.day+'</div><div class="pdc">';
+    html+='<span class="pds '+strandClass[l.strand]+'">'+strandLabel[l.strand]+'</span>';
+    html+='<div class="pdt">'+l.lesson+' · '+l.sub+'</div>';
+    html+='<div style="font-size:10px;color:var(--sub);margin-top:2px">'+l.date+(l.strand!=="admin"?' · '+cnt+'/30 saved':'')+'</div>';
+    html+='</div><div style="font-size:16px;color:var(--border)">›</div></div>';
+  });
+  html+='</div>';
+  html+='<div class="card"><div class="ch">📝 Week '+PLAN_WEEK+' Notes</div>';
+  html+='<textarea class="fta" id="plan-notes" rows="3" placeholder="Preparation notes, materials, reminders…" oninput="savePlanNotes(this.value)"></textarea></div>';
+  document.getElementById("plannerContent").innerHTML=html;
+  iGet("planner","w"+PLAN_WEEK,function(d){var ta=document.getElementById("plan-notes");if(ta&&d&&d.notes)ta.value=d.notes;});
+}
+function savePlanNotes(v){iPut("planner",{key:"w"+PLAN_WEEK,notes:v,updated:new Date().toISOString()});}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+openIDB(function(){
+  initLearners();
+  initFB();
+  renderHome();
+  renderPlannerNav();
+  var now2=new Date();
+  var ds=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var ms=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  document.getElementById("topDate").textContent=ds[now2.getDay()]+" "+now2.getDate()+" "+ms[now2.getMonth()]+" · "+T.short;
+  document.getElementById("finDate").value=now2.toISOString().split("T")[0];
+});
+
+// SERVICE WORKER
+if("serviceWorker" in navigator){
+  var swBlob=new Blob(['var C="aep-v1";self.addEventListener("install",function(e){self.skipWaiting();});self.addEventListener("activate",function(e){self.clients.claim();});self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).catch(function(){return r;});}));});'],{type:"application/javascript"});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(function(){});
+}
+// PWA MANIFEST
+var mf={name:"Atiaket Edu Pro",short_name:"AEP",display:"standalone",theme_color:"#0c1d5e",background_color:"#f1f5f9",start_url:".",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230c1d5e'/><text y='72' font-size='56' text-anchor='middle' x='50'>📚</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
+var ml=document.createElement("link");ml.rel="manifest";ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:"application/manifest+json"}));document.head.appendChild(ml);
+</script>
+</body>
+</html>
