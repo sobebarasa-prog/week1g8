@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>L3 Wednesday | Telephone Messages | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#cbd5e1;--bg:#f5f3ff;--wh:#fff;
+--pu:#6d28d9;--pul:#ede9fe;--pud:#2e1065;
+--b:#1d4ed8;--bl:#dbeafe;--t:#0f766e;--tl:#ccfbf1;
+--g:#15803d;--gl:#dcfce7;--r:#dc2626;--rl:#fee2e2;
+--go:#d97706;--gol:#fef3c7;
+--sh:0 2px 16px rgba(0,0,0,.08);--ra:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px}
+
+.hero{background:linear-gradient(135deg,#1a0850,#6d28d9 60%,#1d4ed8);padding:24px 16px 20px;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+.hero h1{font-size:clamp(18px,5vw,26px);font-weight:900;line-height:1.22;margin-bottom:4px}
+.hero h1 span{color:#c4b5fd}
+.hero p{font-size:12px;opacity:.86;line-height:1.6}
+.roll{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700}
+
+.tabs{display:flex;overflow-x:auto;background:var(--wh);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:90;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:11px 13px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;border:none;background:none;border-bottom:3px solid transparent;cursor:pointer;color:var(--sub);white-space:nowrap}
+.tb.on{color:var(--pu);border-bottom-color:var(--pu)}
+
+.sec{display:none;padding:14px}
+.sec.on{display:block;animation:fadeup .24s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.card{background:var(--wh);border-radius:var(--ra);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.ch{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--pu);display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.ch .ci{width:23px;height:23px;background:var(--pul);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+.sh{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sn{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff}
+.s1c{background:#1d4ed8}.s2c{background:#0f766e}.s3c{background:#d97706}.s4c{background:#6d28d9}
+.st{font-size:13.5px;font-weight:800}
+.ss{font-size:11px;color:var(--sub);font-weight:700;margin-top:2px}
+.sd{font-size:12.5px;color:var(--sub);line-height:1.7;margin-bottom:10px}
+
+.org{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:800;color:#fff;margin-right:4px}
+.oc{background:#1d4ed8}.op{background:#d97706}.og{background:#0f766e}.oi{background:#6d28d9}
+
+.box{border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin-bottom:10px}
+.bgo{background:var(--gol);border-left:4px solid var(--go);color:#4a2c00}
+.bt{background:var(--tl);border-left:4px solid var(--t);color:#003b35}
+.bp{background:var(--pul);border-left:4px solid var(--pu);color:var(--pud)}
+.bg{background:var(--gl);border-left:4px solid var(--g);color:#0a3018}
+
+.rollgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;text-align:center;margin-bottom:4px}
+.rc2{border-radius:10px;padding:10px 4px}
+.rc2 .num{font-size:22px;font-weight:900}
+.rc2 .lbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+
+/* VIDEO EXPLAINER */
+.vidcard{background:linear-gradient(135deg,#1a0850,#6d28d9);border-radius:var(--ra);padding:18px;color:#fff;text-align:center;margin-bottom:11px}
+.vico{font-size:46px;margin-bottom:8px}
+.vidcard h3{font-size:15px;font-weight:900;margin-bottom:5px}
+.vidcard p{font-size:12px;opacity:.88;line-height:1.6;max-width:360px;margin:0 auto 14px}
+.vbtn{background:#fff;color:var(--pu);border:none;border-radius:50px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.vslide{display:none;animation:fadeup .28s ease}
+.vslide.on{display:block}
+
+/* GROUP TABS */
+.gtabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.gt{padding:6px 12px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;cursor:pointer;color:var(--sub);transition:all .18s}
+.gt.on{background:var(--pu);border-color:var(--pu);color:#fff}
+.gpanel{display:none}
+.gpanel.on{display:block}
+
+/* MESSAGE COMPONENTS */
+.complist{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.compitem{display:flex;align-items:flex-start;gap:9px;background:var(--bg);border:2px solid var(--border);border-radius:11px;padding:10px 12px;cursor:pointer;user-select:none;transition:all .18s}
+.compitem.hit{background:var(--pul);border-color:var(--pu)}
+.cnum{width:24px;height:24px;flex-shrink:0;border-radius:50%;background:var(--border);color:var(--sub);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;transition:all .18s}
+.compitem.hit .cnum{background:var(--pu);color:#fff}
+.cname{font-size:12.5px;font-weight:800;margin-bottom:1px}
+.compitem.hit .cname{color:var(--pu)}
+.cexp{font-size:11.5px;color:var(--sub);line-height:1.5}
+.gpbar{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-size:12px;color:var(--sub);font-weight:800}
+.gpb{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden}
+.gpbf{height:100%;background:linear-gradient(90deg,var(--pu),var(--b));border-radius:5px;transition:width .4s}
+.gsavebtn{width:100%;padding:10px;background:var(--pu);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px}
+.gsaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+/* AUDIO PLAYER */
+.ap{background:linear-gradient(135deg,#1a0850,#6d28d9);color:#fff;border-radius:var(--ra);padding:15px;margin-bottom:11px}
+.at{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.as{font-size:11px;opacity:.8;margin-bottom:11px}
+.asp2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.aspk{background:rgba(255,255,255,.13);border-radius:9px;padding:9px;text-align:center}
+.aspk-i{font-size:22px;margin-bottom:2px}
+.aspk-n{font-size:11.5px;font-weight:800}
+.aspk-r{font-size:10px;opacity:.7}
+.arow{display:flex;gap:7px;margin-bottom:8px}
+.abt{flex:1;padding:10px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+.abt:disabled{opacity:.36;cursor:not-allowed}
+.aplay{background:#fff;color:var(--pu)}
+.astop{background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.abar{height:4px;background:rgba(255,255,255,.22);border-radius:4px;margin-bottom:7px;overflow:hidden}
+.afill{height:100%;width:0%;background:#fff;border-radius:4px;transition:width .35s}
+.astat{font-size:11px;opacity:.82}
+.aspd{display:flex;align-items:center;gap:6px;font-size:11px;opacity:.82;margin-bottom:8px}
+.aspd select{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:3px 8px;font-family:'Nunito',sans-serif;font-size:11px;color:#fff;outline:none}
+.cl{display:flex;gap:8px;padding:5px;border-radius:7px;margin-bottom:4px;align-items:flex-start;transition:background .2s}
+.cl.lit{background:rgba(255,255,255,.16)}
+.cav{font-size:16px;width:23px;flex-shrink:0;text-align:center}
+.cwho{font-size:9px;font-weight:800;text-transform:uppercase;opacity:.68;margin-bottom:1px}
+.ctxt{font-size:12px;line-height:1.55}
+.cl.c .cwho{color:#c4b5fd}.cl.r .cwho{color:#7dd3fc}
+
+/* SAMPLE MESSAGE */
+.samplemsg{background:#fffdf5;border:2px dashed var(--go);border-radius:11px;padding:12px;margin-bottom:11px}
+.smtop{font-size:12px;font-weight:900;color:var(--go);margin-bottom:8px}
+.smrow{display:flex;gap:8px;margin-bottom:4px;font-size:12px;line-height:1.5}
+.smlbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--sub);width:80px;flex-shrink:0}
+
+/* PAIR SELECTOR */
+.psel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.psel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.psel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+
+/* MESSAGE PAD — shown per pair */
+.msgpad{background:var(--wh);border-radius:var(--ra);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.mphd{background:linear-gradient(135deg,#1a0850,#6d28d9);padding:11px 14px;color:#fff}
+.mphd h3{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.mphd p{font-size:11px;opacity:.85}
+.mpbody{padding:13px}
+.mf{margin-bottom:9px}
+.mf label{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--pu);margin-bottom:4px}
+.mf input,.mf textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:var(--bg);transition:border-color .18s}
+.mf input:focus,.mf textarea:focus{border-color:var(--pu);background:#fff}
+.mf textarea{resize:none;min-height:58px;line-height:1.6}
+.msavebtn{width:100%;padding:10px;background:var(--pu);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:4px}
+.msaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+/* STEP 4 PAIR ROLE PLAY — 10 pairs with compare panels */
+.psection{background:var(--bg);border-radius:11px;padding:11px;margin-bottom:9px;border:2px solid var(--border)}
+.psection.done{border-color:var(--g);background:var(--gl)}
+.pstop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.ptag{font-size:11.5px;font-weight:800;color:var(--pu)}
+.pdone{font-size:10px;font-weight:800;color:var(--sub)}
+.psection.done .pdone{color:var(--g)}
+.compare2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+.cside{border-radius:10px;overflow:hidden;border:2px solid var(--border)}
+.csidehd{padding:8px 10px;font-size:11.5px;font-weight:800;color:#fff}
+.csidebdy{padding:10px}
+.cside label{display:block;font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:3px}
+.cside textarea{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:7px 8px;font-family:'Nunito',sans-serif;font-size:11.5px;resize:none;min-height:50px;outline:none;background:var(--bg);font-weight:700}
+
+.rslots{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.rslot{background:var(--wh);border-radius:9px;padding:8px;border:2px solid var(--border)}
+.rslot.rec{border-color:var(--r);background:var(--rl);animation:pulse 1.2s infinite}
+.rslot.done{border-color:var(--g);background:var(--gl)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+.rtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.rtag{font-size:9.5px;font-weight:800;text-transform:uppercase;color:var(--sub)}
+.rtimer{font-size:11px;font-weight:800;color:var(--r)}
+.rslot.done .rtimer{color:var(--g)}
+.rbtns{display:flex;gap:4px;margin-bottom:5px}
+.rbtn{flex:1;padding:6px 3px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:10.5px;font-weight:800;cursor:pointer}
+.rstart{background:var(--r);color:#fff}
+.rstart:disabled{background:#cbd5e1;cursor:not-allowed}
+.rstop{background:var(--bg);color:var(--sub);border:1.5px solid var(--border)}
+.rstop:disabled{opacity:.4;cursor:not-allowed}
+.rplay audio{width:100%;height:30px;border-radius:7px}
+.rstat{font-size:9.5px;color:var(--sub);text-align:center;font-weight:700}
+.rslot.rec .rstat{color:var(--r)}.rslot.done .rstat{color:var(--g)}
+
+.lsel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.lsel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.lsel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+
+.qopt{padding:9px 11px;border-radius:9px;border:2px solid var(--border);background:var(--wh);font-size:12.5px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;margin-bottom:6px;display:block;font-weight:700}
+.qopt:hover{border-color:var(--pu)}.qopt.right{background:var(--gl);border-color:var(--g);color:var(--g)}.qopt.wrong{background:var(--rl);border-color:var(--r);color:var(--r)}
+.chkrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.chkrow:last-child{border-bottom:none}
+.chkbox{width:21px;height:21px;flex-shrink:0;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;transition:all .18s}
+.chkbox.on{background:var(--pu);border-color:var(--pu);color:#fff}
+.chktxt{font-size:12.5px;line-height:1.5;font-weight:700}
+.savebtn{width:100%;padding:10px;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:#fff;margin-top:9px}
+.sb-pu{background:var(--pu)}.sb-g{background:var(--g)}
+.saved-msg{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;box-shadow:0 -3px 14px rgba(0,0,0,.07);z-index:99}
+.nb{flex:1;border:none;background:none;cursor:pointer;padding:8px 2px 12px;font-family:'Nunito',sans-serif;font-size:9.5px;font-weight:800;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nb .ico{font-size:18px}
+.nb.on{color:var(--pu)}
+.footer{background:#0c1222;color:rgba(255,255,255,.6);text-align:center;padding:12px 16px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.5;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📝 Grade 8 · Lesson 3 · Wednesday · Week 1</div>
+  <h1>Telephone Etiquette:<br><span>Leaving &amp; Taking Messages</span></h1>
+  <p>Theme: Human Rights · Listening &amp; Speaking · 9:00–9:40 AM</p>
+  <div class="roll">
+    <span class="rc">🏫 Atiaket Junior School</span>
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">👥 10 Pairs</span>
+    <span class="rc">🔵 5 Groups</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="go('intro')">🎯 Intro</button>
+  <button class="tb" onclick="go('s1')">🎬 Step 1</button>
+  <button class="tb" onclick="go('s2')">🔍 Step 2</button>
+  <button class="tb" onclick="go('s3')">📝 Step 3</button>
+  <button class="tb" onclick="go('s4')">🔄 Step 4</button>
+  <button class="tb" onclick="go('ass')">✅ Assess</button>
+</div>
+
+<!-- INTRO -->
+<div class="sec on" id="sec-intro">
+  <div class="card">
+    <div class="ch"><div class="ci">📋</div>Organisation — 20 Learners</div>
+    <div class="rollgrid">
+      <div class="rc2" style="background:var(--pul)"><div class="num" style="color:var(--pu)">20</div><div class="lbl">Learners</div></div>
+      <div class="rc2" style="background:var(--tl)"><div class="num" style="color:var(--t)">10</div><div class="lbl">Pairs</div></div>
+      <div class="rc2" style="background:var(--gol)"><div class="num" style="color:var(--go)">5</div><div class="lbl">Groups</div></div>
+      <div class="rc2" style="background:var(--gl)"><div class="num" style="color:var(--g)">1</div><div class="lbl">Class</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🗂</div>Steps at a Glance</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org oc">🌍 CLASS</span>Step 1 — Watch video on telephone messages; take notes individually</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org og">🔵 5 GROUPS</span>Step 2 — Search for components of a telephone message in print and online</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org op">👥 10 PAIRS</span>Step 3 — Listen to audio of caller leaving a message; take the message</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org op">👥 10 PAIRS</span>Step 4 — Role play leaving and taking messages; compare written messages</div>
+    </div>
+  </div>
+  <div class="box bgo"><strong>Link to Lesson 2:</strong> On Tuesday you identified polite words in telephone conversations. Today you learn what to do when the person you are calling is unavailable — how to <strong>leave and take a message</strong> politely.</div>
+</div>
+
+<!-- STEP 1 — CLASS watches video -->
+<div class="sec" id="sec-s1">
+  <div class="card">
+    <div class="sh"><div class="sn s1c">1</div><div><div class="st">Watch Video — Telephone Messages Explained</div><div class="ss"><span class="org oc" style="font-size:10px;padding:2px 8px">🌍 WHOLE CLASS watches</span> — take notes individually</div></div></div>
+    <p class="sd">The teacher plays the presentation for the whole class. Follow each slide and write notes in your exercise book. Tap Start when ready.</p>
+  </div>
+  <div class="vidcard">
+    <div class="vico">📽</div>
+    <h3>Video: What is a Telephone Message?</h3>
+    <p>Explaining when messages are needed, what components they must include, and the polite language used when taking a message.</p>
+    <button class="vbtn" onclick="startVid()">▶ Start Presentation</button>
+  </div>
+  <div id="vidArea" style="display:none">
+    <div class="vslide" id="vs0">
+      <div class="card" style="border-left:5px solid var(--pu)">
+        <div class="ch"><div class="ci">1️⃣</div>What is a Telephone Message?</div>
+        <p style="font-size:13px;line-height:1.7;color:var(--sub);margin-bottom:9px">A <strong>telephone message</strong> is a written record of information from a caller when the receiver is <strong>not available</strong> to speak. The person who answers writes it down accurately and passes it on.</p>
+        <div class="bt box"><strong>When is it needed?</strong><br>• A parent calls the headteacher who is in a meeting.<br>• You call a classmate but only their parent answers.<br>• An officer is on rounds when the community calls.</div>
+        <div class="bp box" style="margin-bottom:0"><strong>In your exercise book:</strong><br>1. Define "telephone message" in your own words.<br>2. Give TWO situations in your community where a message would be needed.</div>
+      </div>
+    </div>
+    <div class="vslide" id="vs1">
+      <div class="card" style="border-left:5px solid var(--b)">
+        <div class="ch"><div class="ci">2️⃣</div>6 Components Every Message Must Have</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div style="background:var(--pul);border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">📅</div><div style="font-size:11px;font-weight:800;color:var(--pu)">Date &amp; Time</div></div>
+          <div style="background:var(--bl);border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">👤</div><div style="font-size:11px;font-weight:800;color:var(--b)">Caller's Name</div></div>
+          <div style="background:var(--tl);border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">📞</div><div style="font-size:11px;font-weight:800;color:var(--t)">Contact Number</div></div>
+          <div style="background:var(--gol);border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">💬</div><div style="font-size:11px;font-weight:800;color:var(--go)">Message Content</div></div>
+          <div style="background:var(--gl);border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">⚡</div><div style="font-size:11px;font-weight:800;color:var(--g)">Action Required</div></div>
+          <div style="background:#fff7ed;border-radius:9px;padding:10px;text-align:center"><div style="font-size:22px;margin-bottom:3px">✍</div><div style="font-size:11px;font-weight:800;color:var(--go)">Taken By</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="vslide" id="vs2">
+      <div class="card" style="border-left:5px solid var(--t)">
+        <div class="ch"><div class="ci">3️⃣</div>Polite Language for Taking a Message</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:9px">
+          <div style="background:var(--bg);border-radius:8px;padding:9px 11px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:2px">Saying person is unavailable:</div><div style="font-size:12.5px;font-weight:700">"I am afraid Mary is not available. <strong>May I take a message, please?</strong>"</div></div>
+          <div style="background:var(--bg);border-radius:8px;padding:9px 11px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:2px">Asking caller's name:</div><div style="font-size:12.5px;font-weight:700">"<strong>Could you kindly tell me your name, please?</strong>"</div></div>
+          <div style="background:var(--bg);border-radius:8px;padding:9px 11px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:2px">Asking for contact number:</div><div style="font-size:12.5px;font-weight:700">"<strong>Could I have your telephone number, please?</strong>"</div></div>
+          <div style="background:var(--bg);border-radius:8px;padding:9px 11px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:2px">Confirming and closing:</div><div style="font-size:12.5px;font-weight:700">"<strong>I will make sure she receives your message. Thank you for calling.</strong>"</div></div>
+        </div>
+      </div>
+      <div class="bg box">✅ Video complete! Move to Step 2 — your group will now search for these components in print and online materials.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2 — 5 GROUPS search for components -->
+<div class="sec" id="sec-s2">
+  <div class="card">
+    <div class="sh"><div class="sn s2c">2</div><div><div class="st">Search for Components of a Telephone Message</div><div class="ss"><span class="org og" style="font-size:10px;padding:2px 8px">🔵 5 GROUPS of 4</span> — internet and print materials</div></div></div>
+    <p class="sd">In your group of 4, use an internet-enabled device and any print materials to search for the components of a telephone message. Select your group tab, tap each component your group finds, then save your findings.</p>
+  </div>
+  <div class="card">
+    <div class="bgo box"><strong>Group Task:</strong> Search online ("components of a telephone message") or in your course book. Tap each component your group identifies and agrees belongs in a telephone message. Then save.</div>
+    <div class="gtabs" id="gt2">
+      <button class="gt on" onclick="sg('g2',1)">Group 1</button>
+      <button class="gt" onclick="sg('g2',2)">Group 2</button>
+      <button class="gt" onclick="sg('g2',3)">Group 3</button>
+      <button class="gt" onclick="sg('g2',4)">Group 4</button>
+      <button class="gt" onclick="sg('g2',5)">Group 5</button>
+    </div>
+    <div id="g2panels"></div>
+  </div>
+</div>
+
+<!-- STEP 3 — 10 PAIRS listen and take message -->
+<div class="sec" id="sec-s3">
+  <div class="card">
+    <div class="sh"><div class="sn s3c">3</div><div><div class="st">Listen &amp; Take the Message</div><div class="ss"><span class="org op" style="font-size:10px;padding:2px 8px">👥 10 PAIRS</span> — listen together; each pair fills in their own message pad</div></div></div>
+    <p class="sd">The teacher plays the audio for the whole class. A caller phones for Mary but she is unavailable. Select your pair number, then fill in your pair's message pad as you listen. Each of the 10 pairs writes their own message.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">👁</div>Sample Message Format — study before listening</div>
+    <div class="samplemsg">
+      <div class="smtop">📋 TELEPHONE MESSAGE</div>
+      <div class="smrow"><div class="smlbl">Date &amp; Time</div><div>Wednesday, 7 January 2026 — 9:15 AM</div></div>
+      <div class="smrow"><div class="smlbl">For</div><div>Mary ______________________</div></div>
+      <div class="smrow"><div class="smlbl">Caller's Name</div><div>________________________________</div></div>
+      <div class="smrow"><div class="smlbl">Contact No.</div><div>________________________________</div></div>
+      <div class="smrow"><div class="smlbl">Message</div><div>________________________________<br>________________________________</div></div>
+      <div class="smrow"><div class="smlbl">Action</div><div>☐ Call back &nbsp; ☐ No reply needed</div></div>
+      <div class="smrow"><div class="smlbl">Taken by</div><div>________________________________</div></div>
+    </div>
+  </div>
+  <div class="ap">
+    <div class="at">📞 Caller Leaves a Message for Mary</div>
+    <div class="as">Mary is unavailable — listen and write the message as the receiver</div>
+    <div class="asp2">
+      <div class="aspk"><div class="aspk-i">👦</div><div class="aspk-n">James Omondi</div><div class="aspk-r">Caller</div></div>
+      <div class="aspk"><div class="aspk-i">👤</div><div class="aspk-n">Receiver</div><div class="aspk-r">Mary unavailable</div></div>
+    </div>
+    <div class="aspd">🐢 Speed: <select id="apSpd" onchange="apSpeed=parseFloat(this.value)"><option value="0.75">Slow</option><option value="0.9" selected>Normal</option><option value="1.1">Fast</option></select></div>
+    <div class="arow">
+      <button class="abt aplay" id="apPlay" onclick="apStart()">▶ Play &amp; Take Message</button>
+      <button class="abt astop" id="apStop" onclick="apHalt()" disabled>⏹ Stop</button>
+    </div>
+    <div class="abar"><div class="afill" id="apFill"></div></div>
+    <div class="astat" id="apStat">Tap Play — fill in your pair's message pad as you listen!</div>
+    <div id="convBody" style="margin-top:8px">
+      <div class="cl c" id="cl0"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">Good morning. May I please speak to Mary?</div></div></div>
+      <div class="cl r" id="cl1"><div class="cav">👤</div><div><div class="cwho">Receiver</div><div class="ctxt">Good morning. I am afraid Mary is not available at the moment. May I take a message, please?</div></div></div>
+      <div class="cl c" id="cl2"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">Yes please. My name is James Omondi. I am calling about the human rights meeting this Friday at the County Hall.</div></div></div>
+      <div class="cl r" id="cl3"><div class="cav">👤</div><div><div class="cwho">Receiver</div><div class="ctxt">I see. Could you kindly give me your contact number, please, so Mary can call you back?</div></div></div>
+      <div class="cl c" id="cl4"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">Certainly. My number is zero seven one two, three four five, six seven eight.</div></div></div>
+      <div class="cl r" id="cl5"><div class="cav">👤</div><div><div class="cwho">Receiver</div><div class="ctxt">Thank you. Is there anything specific you would like Mary to know?</div></div></div>
+      <div class="cl c" id="cl6"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">Yes. The venue has changed from the Community Hall to the County Hall, and the meeting starts at two o'clock in the afternoon instead of ten in the morning.</div></div></div>
+      <div class="cl r" id="cl7"><div class="cav">👤</div><div><div class="cwho">Receiver</div><div class="ctxt">I will make sure Mary receives that message. Is there anything else?</div></div></div>
+      <div class="cl c" id="cl8"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">Please ask her to confirm attendance before Thursday. Thank you very much. Goodbye.</div></div></div>
+      <div class="cl r" id="cl9"><div class="cav">👤</div><div><div class="cwho">Receiver</div><div class="ctxt">I certainly will. Thank you for calling. Goodbye and have a lovely morning.</div></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">📝</div>Pair Message Pads — 10 Pairs</div>
+    <p style="font-size:12px;color:var(--sub);margin-bottom:10px;font-weight:700">Select your pair number. Fill in all fields as you listen to the audio. Each pair saves their own message.</p>
+    <div class="psel"><label>Select your pair number</label>
+      <select id="pairSel3" onchange="showMsgPad()">
+        <option value="">-- Select your pair --</option>
+        <option>Pair 1</option><option>Pair 2</option><option>Pair 3</option><option>Pair 4</option><option>Pair 5</option>
+        <option>Pair 6</option><option>Pair 7</option><option>Pair 8</option><option>Pair 9</option><option>Pair 10</option>
+      </select>
+    </div>
+    <div id="msgPadArea"></div>
+    <div class="bt box" style="margin-top:8px;margin-bottom:0"><strong>Check your message:</strong> Caller's name (James Omondi), number (0712 345 678), venue change (County Hall), new time (2 PM), action (confirm by Thursday)?</div>
+  </div>
+</div>
+
+<!-- STEP 4 — 10 PAIRS role play, leave/take, compare -->
+<div class="sec" id="sec-s4">
+  <div class="card">
+    <div class="sh"><div class="sn s4c">4</div><div><div class="st">Role Play — Leave &amp; Take Messages</div><div class="ss"><span class="org op" style="font-size:10px;padding:2px 8px">👥 10 PAIRS</span> — take turns; compare your written messages</div></div></div>
+    <p class="sd">In pairs, take turns: one is the <strong>caller</strong> leaving a message, the other is the <strong>receiver</strong> writing it down. Then swap roles. After both turns, <strong>compare your written messages</strong> — are they the same? Record your voices to listen back.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">📋</div>Scenarios — Pairs 1–5: Scenario A · Pairs 6–10: Scenario B</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px">
+      <div style="background:linear-gradient(135deg,#1a0850,#6d28d9);border-radius:11px;padding:12px;color:#fff"><div style="font-size:11.5px;font-weight:900;margin-bottom:4px">📝 Scenario A</div><div style="font-size:11.5px;opacity:.9;line-height:1.5">School fees enquiry. Bursar unavailable. Parent needs a call back before 3 PM.</div><div style="font-size:10px;font-weight:800;margin-top:6px;opacity:.8">Pairs 1–5</div></div>
+      <div style="background:linear-gradient(135deg,#0a3018,#15803d);border-radius:11px;padding:12px;color:#fff"><div style="font-size:11.5px;font-weight:900;margin-bottom:4px">📝 Scenario B</div><div style="font-size:11.5px;opacity:.9;line-height:1.5">Community water rights meeting. Chief unavailable. Caller needs venue and time confirmed.</div><div style="font-size:10px;font-weight:800;margin-top:6px;opacity:.8">Pairs 6–10</div></div>
+    </div>
+    <div id="s4Grid"></div>
+    <div class="bt box" style="margin-top:9px">
+      <strong>After role play — discuss:</strong><br>
+      1. Were both written messages the same? What was different?<br>
+      2. Why is accuracy so important when taking a message?<br>
+      3. What will you do differently next time to take a complete message?
+    </div>
+  </div>
+</div>
+
+<!-- ASSESS -->
+<div class="sec" id="sec-ass">
+  <div class="card">
+    <div class="ch"><div class="ci">📝</div>Comprehension Check — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="assLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">1. When is it necessary to leave a telephone message?</div>
+      <button class="qopt" onclick="cQ(this,0,false)">A. When you have a lot to say</button>
+      <button class="qopt" onclick="cQ(this,0,true)">B. When the person you are calling is not available</button>
+      <button class="qopt" onclick="cQ(this,0,false)">C. When the line is very busy</button>
+      <button class="qopt" onclick="cQ(this,0,false)">D. When you prefer not to speak directly</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">2. Which is NOT a component of a telephone message?</div>
+      <button class="qopt" onclick="cQ(this,1,false)">A. Caller's name and contact number</button>
+      <button class="qopt" onclick="cQ(this,1,false)">B. Date, time, and message content</button>
+      <button class="qopt" onclick="cQ(this,1,true)">C. The caller's home address and family members</button>
+      <button class="qopt" onclick="cQ(this,1,false)">D. Action required and name of person who took the message</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">3. The most polite way to offer to take a message is:</div>
+      <button class="qopt" onclick="cQ(this,2,false)">A. "Just call back later."</button>
+      <button class="qopt" onclick="cQ(this,2,true)">B. "May I take a message, please?"</button>
+      <button class="qopt" onclick="cQ(this,2,false)">C. "She is not here, what do you want?"</button>
+      <button class="qopt" onclick="cQ(this,2,false)">D. "Hold on and I will try to find her."</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">4. In the audio recording, the KEY change James communicated was:</div>
+      <button class="qopt" onclick="cQ(this,3,false)">A. The meeting was cancelled</button>
+      <button class="qopt" onclick="cQ(this,3,true)">B. The venue changed to County Hall and the time changed to 2 PM</button>
+      <button class="qopt" onclick="cQ(this,3,false)">C. A new speaker was added to the meeting</button>
+      <button class="qopt" onclick="cQ(this,3,false)">D. The meeting moved to Saturday</button>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">5. Why is it important to compare messages after the role play?</div>
+      <button class="qopt" onclick="cQ(this,4,false)">A. To find who spoke for longer</button>
+      <button class="qopt" onclick="cQ(this,4,true)">B. To identify missing information and improve accuracy in taking messages</button>
+      <button class="qopt" onclick="cQ(this,4,false)">C. To decide who was more polite</button>
+      <button class="qopt" onclick="cQ(this,4,false)">D. To copy each other's work</button>
+    </div>
+    <div id="qScore" style="display:none;padding:11px;border-radius:9px;font-size:13.5px;font-weight:900;text-align:center;margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ci">✅</div>Self-Assessment — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="selfLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="selfList">
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain when and why a telephone message is needed.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can list the 6 key components of a complete telephone message.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I successfully wrote the message from the audio recording with my pair.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I practised leaving and taking messages politely in the role play.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I compared my written message with my partner's and noted differences.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I acknowledge the importance of accuracy and politeness in telephone messages.</div></div>
+    </div>
+    <div id="selfRes" style="margin-top:10px;font-size:13px;font-weight:800;text-align:center;color:var(--pu)"></div>
+    <button class="savebtn sb-g" onclick="saveSelf()">💾 Save My Self-Assessment</button>
+    <div class="saved-msg" id="selfSaved">✅ Saved!</div>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="nb on" onclick="go('intro')"><span class="ico">🎯</span>Intro</button>
+  <button class="nb" onclick="go('s1')"><span class="ico">🎬</span>Step 1</button>
+  <button class="nb" onclick="go('s2')"><span class="ico">🔍</span>Step 2</button>
+  <button class="nb" onclick="go('s3')"><span class="ico">📝</span>Step 3</button>
+  <button class="nb" onclick="go('s4')"><span class="ico">🔄</span>Step 4</button>
+  <button class="nb" onclick="go('ass')"><span class="ico">✅</span>Assess</button>
+</div>
+<div style="height:8px"></div>
+<div class="footer"><strong>Developed by Tr. Sobe</strong> — Atiaket Junior School, Grade 8 English, 2026<small>© Original material. All rights reserved. Unauthorised reproduction or distribution is not permitted.</small></div>
+
+<script>
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var fdb=null;
+function fbInit(){try{if(typeof firebase==="undefined")return;if(!firebase.apps.length)firebase.initializeApp(FBC);fdb=firebase.database();}catch(e){}}
+function now(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return{t:p(n.getHours())+":"+p(n.getMinutes()),d:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())};}
+function fbSet(path,data){if(!fdb)return;fdb.ref(path).set(data).catch(function(){});}
+var SECS={intro:"sec-intro",s1:"sec-s1",s2:"sec-s2",s3:"sec-s3",s4:"sec-s4",ass:"sec-ass"};
+function go(id){Object.keys(SECS).forEach(function(k){document.getElementById(SECS[k]).classList.toggle("on",k===id);});document.querySelectorAll(".tb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});document.querySelectorAll(".nb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});window.scrollTo({top:0,behavior:"smooth"});}
+
+/* VIDEO */
+var vCur=0;
+function startVid(){document.getElementById("vidArea").style.display="block";document.getElementById("vs0").classList.add("on");document.getElementById("vidArea").scrollIntoView({behavior:"smooth"});var n=now();fbSet("L3/step1/video_started",{t:n.t,d:n.d});}
+document.addEventListener("scroll",function(){if(!document.getElementById("sec-s1").classList.contains("on"))return;if(vCur<2){var sl=document.getElementById("vs"+vCur);if(sl){var r=sl.getBoundingClientRect();if(r.bottom<window.innerHeight+100){vCur++;document.getElementById("vs"+vCur).classList.add("on");}}}});
+
+/* GROUP TABS */
+var gData={};
+function sg(key,n){document.getElementById(key+"tabs").querySelectorAll(".gt").forEach(function(b,i){b.classList.toggle("on",i===n-1);});document.getElementById(key+"panels").querySelectorAll(".gpanel").forEach(function(p,i){p.classList.toggle("on",i===n-1);});}
+
+/* STEP 2 — 5 GROUP PANELS */
+var COMPS=["📅 Date and Time of the Call","👤 Caller's Full Name","📞 Caller's Contact Number","💬 Content of the Message","⚡ Action Required","✍ Name of Person Who Took the Message"];
+var CEXP=["When the call was received — exact date and time.","The full name of the person who called.","Telephone number so the receiver can call back.","A brief, clear summary of what the caller said.","Should the receiver call back? Attend something? No reply needed?","Who answered and recorded the message — sign or write your name."];
+var grpHits={};
+function buildG2(){var panels=document.createElement("div");panels.id="g2panels";document.getElementById("g2panels")?document.getElementById("g2panels").replaceWith(panels):document.querySelector("#sec-s2 .card").appendChild(panels);document.getElementById("gt2").id="g2tabs";for(var g=1;g<=5;g++){var p=document.createElement("div");p.className="gpanel"+(g===1?" on":"");var html='<div class="gpbar"><span id="gbar'+g+'" style="font-size:12px;font-weight:800">0 of 6 found</span><div class="gpb"><div class="gpbf" id="gpbf'+g+'" style="width:0%"></div></div></div><div class="complist">';for(var c=0;c<6;c++){html+='<div class="compitem" onclick="hitC(this,'+g+','+c+')"><div class="cnum">'+(c+1)+'</div><div><div class="cname">'+COMPS[c]+'</div><div class="cexp">'+CEXP[c]+'</div></div></div>';}html+='</div><button class="gsavebtn" onclick="saveG2('+g+')">💾 Save Group '+g+' Findings</button><div class="gsaved" id="gs'+g+'">✅ Group '+g+' findings saved!</div>';p.innerHTML=html;panels.appendChild(p);}document.getElementById("g2tabs").querySelectorAll(".gt").forEach(function(b,i){b.setAttribute("onclick","sg('g2',"+(i+1)+")");;});}
+function hitC(el,g,c){var k=g+"-"+c;if(grpHits[k])return;grpHits[k]=true;el.classList.add("hit");var cnt=Object.keys(grpHits).filter(function(k2){return k2.startsWith(g+"-");}).length;document.getElementById("gbar"+g).textContent=cnt+" of 6 found";document.getElementById("gpbf"+g).style.width=(cnt/6*100)+"%";}
+function saveG2(g){var cnt=Object.keys(grpHits).filter(function(k){return k.startsWith(g+"-");}).length;document.getElementById("gs"+g).style.display="block";setTimeout(function(){document.getElementById("gs"+g).style.display="none";},3000);var n=now();fbSet("L3/step2/group"+g,{found:cnt+"/6",t:n.t,d:n.d});}
+buildG2();
+
+/* AUDIO */
+var syn=window.speechSynthesis,apOn=false,apSpeed=0.9;
+var LINES=[
+  {t:"Good morning. May I please speak to Mary?",s:"c"},
+  {t:"Good morning. I am afraid Mary is not available at the moment. May I take a message, please?",s:"r"},
+  {t:"Yes please. My name is James Omondi. I am calling about the human rights meeting this Friday at the County Hall.",s:"c"},
+  {t:"I see. Could you kindly give me your contact number, please, so Mary can call you back?",s:"r"},
+  {t:"Certainly. My number is zero seven one two, three four five, six seven eight.",s:"c"},
+  {t:"Thank you. Is there anything specific you would like Mary to know?",s:"r"},
+  {t:"Yes. The venue has changed from the Community Hall to the County Hall, and the meeting starts at two o clock in the afternoon instead of ten in the morning.",s:"c"},
+  {t:"I will make sure Mary receives that message. Is there anything else?",s:"r"},
+  {t:"Please ask her to confirm attendance before Thursday. Thank you very much. Goodbye.",s:"c"},
+  {t:"I certainly will. Thank you for calling. Goodbye and have a lovely morning.",s:"r"}
+];
+function ring(cb){var A=window.AudioContext||window.webkitAudioContext;if(!A){cb();return;}var ctx=new A();function rng(st,d){[350,440].forEach(function(f){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type="sine";o.frequency.setValueAtTime(f,st);g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(0.25,st+0.03);g.gain.setValueAtTime(0.25,st+d-0.05);g.gain.linearRampToValueAtTime(0,st+d);o.start(st);o.stop(st+d);});}var now2=ctx.currentTime+0.1;rng(now2,.5);rng(now2+.85,.5);setTimeout(cb,(now2+1.6-ctx.currentTime)*1000);}
+function getV(c){var vs=syn.getVoices(),en=vs.filter(function(v){return v.lang.indexOf("en")===0;});var m=en.find(function(v){return /male|david|mark/i.test(v.name);});var f=en.find(function(v){return /female|zira|samantha|karen/i.test(v.name);});return(c&&m)?m:(!c&&f)?f:(en[0]||vs[0]);}
+function apStart(){if(!("speechSynthesis" in window)){document.getElementById("apStat").textContent="Not supported.";return;}apHalt();apOn=true;document.getElementById("apPlay").disabled=true;document.getElementById("apStop").disabled=false;document.getElementById("apStat").innerHTML="📳 <strong>Ring ring…</strong>";var n=now();fbSet("L3/step3/audio_played",{t:n.t,d:n.d});ring(function(){if(!apOn)return;document.getElementById("apStat").textContent="📞 Connected! Fill in your message pad!";setTimeout(function(){apLine(0);},500);});}
+function apLine(i){if(!apOn||i>=LINES.length){apDone();return;}for(var j=0;j<10;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}var el=document.getElementById("cl"+i);if(el){el.classList.add("lit");el.scrollIntoView({behavior:"smooth",block:"nearest"});}document.getElementById("apFill").style.width=((i+1)/10*100)+"%";var u=new SpeechSynthesisUtterance(LINES[i].t);u.rate=apSpeed;u.pitch=LINES[i].s==="c"?0.94:1.18;var v=getV(LINES[i].s==="c");if(v)u.voice=v;u.onend=function(){if(apOn)setTimeout(function(){apLine(i+1);},430);};u.onerror=function(){if(apOn)setTimeout(function(){apLine(i+1);},430);};syn.speak(u);}
+function apHalt(){apOn=false;syn.cancel();for(var j=0;j<10;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}document.getElementById("apFill").style.width="0%";document.getElementById("apPlay").disabled=false;document.getElementById("apStop").disabled=true;document.getElementById("apStat").textContent="Stopped. Fill in your message pad below.";}
+function apDone(){apOn=false;for(var j=0;j<10;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}document.getElementById("apFill").style.width="100%";document.getElementById("apPlay").disabled=false;document.getElementById("apStop").disabled=true;document.getElementById("apStat").textContent="Done! Complete your pair's message pad below.";}
+if(syn.onvoiceschanged!==undefined)syn.onvoiceschanged=function(){syn.getVoices();};
+
+/* MESSAGE PADS — 10 pairs, shown one at a time */
+function showMsgPad(){var pn=document.getElementById("pairSel3").value;var area=document.getElementById("msgPadArea");if(!pn){area.innerHTML="";return;}var pk=pn.replace(" ","");area.innerHTML='<div class="msgpad"><div class="mphd"><h3>📝 '+pn+' — Message Pad</h3><p>Fill in every component as you listen to the audio.</p></div><div class="mpbody"><div class="mf"><label>Date &amp; Time of Call</label><input type="text" id="mdate-'+pk+'" placeholder="e.g. Wednesday, 7 January 2026 — 9:15 AM"/></div><div class="mf"><label>This Message is For</label><input type="text" id="mfor-'+pk+'" placeholder="Who is this message for?"/></div><div class="mf"><label>Caller\'s Full Name</label><input type="text" id="mname-'+pk+'" placeholder="Full name of the caller"/></div><div class="mf"><label>Caller\'s Contact Number</label><input type="text" id="mnum-'+pk+'" placeholder="Telephone number given by caller"/></div><div class="mf"><label>Message — Key Information</label><textarea id="mmsg-'+pk+'" placeholder="Venue change, new time, etc.…"></textarea></div><div class="mf"><label>Action Required</label><input type="text" id="mact-'+pk+'" placeholder="e.g. Please confirm attendance before Thursday"/></div><div class="mf"><label>Message Taken By</label><input type="text" id="mtakn-'+pk+'" placeholder="Your name"/></div><button class="msavebtn" onclick="saveMsg(\''+pn+'\',\''+pk+'\')">💾 Save '+pn+'\'s Message</button><div class="msaved" id="msvd-'+pk+'">✅ Saved!</div></div></div>';}
+function saveMsg(pn,pk){var nm=document.getElementById("mname-"+pk).value.trim(),msg=document.getElementById("mmsg-"+pk).value.trim();if(!nm||!msg){alert("Please fill in caller name and message content.");return;}document.getElementById("msvd-"+pk).style.display="block";setTimeout(function(){document.getElementById("msvd-"+pk).style.display="none";},3000);var n=now();fbSet("L3/step3/"+pn.replace(" ",""),{callerName:nm,msgLen:msg.length+"ch",t:n.t,d:n.d});}
+
+/* STEP 4 — 10 pair sections with compare + recording */
+var MR={},RC={},RT={};
+function buildS4(){var g=document.getElementById("s4Grid");for(var p=1;p<=10;p++){var scen=p<=5?"A":"B";var div=document.createElement("div");div.className="psection";div.id="ps"+p;div.innerHTML='<div class="pstop"><span class="ptag">👥 Pair '+p+' — Scenario '+scen+'</span><span class="pdone" id="pd'+p+'">Not yet done</span></div><div class="compare2"><div class="cside"><div class="csidehd" style="background:var(--pu)">📞 Message Left (Caller)</div><div class="csidebdy"><label>Key info you gave as caller:</label><textarea id="ca'+p+'" placeholder="What did you say as the caller?"></textarea></div></div><div class="cside"><div class="csidehd" style="background:var(--t)">📱 Message Written (Receiver)</div><div class="csidebdy"><label>What you wrote as receiver:</label><textarea id="re'+p+'" placeholder="What did you write down?"></textarea></div></div></div><div class="rslots"><div class="rslot" id="rs-'+p+'a"><div class="rtop"><span class="rtag">📞 Caller</span><span class="rtimer" id="rt-'+p+'a">0:00</span></div><div class="rbtns"><button class="rbtn rstart" onclick="startR(\''+p+'a\')">🎙 Record</button><button class="rbtn rstop" onclick="stopR(\''+p+'a\')" disabled>⏹ Stop</button></div><div class="rplay" id="rp-'+p+'a"></div><div class="rstat" id="rstat-'+p+'a">Ready</div></div><div class="rslot" id="rs-'+p+'b"><div class="rtop"><span class="rtag">📱 Receiver</span><span class="rtimer" id="rt-'+p+'b">0:00</span></div><div class="rbtns"><button class="rbtn rstart" onclick="startR(\''+p+'b\')">🎙 Record</button><button class="rbtn rstop" onclick="stopR(\''+p+'b\')" disabled>⏹ Stop</button></div><div class="rplay" id="rp-'+p+'b"></div><div class="rstat" id="rstat-'+p+'b">Ready</div></div></div>';g.appendChild(div);}}
+buildS4();
+
+function startR(id){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setStat(id,"Mic not supported.");return;}navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){var sl=document.getElementById("rs-"+id);sl.classList.add("rec");sl.classList.remove("done");sl.querySelector(".rstart").disabled=true;sl.querySelector(".rstop").disabled=false;document.getElementById("rp-"+id).innerHTML="";RC[id]=[];var mr=new MediaRecorder(stream);MR[id]=mr;mr.ondataavailable=function(e){if(e.data.size>0)RC[id].push(e.data);};mr.onstop=function(){stream.getTracks().forEach(function(t){t.stop();});var blob=new Blob(RC[id],{type:"audio/webm"});var au=document.createElement("audio");au.controls=true;au.src=URL.createObjectURL(blob);document.getElementById("rp-"+id).appendChild(au);var sl2=document.getElementById("rs-"+id);sl2.classList.remove("rec");sl2.classList.add("done");sl2.querySelector(".rstart").disabled=false;sl2.querySelector(".rstop").disabled=true;setStat(id,"Saved!","done");clearInterval(RT[id]);var pn=id.replace(/[ab]$/,""),rl=id.slice(-1)==="a"?"Caller":"Receiver";var el=document.getElementById("rt-"+id);var dur=el?el.textContent:"0:00";var pts=dur.split(":");var sec=parseInt(pts[0]||0)*60+parseInt(pts[1]||0);var n=now();fbSet("L3/step4/pair"+pn+"/"+rl,{dur:sec+"s",t:n.t,d:n.d});if(document.querySelectorAll("#ps"+pn+" .rslot.done").length>=2){document.getElementById("ps"+pn).classList.add("done");var pd=document.getElementById("pd"+pn);if(pd)pd.textContent="✅ Done!";}};mr.start();var sec=0;setStat(id,"Recording…","rec");RT[id]=setInterval(function(){sec++;var m=Math.floor(sec/60),s2=sec%60;var el=document.getElementById("rt-"+id);if(el)el.textContent=m+":"+(s2<10?"0":"")+s2;},1000);}).catch(function(e){setStat(id,e.name==="NotAllowedError"?"Mic denied — use https:// URL.":"Cannot access mic.");});}
+function stopR(id){if(MR[id]&&MR[id].state!=="inactive")MR[id].stop();clearInterval(RT[id]);}
+function setStat(id,msg,type){var el=document.getElementById("rstat-"+id);if(!el)return;el.textContent=msg;el.style.color=type==="rec"?"var(--r)":type==="done"?"var(--g)":"var(--sub)";}
+
+var qAns={};
+function cQ(btn,n,correct){if(qAns[n]!==undefined)return;qAns[n]=correct;btn.parentElement.querySelectorAll(".qopt").forEach(function(o){o.disabled=true;});if(correct){btn.classList.add("right");}else{btn.classList.add("wrong");btn.parentElement.querySelectorAll(".qopt").forEach(function(o){if(o.getAttribute("onclick").indexOf("true")!==-1)o.classList.add("right");});}var tot=5,done=Object.keys(qAns).length,score=Object.values(qAns).filter(Boolean).length;if(done===tot){var sc=document.getElementById("qScore");sc.style.display="block";sc.style.background=score>=4?"var(--gl)":"var(--gol)";sc.style.color=score>=4?"var(--g)":"#4a2c00";sc.textContent="Score: "+score+"/"+tot+" — "+(score===5?"Excellent!":score>=4?"Very good!":score>=3?"Good effort!":"Keep practising!");var ln=document.getElementById("assLn").value;var n=now();if(ln)fbSet("L3/assess/comp/"+ln.replace(" ","_"),{score:score+"/"+tot,t:n.t,d:n.d});}}
+function togSelf(row){var box=row.querySelector(".chkbox");box.classList.toggle("on");var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;var res=document.getElementById("selfRes");if(done===0)res.textContent="";else if(done===tot)res.textContent="🌟 All objectives achieved!";else res.textContent=done+"/"+tot+" objectives achieved.";}
+function saveSelf(){var ln=document.getElementById("selfLn").value;if(!ln){alert("Select your name first.");return;}var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;document.getElementById("selfSaved").style.display="block";setTimeout(function(){document.getElementById("selfSaved").style.display="none";},3000);var n=now();fbSet("L3/assess/self/"+ln.replace(" ","_"),{achieved:done+"/"+tot,t:n.t,d:n.d});}
+
+window.addEventListener("load",function(){fbInit();});
+</script>
+</body>
+</html>

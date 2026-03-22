@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>L2 Tuesday | Telephone Etiquette | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#cbd5e1;--bg:#f1f5f9;--wh:#fff;
+--b:#1d4ed8;--bl:#dbeafe;--t:#0f766e;--tl:#ccfbf1;
+--g:#15803d;--gl:#dcfce7;--r:#dc2626;--rl:#fee2e2;
+--go:#d97706;--gol:#fef3c7;--pu:#7c3aed;--pul:#ede9fe;
+--sh:0 2px 16px rgba(0,0,0,.08);--ra:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px}
+
+.hero{background:linear-gradient(135deg,#0c1d5e,#1d4ed8 60%,#0f766e);padding:24px 16px 20px;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+.hero h1{font-size:clamp(18px,5vw,26px);font-weight:900;line-height:1.22;margin-bottom:4px}
+.hero h1 span{color:#7dd3fc}
+.hero p{font-size:12px;opacity:.86;line-height:1.6}
+.roll{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700}
+
+.tabs{display:flex;overflow-x:auto;background:var(--wh);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:90;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:11px 13px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;border:none;background:none;border-bottom:3px solid transparent;cursor:pointer;color:var(--sub);white-space:nowrap}
+.tb.on{color:var(--b);border-bottom-color:var(--b)}
+
+.sec{display:none;padding:14px}
+.sec.on{display:block;animation:fadeup .24s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.card{background:var(--wh);border-radius:var(--ra);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.ch{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--b);display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.ch .ci{width:23px;height:23px;background:var(--bl);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+.sh{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sn{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff}
+.s1c{background:#1d4ed8}.s2c{background:#0f766e}.s3c{background:#d97706}.s4c{background:#7c3aed}
+.st{font-size:13.5px;font-weight:800}
+.ss{font-size:11px;color:var(--sub);font-weight:700;margin-top:2px}
+.sd{font-size:12.5px;color:var(--sub);line-height:1.7;margin-bottom:10px}
+
+/* ORG BADGE */
+.org{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 11px;font-size:11px;font-weight:800;margin-bottom:9px;color:#fff}
+.org-class{background:#1d4ed8}
+.org-pair{background:#d97706}
+.org-group{background:#0f766e}
+.org-indiv{background:#7c3aed}
+
+/* INFO BOXES */
+.box{border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin-bottom:10px}
+.box-go{background:var(--gol);border-left:4px solid var(--go);color:#4a2c00}
+.box-t{background:var(--tl);border-left:4px solid var(--t);color:#003b35}
+.box-b{background:var(--bl);border-left:4px solid var(--b);color:#0c1d5e}
+.box-g{background:var(--gl);border-left:4px solid var(--g);color:#0a3018}
+
+/* ROLL SUMMARY GRID */
+.rollgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;text-align:center;margin-bottom:4px}
+.rollcell{border-radius:10px;padding:10px 4px}
+.rollcell .num{font-size:22px;font-weight:900}
+.rollcell .lbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+
+/* PICTURES */
+.pic2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.pc{border-radius:11px;overflow:hidden;box-shadow:var(--sh)}
+.plb{text-align:center;font-size:10.5px;font-weight:800;padding:6px;background:var(--bg);color:var(--sub)}
+
+/* COMPARE TABLE */
+.ctbl{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;font-size:12px;margin-bottom:10px}
+.ctbl th{padding:8px 10px;font-size:9.5px;font-weight:800;text-transform:uppercase;text-align:left}
+.ctbl th.a{background:var(--b);color:#fff}
+.ctbl th.b{background:var(--g);color:#fff}
+.ctbl td{padding:8px 10px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top}
+.ctbl tr:last-child td{border-bottom:none}
+.ctbl tr:nth-child(even) td{background:#f8faff}
+
+/* AUDIO PLAYER */
+.ap{background:linear-gradient(135deg,#0c1d5e,#1d4ed8);color:#fff;border-radius:var(--ra);padding:15px;margin-bottom:11px}
+.at{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.as{font-size:11px;opacity:.8;margin-bottom:11px}
+.asp2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.aspk{background:rgba(255,255,255,.13);border-radius:9px;padding:9px;text-align:center}
+.aspk-i{font-size:22px;margin-bottom:2px}
+.aspk-n{font-size:11.5px;font-weight:800}
+.aspk-r{font-size:10px;opacity:.7}
+.arow{display:flex;gap:7px;margin-bottom:8px}
+.abt{flex:1;padding:10px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+.abt:disabled{opacity:.36;cursor:not-allowed}
+.aplay{background:#fff;color:var(--b)}
+.astop{background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.abar{height:4px;background:rgba(255,255,255,.22);border-radius:4px;margin-bottom:7px;overflow:hidden}
+.afill{height:100%;width:0%;background:#fff;border-radius:4px;transition:width .35s}
+.astat{font-size:11px;opacity:.82}
+.aspd{display:flex;align-items:center;gap:6px;font-size:11px;opacity:.82;margin-bottom:8px}
+.aspd select{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:3px 8px;font-family:'Nunito',sans-serif;font-size:11px;color:#fff;outline:none}
+
+/* CONVERSATION */
+.cl{display:flex;gap:8px;padding:5px;border-radius:7px;margin-bottom:4px;align-items:flex-start;transition:background .2s}
+.cl.lit{background:rgba(255,255,255,.16)}
+.cav{font-size:16px;width:23px;flex-shrink:0;text-align:center}
+.cwho{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;opacity:.68;margin-bottom:1px}
+.ctxt{font-size:12px;line-height:1.55}
+.cl.c .cwho{color:#93c5fd}
+.cl.r .cwho{color:#fde68a}
+.pw{background:#fbbf24;color:#3d1d00;font-weight:800;border-radius:4px;padding:0 4px;font-size:11.5px;cursor:pointer;transition:all .15s}
+.pw.hit{background:#fde68a;outline:2px solid #fbbf24}
+
+/* POLITE CHIPS */
+.pchips{display:flex;flex-wrap:wrap;gap:6px;min-height:24px;margin-bottom:8px}
+.pchip{background:var(--gol);border:1.5px solid var(--go);border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:800;color:#4a2c00}
+
+/* LEARNER SELECT */
+.lsel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.lsel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.lsel select,.psel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+.psel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.psel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+
+/* FLASHCARD MATCH */
+.fcgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.fch{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--sub);text-align:center;margin-bottom:5px}
+.fcc{display:flex;flex-direction:column;gap:6px}
+.fc{background:var(--wh);border:2px solid var(--border);border-radius:11px;padding:9px 10px;cursor:pointer;font-size:12px;line-height:1.5;transition:all .18s;user-select:none}
+.fc:hover{border-color:var(--t)}
+.fc.sel{border-color:var(--t);background:var(--tl)}
+.fc.ok{border-color:var(--g);background:var(--gl);pointer-events:none}
+.fc.bad{border-color:var(--r);background:var(--rl);animation:shk .35s}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fclb{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-bottom:3px}
+.fcst{text-align:center;padding:9px;border-radius:9px;font-size:12.5px;font-weight:800;display:none;margin-top:6px}
+.fcst.on{display:block}
+.fcst.ok{background:var(--gl);color:var(--g)}
+.fcst.pt{background:var(--gol);color:#4a2c00}
+.celeb{display:none;background:linear-gradient(135deg,#0a3018,#15803d);color:#fff;border-radius:13px;padding:14px;text-align:center;margin-bottom:10px}
+.celeb.on{display:block;animation:fadeup .3s ease}
+.celeb h3{font-size:15px;font-weight:900;margin-bottom:4px}
+.corrconv{display:none;background:var(--wh);border-radius:11px;padding:12px;box-shadow:var(--sh);margin-top:8px}
+.corrconv.on{display:block}
+.corrconv h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--g);margin-bottom:8px}
+.ccl{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5;align-items:flex-start}
+.ccl:last-child{border-bottom:none}
+.ccn{width:20px;height:20px;flex-shrink:0;background:var(--g);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
+.ccwho{font-size:9px;font-weight:800;text-transform:uppercase;margin-bottom:1px}
+.ccc{color:var(--b)}.ccr{color:var(--t)}
+.resetbtn{width:100%;padding:10px;background:var(--t);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:7px}
+
+/* PAIR PERFORMANCE GRID — 10 pairs, 3 scenarios */
+.scen{border-radius:var(--ra);padding:14px;color:#fff;margin-bottom:8px}
+.scen h3{font-size:13px;font-weight:900;margin-bottom:5px}
+.scen p{font-size:12px;line-height:1.6;opacity:.92}
+.roles{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.role{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:800}
+
+.pairgrid{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.prow{background:var(--bg);border:2px solid var(--border);border-radius:11px;padding:10px}
+.prow.done{border-color:var(--g);background:var(--gl)}
+.prowt{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ptag{font-size:11.5px;font-weight:800;color:var(--b)}
+.pst{font-size:10px;font-weight:800;color:var(--sub)}
+.prow.done .pst{color:var(--g)}
+.rslots{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.rslot{background:var(--wh);border-radius:9px;padding:8px;border:2px solid var(--border)}
+.rslot.rec{border-color:var(--r);background:var(--rl);animation:pulse 1.2s infinite}
+.rslot.done{border-color:var(--g);background:var(--gl)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+.rtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.rtag{font-size:9.5px;font-weight:800;text-transform:uppercase;color:var(--sub)}
+.rtimer{font-size:11px;font-weight:800;color:var(--r)}
+.rslot.done .rtimer{color:var(--g)}
+.rbtns{display:flex;gap:4px;margin-bottom:5px}
+.rbtn{flex:1;padding:6px 3px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:10.5px;font-weight:800;cursor:pointer}
+.rstart{background:var(--r);color:#fff}
+.rstart:disabled{background:#cbd5e1;cursor:not-allowed}
+.rstop{background:var(--bg);color:var(--sub);border:1.5px solid var(--border)}
+.rstop:disabled{opacity:.4;cursor:not-allowed}
+.rplay audio{width:100%;height:30px;border-radius:7px}
+.rstat{font-size:9.5px;color:var(--sub);text-align:center;font-weight:700}
+.rslot.rec .rstat{color:var(--r)}
+.rslot.done .rstat{color:var(--g)}
+
+/* ASSESS */
+.qopt{padding:9px 11px;border-radius:9px;border:2px solid var(--border);background:var(--wh);font-size:12.5px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;margin-bottom:6px;display:block;font-weight:700;transition:border-color .15s}
+.qopt:hover{border-color:var(--b)}.qopt.right{background:var(--gl);border-color:var(--g);color:var(--g)}.qopt.wrong{background:var(--rl);border-color:var(--r);color:var(--r)}
+.chkrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.chkrow:last-child{border-bottom:none}
+.chkbox{width:21px;height:21px;flex-shrink:0;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;transition:all .18s}
+.chkbox.on{background:var(--b);border-color:var(--b);color:#fff}
+.chktxt{font-size:12.5px;line-height:1.5;font-weight:700}
+
+.savebtn{width:100%;padding:10px;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:#fff;margin-top:9px}
+.savebtn-b{background:var(--b)}.savebtn-g{background:var(--g)}
+.saved-msg{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;box-shadow:0 -3px 14px rgba(0,0,0,.07);z-index:99}
+.nb{flex:1;border:none;background:none;cursor:pointer;padding:8px 2px 12px;font-family:'Nunito',sans-serif;font-size:9.5px;font-weight:800;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nb .ico{font-size:18px}
+.nb.on{color:var(--b)}
+.footer{background:#0c1222;color:rgba(255,255,255,.6);text-align:center;padding:12px 16px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.5;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-badge">📞 Grade 8 · Lesson 2 · Tuesday · Week 1</div>
+  <h1>Telephone Etiquette:<br><span>Polite Language</span></h1>
+  <p>Theme: Human Rights · Listening &amp; Speaking · 9:00–9:40 AM</p>
+  <div class="roll">
+    <span class="rc">🏫 Atiaket Junior School</span>
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">👥 10 Pairs</span>
+    <span class="rc">🔵 5 Groups</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="go('intro')">🎯 Intro</button>
+  <button class="tb" onclick="go('s1')">🖼 Step 1</button>
+  <button class="tb" onclick="go('s2')">🔊 Step 2</button>
+  <button class="tb" onclick="go('s3')">🃏 Step 3</button>
+  <button class="tb" onclick="go('s4')">🎭 Step 4</button>
+  <button class="tb" onclick="go('ass')">✅ Assess</button>
+</div>
+
+<!-- INTRO -->
+<div class="sec on" id="sec-intro">
+  <div class="card">
+    <div class="ch"><div class="ci">📋</div>Organisation — 20 Learners</div>
+    <div class="rollgrid">
+      <div class="rollcell" style="background:var(--bl)"><div class="num" style="color:var(--b)">20</div><div class="lbl">Learners</div></div>
+      <div class="rollcell" style="background:var(--tl)"><div class="num" style="color:var(--t)">10</div><div class="lbl">Pairs</div></div>
+      <div class="rollcell" style="background:var(--gol)"><div class="num" style="color:var(--go)">5</div><div class="lbl">Groups</div></div>
+      <div class="rollcell" style="background:var(--gl)"><div class="num" style="color:var(--g)">1</div><div class="lbl">Class</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🎯</div>Learning Outcomes</div>
+    <ul style="list-style:none">
+      <li style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6;font-weight:700"><span style="flex-shrink:0;width:21px;height:21px;background:var(--b);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900">a</span>Identify polite words and phrases in telephone conversations.</li>
+      <li style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6;font-weight:700"><span style="flex-shrink:0;width:21px;height:21px;background:var(--b);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900">b</span>Conduct a telephone conversation using polite words and expressions.</li>
+      <li style="display:flex;gap:8px;padding:8px 0;font-size:13px;line-height:1.6;font-weight:700"><span style="flex-shrink:0;width:21px;height:21px;background:var(--b);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900">c</span>Acknowledge the significance of etiquette in telephone conversations.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🗂</div>Steps at a Glance</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;font-weight:700"><span class="org org-class">🌍 CLASS</span>Step 1 — Observe picture; share experiences; compare telephone vs face-to-face</div>
+      <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;font-weight:700"><span class="org org-class">🌍 CLASS</span>Step 2 — Listen to audio recording; each learner taps polite words (20 individual)</div>
+      <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;font-weight:700"><span class="org org-pair">👥 10 PAIRS</span>Step 3 — Match jumbled flashcard conversation; write correct version</div>
+      <div style="display:flex;gap:9px;align-items:center;font-size:12.5px;font-weight:700"><span class="org org-pair">👥 10 PAIRS</span>Step 4 — Role play scenario in front of the class; record voices</div>
+    </div>
+  </div>
+  <div class="box box-go"><strong>Key Inquiry Questions:</strong><br>1. Why should one be polite when speaking over the telephone?<br>2. How do we ensure politeness in a telephone conversation?</div>
+</div>
+
+<!-- STEP 1 — CLASS -->
+<div class="sec" id="sec-s1">
+  <div class="card">
+    <div class="sh"><div class="sn s1c">1</div><div><div class="st">Observe the Picture &amp; Share Experiences</div><div class="ss"><span class="org org-class" style="font-size:10px;padding:2px 8px">🌍 WHOLE CLASS</span></div></div></div>
+    <p class="sd">The teacher shows the pictures. Look at both carefully — a telephone conversation and a face-to-face conversation. Share your personal experience of using a telephone and discuss differences with the class.</p>
+  </div>
+  <div class="card">
+    <div class="pic2">
+      <div class="pc">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 185" style="width:100%;display:block">
+          <rect width="280" height="185" fill="#dbeafe"/>
+          <rect x="0" y="42" width="118" height="143" fill="#fef9c3"/><rect x="0" y="42" width="118" height="7" fill="#ca8a04"/>
+          <ellipse cx="52" cy="102" rx="16" ry="17" fill="#fcd9a0"/><ellipse cx="52" cy="88" rx="11" ry="8" fill="#78350f"/>
+          <rect x="41" y="117" width="22" height="32" rx="6" fill="#1d4ed8"/>
+          <rect x="30" y="121" width="11" height="21" rx="5" fill="#fcd9a0"/><rect x="62" y="121" width="11" height="21" rx="5" fill="#fcd9a0"/>
+          <rect x="62" y="93" width="13" height="19" rx="3" fill="#1e293b"/><rect x="64" y="95" width="9" height="14" rx="2" fill="#7dd3fc"/>
+          <rect x="79" y="63" width="90" height="22" rx="8" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+          <polygon points="90,85 83,97 103,85" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/><polygon points="91,85 84,95 102,85" fill="#fff"/>
+          <text x="124" y="77" text-anchor="middle" font-size="7.5" font-family="Georgia" fill="#1d4ed8" font-weight="700">May I please speak</text>
+          <text x="124" y="86" text-anchor="middle" font-size="7.5" font-family="Georgia" fill="#1d4ed8" font-weight="700">to Mary, please?</text>
+          <rect x="162" y="42" width="118" height="143" fill="#dcfce7"/><rect x="162" y="42" width="118" height="7" fill="#16a34a"/>
+          <ellipse cx="215" cy="102" rx="16" ry="17" fill="#fcd9a0"/><ellipse cx="215" cy="87" rx="11" ry="9" fill="#431407"/>
+          <rect x="204" y="117" width="22" height="32" rx="6" fill="#be185d"/>
+          <rect x="193" y="121" width="11" height="21" rx="5" fill="#fcd9a0"/><rect x="225" y="121" width="11" height="21" rx="5" fill="#fcd9a0"/>
+          <rect x="193" y="93" width="13" height="19" rx="3" fill="#1e293b"/><rect x="195" y="95" width="9" height="14" rx="2" fill="#7dd3fc"/>
+          <text x="52" y="178" text-anchor="middle" font-size="9" font-family="Georgia" fill="#1d4ed8" font-weight="700">James — Caller</text>
+          <text x="215" y="178" text-anchor="middle" font-size="9" font-family="Georgia" fill="#16a34a" font-weight="700">Mary — Receiver</text>
+          <text x="140" y="32" text-anchor="middle" font-size="10" font-family="Georgia" fill="#0f172a" font-weight="900">📞 Telephone Conversation</text>
+        </svg>
+        <div class="plb">Picture 1 — On the Phone</div>
+      </div>
+      <div class="pc">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 185" style="width:100%;display:block">
+          <rect width="280" height="185" fill="#dcfce7"/>
+          <rect x="0" y="138" width="280" height="47" fill="#bbf7d0"/>
+          <rect x="218" y="99" width="8" height="44" rx="3" fill="#92400e"/><ellipse cx="222" cy="88" rx="22" ry="24" fill="#15803d"/>
+          <ellipse cx="90" cy="98" rx="15" ry="17" fill="#fcd9a0"/><ellipse cx="90" cy="84" rx="11" ry="8" fill="#78350f"/>
+          <rect x="79" y="113" width="22" height="32" rx="6" fill="#1d4ed8"/>
+          <rect x="68" y="117" width="11" height="21" rx="5" fill="#fcd9a0"/>
+          <rect x="100" y="117" width="18" height="9" rx="4" fill="#fcd9a0"/>
+          <ellipse cx="165" cy="98" rx="15" ry="17" fill="#d6ad8a"/><ellipse cx="165" cy="83" rx="11" ry="9" fill="#431407"/>
+          <rect x="154" y="113" width="22" height="32" rx="6" fill="#be185d"/>
+          <rect x="143" y="117" width="11" height="21" rx="5" fill="#d6ad8a"/><rect x="175" y="117" width="11" height="21" rx="5" fill="#d6ad8a"/>
+          <line x1="105" y1="96" x2="150" y2="96" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="4,3"/>
+          <rect x="38" y="57" width="66" height="17" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+          <polygon points="68,74 60,86 80,74" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/><polygon points="69,74 61,84 79,74" fill="#fff"/>
+          <text x="71" y="69" text-anchor="middle" font-size="7.5" font-family="Georgia" fill="#1d4ed8" font-weight="700">Good morning!</text>
+          <rect x="178" y="57" width="68" height="17" rx="7" fill="#fff" stroke="#be185d" stroke-width="1.5"/>
+          <polygon points="200,74 192,86 212,74" fill="#fff" stroke="#be185d" stroke-width="1.5"/><polygon points="201,74 193,84 211,74" fill="#fff"/>
+          <text x="212" y="69" text-anchor="middle" font-size="7.5" font-family="Georgia" fill="#be185d" font-weight="700">Hello! How are you?</text>
+          <text x="90" y="180" text-anchor="middle" font-size="9" font-family="Georgia" fill="#1d4ed8" font-weight="700">Speaker 1</text>
+          <text x="165" y="180" text-anchor="middle" font-size="9" font-family="Georgia" fill="#be185d" font-weight="700">Speaker 2</text>
+          <text x="140" y="32" text-anchor="middle" font-size="10" font-family="Georgia" fill="#0f172a" font-weight="900">👥 Face-to-Face</text>
+        </svg>
+        <div class="plb">Picture 2 — Face to Face</div>
+      </div>
+    </div>
+    <table class="ctbl">
+      <thead><tr><th class="a">📞 Telephone</th><th class="b">👥 Face-to-Face</th></tr></thead>
+      <tbody>
+        <tr><td>❌ Cannot see each other</td><td>✅ See each other clearly</td></tr>
+        <tr><td>❌ No body language or gestures</td><td>✅ Body language helps meaning</td></tr>
+        <tr><td>✅ Can speak across any distance</td><td>❌ Must be in the same place</td></tr>
+        <tr><td>⚠ Must introduce yourself clearly</td><td>👋 Other person already sees you</td></tr>
+        <tr><td>⚠ Polite words carry the whole message</td><td>⚠ Tone and expressions also help</td></tr>
+      </tbody>
+    </table>
+    <div class="box box-go" style="margin-bottom:0"><strong>Class Discussion:</strong><br>1. Have you used a telephone? What did you say first?<br>2. Why does politeness matter even more on the telephone than face-to-face?<br>3. How is telephone etiquette connected to human rights?</div>
+  </div>
+</div>
+
+<!-- STEP 2 — CLASS listen; 20 individual polite-word taps -->
+<div class="sec" id="sec-s2">
+  <div class="card">
+    <div class="sh"><div class="sn s2c">2</div><div><div class="st">Listen to the Audio Recording</div><div class="ss"><span class="org org-class" style="font-size:10px;padding:2px 8px">🌍 CLASS listens</span> &nbsp; <span class="org org-indiv" style="font-size:10px;padding:2px 8px">👤 20 individual word lists</span></div></div></div>
+    <p class="sd">The teacher plays the audio for the whole class. Follow the conversation below. Tap every <strong>gold word</strong> to mark it as a polite expression. Then select your name and save your personal list.</p>
+  </div>
+  <div class="card">
+    <div class="lsel"><label>Select your name to save your polite word list</label>
+      <select id="learnerSel2">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+  </div>
+  <div class="ap">
+    <div class="at">📞 James calls Mary — Human Rights Meeting</div>
+    <div class="as">Audio recording with polite expressions — tap the gold words as you hear them</div>
+    <div class="asp2">
+      <div class="aspk"><div class="aspk-i">👦</div><div class="aspk-n">James</div><div class="aspk-r">Caller</div></div>
+      <div class="aspk"><div class="aspk-i">👧</div><div class="aspk-n">Mary</div><div class="aspk-r">Receiver</div></div>
+    </div>
+    <div class="aspd">🐢 Speed: <select id="apSpd" onchange="apSpeed=parseFloat(this.value)"><option value="0.78">Slow</option><option value="0.92" selected>Normal</option><option value="1.1">Fast</option></select></div>
+    <div class="arow">
+      <button class="abt aplay" id="apPlay" onclick="apStart()">▶ Play Recording</button>
+      <button class="abt astop" id="apStop" onclick="apHalt()" disabled>⏹ Stop</button>
+    </div>
+    <div class="abar"><div class="afill" id="apFill"></div></div>
+    <div class="astat" id="apStat">Tap Play to begin.</div>
+    <div id="convBody" style="margin-top:8px">
+      <div class="cl c" id="cl0"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Good morning.</span> This is James speaking. <span class="pw" onclick="tapPW(this)">May I please</span> speak to Mary?</div></div></div>
+      <div class="cl r" id="cl1"><div class="cav">👧</div><div><div class="cwho">Mary — Receiver</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Good morning,</span> James! Mary speaking. How are you?</div></div></div>
+      <div class="cl c" id="cl2"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt">I am fine, <span class="pw" onclick="tapPW(this)">thank you.</span> I am calling about the human rights meeting, <span class="pw" onclick="tapPW(this)">if you do not mind.</span></div></div></div>
+      <div class="cl r" id="cl3"><div class="cav">👧</div><div><div class="cwho">Mary — Receiver</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Of course!</span> The meeting is on Friday at the community hall at two o'clock.</div></div></div>
+      <div class="cl c" id="cl4"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Could you kindly</span> tell me what to bring, <span class="pw" onclick="tapPW(this)">please?</span></div></div></div>
+      <div class="cl r" id="cl5"><div class="cav">👧</div><div><div class="cwho">Mary — Receiver</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Certainly!</span> Please bring a notebook and your identification card.</div></div></div>
+      <div class="cl c" id="cl6"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Thank you so much</span> for your help, Mary.</div></div></div>
+      <div class="cl r" id="cl7"><div class="cav">👧</div><div><div class="cwho">Mary — Receiver</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">You are most welcome.</span> Goodbye and have a lovely day!</div></div></div>
+      <div class="cl c" id="cl8"><div class="cav">👦</div><div><div class="cwho">James — Caller</div><div class="ctxt"><span class="pw" onclick="tapPW(this)">Goodbye!</span> Take care.</div></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">⭐</div>My Polite Expressions List</div>
+    <p style="font-size:12px;color:var(--sub);margin-bottom:8px;font-weight:700">Tap gold words above to collect them here.</p>
+    <div class="pchips" id="pchips"><span style="font-size:12px;color:var(--sub);font-weight:700">Tap the gold words in the conversation…</span></div>
+    <div id="pwCount" style="font-size:12px;color:var(--sub);text-align:center;margin-bottom:8px;font-weight:700">0 polite expressions identified</div>
+    <button class="savebtn savebtn-b" onclick="savePW()">💾 Save My Word List</button>
+    <div class="saved-msg" id="pwSaved">✅ Word list saved!</div>
+    <div class="box box-b" style="margin-top:10px;margin-bottom:0"><strong>In your exercise book:</strong> Write every polite expression you found. Then write one new telephone sentence of your own using each expression.</div>
+  </div>
+</div>
+
+<!-- STEP 3 — 10 PAIRS flashcard match -->
+<div class="sec" id="sec-s3">
+  <div class="card">
+    <div class="sh"><div class="sn s3c">3</div><div><div class="st">Match the Jumbled Flashcards</div><div class="ss"><span class="org org-pair" style="font-size:10px;padding:2px 8px">👥 10 PAIRS</span></div></div></div>
+    <p class="sd">Work with your partner. The lines of a telephone conversation are jumbled and split. Tap a <strong>Caller</strong> card on the left, then tap the correct <strong>Receiver</strong> response on the right. When all pairs match, write the correct conversation in your exercise books.</p>
+  </div>
+  <div class="card">
+    <div class="psel"><label>Select your pair number</label>
+      <select id="pairSel3" onchange="logPair3()">
+        <option value="">-- Select your pair --</option>
+        <option>Pair 1</option><option>Pair 2</option><option>Pair 3</option><option>Pair 4</option><option>Pair 5</option>
+        <option>Pair 6</option><option>Pair 7</option><option>Pair 8</option><option>Pair 9</option><option>Pair 10</option>
+      </select>
+    </div>
+    <div class="box box-t">Tap a card on the <strong>left</strong> then the matching card on the <strong>right</strong>. ✅ Green = correct. ❌ Red = wrong — try again.</div>
+    <div class="fcgrid">
+      <div><div class="fch">📞 Caller says…</div><div class="fcc" id="fcL"></div></div>
+      <div><div class="fch">📱 Receiver replies…</div><div class="fcc" id="fcR"></div></div>
+    </div>
+    <div class="fcst" id="fcSt"></div>
+    <div class="celeb" id="fcCeleb">
+      <h3>🎉 All pairs matched!</h3>
+      <p>Excellent! Copy the correct conversation below into your exercise books. Notice the polite words at every turn.</p>
+    </div>
+    <div class="corrconv" id="corrConv">
+      <h4>✅ Correct Conversation — copy into your exercise book</h4>
+      <div class="ccl"><div class="ccn">1</div><div><div class="ccwho ccc">📞 James (Caller)</div><div>Good morning. This is James speaking. May I please speak to Mary?</div></div></div>
+      <div class="ccl"><div class="ccn">2</div><div><div class="ccwho ccr">📱 Mary (Receiver)</div><div>Good morning, James! Mary speaking. How may I help you?</div></div></div>
+      <div class="ccl"><div class="ccn">3</div><div><div class="ccwho ccc">📞 James (Caller)</div><div>I would like to enquire about the venue for the human rights meeting, please.</div></div></div>
+      <div class="ccl"><div class="ccn">4</div><div><div class="ccwho ccr">📱 Mary (Receiver)</div><div>Of course! The meeting will be at the community hall on Friday at two o'clock.</div></div></div>
+      <div class="ccl"><div class="ccn">5</div><div><div class="ccwho ccc">📞 James (Caller)</div><div>Could you kindly tell me what I should bring, please?</div></div></div>
+      <div class="ccl"><div class="ccn">6</div><div><div class="ccwho ccr">📱 Mary (Receiver)</div><div>Certainly! Please bring a notebook and your identification card.</div></div></div>
+      <div class="ccl"><div class="ccn">7</div><div><div class="ccwho ccc">📞 James (Caller)</div><div>Thank you so much for your help, Mary. Goodbye!</div></div></div>
+      <div class="ccl"><div class="ccn">8</div><div><div class="ccwho ccr">📱 Mary (Receiver)</div><div>You are most welcome. Goodbye and take care!</div></div></div>
+    </div>
+    <button class="resetbtn" onclick="initFC()">🔄 Reset &amp; Try Again</button>
+  </div>
+</div>
+
+<!-- STEP 4 — 10 PAIRS role play in front of class -->
+<div class="sec" id="sec-s4">
+  <div class="card">
+    <div class="sh"><div class="sn s4c">4</div><div><div class="st">Role Play in Front of the Class</div><div class="ss"><span class="org org-pair" style="font-size:10px;padding:2px 8px">👥 10 PAIRS perform</span></div></div></div>
+    <p class="sd">Each pair gets a scenario below. Practise with your partner, then perform your telephone conversation <strong>in front of the class</strong>. Use polite words throughout. Record your voices to listen back.</p>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ci">💡</div>Before You Perform</div>
+    <ul style="list-style:none">
+      <li style="display:flex;gap:7px;font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--border);font-weight:700"><span>👋</span>Greet and introduce yourself when the call connects.</li>
+      <li style="display:flex;gap:7px;font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--border);font-weight:700"><span>🗣</span>Speak clearly and steadily — not too fast or too quietly.</li>
+      <li style="display:flex;gap:7px;font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--border);font-weight:700"><span>🙏</span>Use: <em>please, thank you, may I, certainly, of course.</em></li>
+      <li style="display:flex;gap:7px;font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--border);font-weight:700"><span>👂</span>Listen fully before responding — do not interrupt.</li>
+      <li style="display:flex;gap:7px;font-size:12.5px;padding:7px 0;font-weight:700"><span>📞</span>End politely: <em>Goodbye, take care, thank you for your time.</em></li>
+    </ul>
+  </div>
+
+  <!-- Scenario A — Pairs 1,2,3,4 -->
+  <div class="scen" style="background:linear-gradient(135deg,#0c1d5e,#1d4ed8)">
+    <h3>🎭 Scenario A — Library Enquiry</h3>
+    <p>Calling the school library to find out when a book on human rights will be available for borrowing.</p>
+    <div class="roles"><div class="role">📞 Caller: Student</div><div class="role">📱 Receiver: Librarian</div><div class="role">Pairs 1 · 2 · 3 · 4</div></div>
+  </div>
+  <div class="pairgrid" id="pgA"></div>
+
+  <!-- Scenario B — Pairs 5,6,7 -->
+  <div class="scen" style="background:linear-gradient(135deg,#0a3018,#15803d)">
+    <h3>🎭 Scenario B — Inviting a Friend</h3>
+    <p>Calling a classmate to invite them to a human rights awareness event at school next Saturday.</p>
+    <div class="roles"><div class="role">📞 Caller: You</div><div class="role">📱 Receiver: Friend / Parent</div><div class="role">Pairs 5 · 6 · 7</div></div>
+  </div>
+  <div class="pairgrid" id="pgB"></div>
+
+  <!-- Scenario C — Pairs 8,9,10 -->
+  <div class="scen" style="background:linear-gradient(135deg,#7c1d1d,#dc2626)">
+    <h3>🎭 Scenario C — Reporting a Concern</h3>
+    <p>Calling the school to report that a classmate is being bullied. Ask what action the school will take to protect the learner's rights.</p>
+    <div class="roles"><div class="role">📞 Caller: Learner</div><div class="role">📱 Receiver: School Secretary</div><div class="role">Pairs 8 · 9 · 10</div></div>
+  </div>
+  <div class="pairgrid" id="pgC"></div>
+
+  <div class="box box-t" style="margin-top:10px">After each performance, the class gives feedback. Each pair notes one thing they did well and one thing to improve.</div>
+</div>
+
+<!-- ASSESS -->
+<div class="sec" id="sec-ass">
+  <div class="card">
+    <div class="ch"><div class="ci">📝</div>Comprehension Check — 20 Individual Learners</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="assLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px;line-height:1.5">1. What is the FIRST thing to do when your call connects?</div>
+      <button class="qopt" onclick="cQ(this,0,false)">A. Ask immediately for what you need</button>
+      <button class="qopt" onclick="cQ(this,0,true)">B. Greet and introduce yourself</button>
+      <button class="qopt" onclick="cQ(this,0,false)">C. Wait silently for them to speak</button>
+      <button class="qopt" onclick="cQ(this,0,false)">D. Say goodbye and end the call</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px;line-height:1.5">2. Which is a polite telephone expression?</div>
+      <button class="qopt" onclick="cQ(this,1,false)">A. "What do you want?"</button>
+      <button class="qopt" onclick="cQ(this,1,true)">B. "May I please speak to Mary?"</button>
+      <button class="qopt" onclick="cQ(this,1,false)">C. "Who is this?"</button>
+      <button class="qopt" onclick="cQ(this,1,false)">D. "Call me back later."</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px;line-height:1.5">3. The key difference between telephone and face-to-face is:</div>
+      <button class="qopt" onclick="cQ(this,2,false)">A. Telephone calls are always shorter</button>
+      <button class="qopt" onclick="cQ(this,2,true)">B. On the phone you cannot see the person or use body language</button>
+      <button class="qopt" onclick="cQ(this,2,false)">C. Face-to-face needs more politeness</button>
+      <button class="qopt" onclick="cQ(this,2,false)">D. Phone calls need no greeting</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px;line-height:1.5">4. Telephone etiquette is linked to Human Rights because:</div>
+      <button class="qopt" onclick="cQ(this,3,false)">A. Phones were invented to protect rights</button>
+      <button class="qopt" onclick="cQ(this,3,true)">B. Being polite respects the dignity and rights of others</button>
+      <button class="qopt" onclick="cQ(this,3,false)">C. Only people with rights can use phones</button>
+      <button class="qopt" onclick="cQ(this,3,false)">D. Rights meetings are always held by phone</button>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px;line-height:1.5">5. Good telephone etiquette means:</div>
+      <button class="qopt" onclick="cQ(this,4,false)">A. Speak as fast as possible to save time</button>
+      <button class="qopt" onclick="cQ(this,4,false)">B. Interrupt when you disagree with the caller</button>
+      <button class="qopt" onclick="cQ(this,4,true)">C. Greet, introduce yourself, listen, speak clearly, end politely</button>
+      <button class="qopt" onclick="cQ(this,4,false)">D. Hang up when the call gets difficult</button>
+    </div>
+    <div id="qScore" style="display:none;padding:11px;border-radius:9px;font-size:13.5px;font-weight:900;text-align:center;margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ci">✅</div>Self-Assessment — 20 Learners (tap what you achieved)</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="selfLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="selfList">
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain the differences between telephone and face-to-face conversations.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can identify polite words and phrases in a telephone conversation.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I successfully matched the jumbled flashcard conversation with my pair.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I participated in the role play and used polite language throughout.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain why telephone etiquette matters in the context of human rights.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I acknowledge the significance of politeness in telephone conversations.</div></div>
+    </div>
+    <div id="selfRes" style="margin-top:10px;font-size:13px;font-weight:800;text-align:center;color:var(--b)"></div>
+    <button class="savebtn savebtn-g" onclick="saveSelf()">💾 Save My Self-Assessment</button>
+    <div class="saved-msg" id="selfSaved">✅ Self-assessment saved!</div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🏠</div>Extended Activity</div>
+    <p style="font-size:13px;line-height:1.7;color:var(--sub);font-weight:700">In your groups of 4 (5 groups), search online and in print for <strong>rules of telephone etiquette</strong>. Write them on manila paper and display in class for all to learn from.</p>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="nb on" onclick="go('intro')"><span class="ico">🎯</span>Intro</button>
+  <button class="nb" onclick="go('s1')"><span class="ico">🖼</span>Step 1</button>
+  <button class="nb" onclick="go('s2')"><span class="ico">🔊</span>Step 2</button>
+  <button class="nb" onclick="go('s3')"><span class="ico">🃏</span>Step 3</button>
+  <button class="nb" onclick="go('s4')"><span class="ico">🎭</span>Step 4</button>
+  <button class="nb" onclick="go('ass')"><span class="ico">✅</span>Assess</button>
+</div>
+<div style="height:8px"></div>
+<div class="footer"><strong>Developed by Tr. Sobe</strong> — Atiaket Junior School, Grade 8 English, 2026<small>© Original material. All rights reserved. Unauthorised reproduction or distribution is not permitted.</small></div>
+
+<script>
+/* FIREBASE */
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var fdb=null;
+function fbInit(){try{if(typeof firebase==="undefined")return;if(!firebase.apps.length)firebase.initializeApp(FBC);fdb=firebase.database();}catch(e){}}
+function now(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return{t:p(n.getHours())+":"+p(n.getMinutes()),d:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())};}
+function fbSet(path,data){if(!fdb)return;fdb.ref(path).set(data).catch(function(){});}
+
+/* TABS */
+var SECS={intro:"sec-intro",s1:"sec-s1",s2:"sec-s2",s3:"sec-s3",s4:"sec-s4",ass:"sec-ass"};
+function go(id){Object.keys(SECS).forEach(function(k){document.getElementById(SECS[k]).classList.toggle("on",k===id);});document.querySelectorAll(".tb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});document.querySelectorAll(".nb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});window.scrollTo({top:0,behavior:"smooth"});}
+
+/* AUDIO */
+var syn=window.speechSynthesis,apOn=false,apSpeed=0.92;
+var LINES=[
+  {t:"Good morning. This is James speaking. May I please speak to Mary?",s:"c"},
+  {t:"Good morning, James! Mary speaking. How are you?",s:"r"},
+  {t:"I am fine, thank you. I am calling about the human rights meeting, if you do not mind.",s:"c"},
+  {t:"Of course! The meeting is on Friday at the community hall at two o clock.",s:"r"},
+  {t:"Could you kindly tell me what to bring, please?",s:"c"},
+  {t:"Certainly! Please bring a notebook and your identification card.",s:"r"},
+  {t:"Thank you so much for your help, Mary.",s:"c"},
+  {t:"You are most welcome. Goodbye and have a lovely day!",s:"r"},
+  {t:"Goodbye! Take care.",s:"c"}
+];
+function ring(cb){var A=window.AudioContext||window.webkitAudioContext;if(!A){cb();return;}var ctx=new A();function rng(st,d){[350,440].forEach(function(f){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type="sine";o.frequency.setValueAtTime(f,st);g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(0.25,st+0.03);g.gain.setValueAtTime(0.25,st+d-0.05);g.gain.linearRampToValueAtTime(0,st+d);o.start(st);o.stop(st+d);});}var now=ctx.currentTime+0.1;rng(now,.5);rng(now+.85,.5);setTimeout(cb,(now+1.6-ctx.currentTime)*1000);}
+function getV(c){var vs=syn.getVoices(),en=vs.filter(function(v){return v.lang.indexOf("en")===0;});var m=en.find(function(v){return /male|david|mark/i.test(v.name);});var f=en.find(function(v){return /female|zira|samantha|karen/i.test(v.name);});return(c&&m)?m:(!c&&f)?f:(en[0]||vs[0]);}
+function apStart(){if(!("speechSynthesis" in window)){document.getElementById("apStat").textContent="Not supported — use Chrome.";return;}apHalt();apOn=true;document.getElementById("apPlay").disabled=true;document.getElementById("apStop").disabled=false;document.getElementById("apStat").innerHTML="📳 <strong>Ring ring…</strong>";var n=now();fbSet("L2/step2/audio_played",{t:n.t,d:n.d});ring(function(){if(!apOn)return;document.getElementById("apStat").innerHTML="📞 Connected!";setTimeout(function(){apLine(0);},500);});}
+function apLine(i){if(!apOn||i>=LINES.length){apDone();return;}for(var j=0;j<9;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}var el=document.getElementById("cl"+i);if(el){el.classList.add("lit");el.scrollIntoView({behavior:"smooth",block:"nearest"});}document.getElementById("apFill").style.width=((i+1)/9*100)+"%";var u=new SpeechSynthesisUtterance(LINES[i].t);u.rate=apSpeed;u.pitch=LINES[i].s==="c"?0.94:1.2;var v=getV(LINES[i].s==="c");if(v)u.voice=v;u.onend=function(){if(apOn)setTimeout(function(){apLine(i+1);},370);};u.onerror=function(){if(apOn)setTimeout(function(){apLine(i+1);},370);};syn.speak(u);}
+function apHalt(){apOn=false;syn.cancel();for(var j=0;j<9;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}document.getElementById("apFill").style.width="0%";document.getElementById("apPlay").disabled=false;document.getElementById("apStop").disabled=true;document.getElementById("apStat").textContent="Stopped.";}
+function apDone(){apOn=false;for(var j=0;j<9;j++){var e=document.getElementById("cl"+j);if(e)e.classList.remove("lit");}document.getElementById("apFill").style.width="100%";document.getElementById("apPlay").disabled=false;document.getElementById("apStop").disabled=true;document.getElementById("apStat").textContent="Done! Tap the gold words above.";}
+if(syn.onvoiceschanged!==undefined)syn.onvoiceschanged=function(){syn.getVoices();};
+
+/* POLITE WORDS */
+var pwFound=[];
+function tapPW(el){var w=el.textContent.trim();el.classList.add("hit");if(pwFound.indexOf(w)===-1){pwFound.push(w);var c=document.getElementById("pchips");if(pwFound.length===1)c.innerHTML="";var ch=document.createElement("span");ch.className="pchip";ch.textContent=w;c.appendChild(ch);document.getElementById("pwCount").textContent=pwFound.length+" polite expression"+(pwFound.length!==1?"s":"")+" identified";}}
+function savePW(){var ln=document.getElementById("learnerSel2").value;if(!ln){alert("Please select your name first.");return;}document.getElementById("pwSaved").style.display="block";setTimeout(function(){document.getElementById("pwSaved").style.display="none";},3000);var n=now();fbSet("L2/step2/polite_words/"+ln.replace(" ","_"),{learner:ln,count:pwFound.length,words:pwFound.join(", "),t:n.t,d:n.d});}
+
+/* FLASHCARDS */
+var FCP=[
+  {id:0,l:"Good morning. This is James. May I please speak to Mary?",r:"Good morning, James! Mary speaking. How may I help you?"},
+  {id:1,l:"I would like to enquire about the venue for the human rights meeting, please.",r:"Of course! The meeting will be at the community hall on Friday at two o clock."},
+  {id:2,l:"Could you kindly tell me what I should bring, please?",r:"Certainly! Please bring a notebook and your identification card."},
+  {id:3,l:"Is there anything else I should know before attending?",r:"Please arrive ten minutes early and wear your name tag."},
+  {id:4,l:"Thank you so much for your help, Mary. Goodbye!",r:"You are most welcome. Goodbye and take care!"}
+];
+var selL=null,selR=null,fcOK=0;
+function logPair3(){var p=document.getElementById("pairSel3").value;if(p){var n=now();fbSet("L2/step3/"+p.replace(" ","_")+"/started",{t:n.t,d:n.d});}}
+function initFC(){selL=null;selR=null;fcOK=0;var L=document.getElementById("fcL"),R=document.getElementById("fcR");L.innerHTML="";R.innerHTML="";var lp=[0,1,2,3,4].sort(function(){return Math.random()-.5;});var rp=[0,1,2,3,4].sort(function(){return Math.random()-.5;});lp.forEach(function(i){var d=document.createElement("div");d.className="fc";d.dataset.idx=i;d.dataset.side="l";d.innerHTML="<div class='fclb'>Caller</div>"+FCP[i].l;d.onclick=function(){pick(d);};L.appendChild(d);});rp.forEach(function(i){var d=document.createElement("div");d.className="fc";d.dataset.idx=i;d.dataset.side="r";d.innerHTML="<div class='fclb'>Receiver</div>"+FCP[i].r;d.onclick=function(){pick(d);};R.appendChild(d);});var st=document.getElementById("fcSt");st.className="fcst";st.textContent="";document.getElementById("fcCeleb").classList.remove("on");document.getElementById("corrConv").classList.remove("on");}
+function pick(el){if(el.classList.contains("ok"))return;var side=el.dataset.side;if(side==="l"){if(selL)selL.classList.remove("sel");selL=el;el.classList.add("sel");}else{if(selR)selR.classList.remove("sel");selR=el;el.classList.add("sel");}if(selL&&selR){if(selL.dataset.idx===selR.dataset.idx){selL.classList.remove("sel");selL.classList.add("ok");selR.classList.remove("sel");selR.classList.add("ok");fcOK++;var st=document.getElementById("fcSt");if(fcOK===FCP.length){st.textContent="";st.className="fcst";document.getElementById("fcCeleb").classList.add("on");document.getElementById("corrConv").classList.add("on");var p=document.getElementById("pairSel3").value;var n=now();if(p)fbSet("L2/step3/"+p.replace(" ","_")+"/completed",{t:n.t,d:n.d});}else{st.textContent="Correct! ("+fcOK+"/"+FCP.length+") Keep going…";st.className="fcst ok on";}selL=null;selR=null;}else{selL.classList.add("bad");selR.classList.add("bad");var sl=selL,sr=selR;selL=null;selR=null;setTimeout(function(){sl.classList.remove("bad","sel");sr.classList.remove("bad","sel");},700);}}}
+initFC();
+
+/* PAIR RECORDING GRIDS */
+var MR={},RC={},RT={};
+function buildPG(gid,pairs){var g=document.getElementById(gid);pairs.forEach(function(p){var r=document.createElement("div");r.className="prow";r.id="prow"+p;r.innerHTML='<div class="prowt"><span class="ptag">👥 Pair '+p+'</span><span class="pst" id="pst'+p+'">Not yet performed</span></div><div class="rslots"><div class="rslot" id="rs-'+p+'a"><div class="rtop"><span class="rtag">📞 Caller</span><span class="rtimer" id="rt-'+p+'a">0:00</span></div><div class="rbtns"><button class="rbtn rstart" onclick="startR(\''+p+'a\')">🎙 Record</button><button class="rbtn rstop" onclick="stopR(\''+p+'a\')" disabled>⏹ Stop</button></div><div class="rplay" id="rp-'+p+'a"></div><div class="rstat" id="rstat-'+p+'a">Ready</div></div><div class="rslot" id="rs-'+p+'b"><div class="rtop"><span class="rtag">📱 Receiver</span><span class="rtimer" id="rt-'+p+'b">0:00</span></div><div class="rbtns"><button class="rbtn rstart" onclick="startR(\''+p+'b\')">🎙 Record</button><button class="rbtn rstop" onclick="stopR(\''+p+'b\')" disabled>⏹ Stop</button></div><div class="rplay" id="rp-'+p+'b"></div><div class="rstat" id="rstat-'+p+'b">Ready</div></div></div>';g.appendChild(r);});}
+buildPG("pgA",[1,2,3,4]);
+buildPG("pgB",[5,6,7]);
+buildPG("pgC",[8,9,10]);
+
+function startR(id){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setStat(id,"Mic not supported.");return;}navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){var sl=document.getElementById("rs-"+id);sl.classList.add("rec");sl.classList.remove("done");sl.querySelector(".rstart").disabled=true;sl.querySelector(".rstop").disabled=false;document.getElementById("rp-"+id).innerHTML="";RC[id]=[];var mr=new MediaRecorder(stream);MR[id]=mr;mr.ondataavailable=function(e){if(e.data.size>0)RC[id].push(e.data);};mr.onstop=function(){stream.getTracks().forEach(function(t){t.stop();});var blob=new Blob(RC[id],{type:"audio/webm"});var au=document.createElement("audio");au.controls=true;au.src=URL.createObjectURL(blob);document.getElementById("rp-"+id).appendChild(au);var sl2=document.getElementById("rs-"+id);sl2.classList.remove("rec");sl2.classList.add("done");sl2.querySelector(".rstart").disabled=false;sl2.querySelector(".rstop").disabled=true;setStat(id,"Saved!","done");clearInterval(RT[id]);var pn=id.replace(/[ab]$/,""),rl=id.slice(-1)==="a"?"Caller":"Receiver";var el=document.getElementById("rt-"+id);var dur=el?el.textContent:"0:00";var pts=dur.split(":");var sec=parseInt(pts[0]||0)*60+parseInt(pts[1]||0);var nw=now();fbSet("L2/step4/pair"+pn+"/"+rl,{dur:sec+"s",t:nw.t,d:nw.d});var doneCount=document.querySelectorAll("#prow"+pn+" .rslot.done").length;if(doneCount>=2){document.getElementById("prow"+pn).classList.add("done");var pst=document.getElementById("pst"+pn);if(pst)pst.textContent="✅ Performed!";}};mr.start();var sec=0;setStat(id,"Recording…","rec");RT[id]=setInterval(function(){sec++;var m=Math.floor(sec/60),s2=sec%60;var el=document.getElementById("rt-"+id);if(el)el.textContent=m+":"+(s2<10?"0":"")+s2;},1000);}).catch(function(err){setStat(id,err.name==="NotAllowedError"?"Mic denied — use https:// URL.":"Cannot access mic.");});}
+function stopR(id){if(MR[id]&&MR[id].state!=="inactive")MR[id].stop();clearInterval(RT[id]);}
+function setStat(id,msg,type){var el=document.getElementById("rstat-"+id);if(!el)return;el.textContent=msg;el.style.color=type==="rec"?"var(--r)":type==="done"?"var(--g)":"var(--sub)";}
+
+/* ASSESS */
+var qAns={};
+function cQ(btn,n,correct){if(qAns[n]!==undefined)return;qAns[n]=correct;btn.parentElement.querySelectorAll(".qopt").forEach(function(o){o.disabled=true;});if(correct){btn.classList.add("right");}else{btn.classList.add("wrong");btn.parentElement.querySelectorAll(".qopt").forEach(function(o){if(o.getAttribute("onclick").indexOf("true")!==-1)o.classList.add("right");});}var tot=5,done=Object.keys(qAns).length,score=Object.values(qAns).filter(Boolean).length;if(done===tot){var sc=document.getElementById("qScore");sc.style.display="block";sc.style.background=score>=4?"var(--gl)":"var(--gol)";sc.style.color=score>=4?"var(--g)":"#4a2c00";sc.textContent="Score: "+score+"/"+tot+" — "+(score===5?"Excellent!":score>=4?"Very good!":score>=3?"Good effort!":"Keep practising!");var ln=document.getElementById("assLn").value;var n=now();if(ln)fbSet("L2/assess/comp/"+ln.replace(" ","_"),{score:score+"/"+tot,t:n.t,d:n.d});}}
+function togSelf(row){var box=row.querySelector(".chkbox");box.classList.toggle("on");var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;var res=document.getElementById("selfRes");if(done===0)res.textContent="";else if(done===tot)res.textContent="🌟 All objectives achieved!";else res.textContent=done+"/"+tot+" objectives achieved.";}
+function saveSelf(){var ln=document.getElementById("selfLn").value;if(!ln){alert("Please select your name first.");return;}var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;document.getElementById("selfSaved").style.display="block";setTimeout(function(){document.getElementById("selfSaved").style.display="none";},3000);var n=now();fbSet("L2/assess/self/"+ln.replace(" ","_"),{achieved:done+"/"+tot,t:n.t,d:n.d});}
+
+window.addEventListener("load",function(){fbInit();});
+</script>
+</body>
+</html>

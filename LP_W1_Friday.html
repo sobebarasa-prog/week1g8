@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>L5 Friday | Skimming &amp; Scanning | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#fed7aa;--bg:#fff7ed;--wh:#fff;
+--go:#c2410c;--gol:#fff7ed;--god:#431407;
+--b:#1d4ed8;--bl:#dbeafe;--t:#0f766e;--tl:#ccfbf1;
+--g:#15803d;--gl:#dcfce7;--pu:#7c3aed;--pul:#ede9fe;
+--r:#dc2626;--rl:#fee2e2;--sh:0 2px 16px rgba(0,0,0,.08);--ra:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px}
+
+.hero{background:linear-gradient(135deg,#431407,#c2410c 55%,#1d4ed8);padding:24px 16px 20px;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+.hero h1{font-size:clamp(18px,5vw,26px);font-weight:900;line-height:1.22;margin-bottom:4px}
+.hero h1 span{color:#fed7aa}
+.hero p{font-size:12px;opacity:.86;line-height:1.6}
+.roll{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700}
+
+.tabs{display:flex;overflow-x:auto;background:var(--wh);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:90;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:11px 13px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;border:none;background:none;border-bottom:3px solid transparent;cursor:pointer;color:var(--sub);white-space:nowrap}
+.tb.on{color:var(--go);border-bottom-color:var(--go)}
+
+.sec{display:none;padding:14px}
+.sec.on{display:block;animation:fadeup .24s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.card{background:var(--wh);border-radius:var(--ra);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.ch{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--go);display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.ch .ci{width:23px;height:23px;background:var(--gol);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+.sh{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sn{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff}
+.s1c{background:#1d4ed8}.s2c{background:#0f766e}.s3c{background:#c2410c}.s4c{background:#7c3aed}
+.st{font-size:13.5px;font-weight:800}
+.ss{font-size:11px;color:var(--sub);font-weight:700;margin-top:2px}
+.sd{font-size:12.5px;color:var(--sub);line-height:1.7;margin-bottom:10px}
+
+.org{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:800;color:#fff;margin-right:4px}
+.oc{background:var(--b)}.og{background:var(--t)}.op{background:var(--go)}.oi{background:var(--pu)}
+
+.box{border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin-bottom:10px}
+.bgo{background:#fff7ed;border-left:4px solid var(--go);color:var(--god)}
+.bt{background:var(--tl);border-left:4px solid var(--t);color:#003b35}
+.bg{background:var(--gl);border-left:4px solid var(--g);color:#052e16}
+.bp{background:var(--pul);border-left:4px solid var(--pu);color:#2e1065}
+
+.rollgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;text-align:center;margin-bottom:4px}
+.rc2{border-radius:10px;padding:10px 4px}
+.rc2 .num{font-size:22px;font-weight:900}
+.rc2 .lbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+
+/* VIDEO */
+.vidcard{background:linear-gradient(135deg,#431407,#c2410c);border-radius:var(--ra);padding:18px;color:#fff;text-align:center;margin-bottom:11px}
+.vico{font-size:46px;margin-bottom:8px}
+.vidcard h3{font-size:15px;font-weight:900;margin-bottom:5px}
+.vidcard p{font-size:12px;opacity:.88;line-height:1.6;max-width:360px;margin:0 auto 14px}
+.vbtn{background:#fff;color:var(--go);border:none;border-radius:50px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.vslide{display:none;animation:fadeup .28s ease}
+.vslide.on{display:block}
+
+/* GROUP TABS */
+.gtabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.gt{padding:6px 12px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;cursor:pointer;color:var(--sub)}
+.gt.on{background:var(--go);border-color:var(--go);color:#fff}
+.gpanel{display:none}
+.gpanel.on{display:block}
+.gsavebtn{width:100%;padding:10px;background:var(--go);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px}
+.gsaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+/* INFO TEXT ARTICLE */
+.article{background:var(--wh);border:2px solid var(--border);border-radius:var(--ra);padding:15px;margin-bottom:11px;font-size:13px;line-height:1.8;color:var(--ink)}
+.artitle{font-size:15px;font-weight:900;margin-bottom:3px}
+.arsub{font-size:11px;color:var(--sub);margin-bottom:11px;font-weight:700}
+.article p{margin-bottom:9px}
+.article p:last-child{margin-bottom:0}
+
+/* SKIM RESPONSE — 5 groups */
+.skimq{background:#fff7ed;border-left:4px solid var(--go);border-radius:9px;padding:10px 12px;margin-bottom:9px}
+.skimql{font-size:13px;font-weight:800;color:var(--god);margin-bottom:5px;line-height:1.5}
+.skiminp{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:12.5px;resize:none;outline:none;background:var(--wh);min-height:52px;line-height:1.6;font-weight:700}
+
+/* PAIR SELECTOR */
+.psel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.psel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.psel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+
+/* WORD SCAN — 10 pairs, each finds and defines unfamiliar words */
+.wordscan{background:var(--wh);border-radius:var(--ra);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.wshd{background:linear-gradient(135deg,#431407,#c2410c);padding:11px 14px;color:#fff}
+.wshd h3{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.wshd p{font-size:11px;opacity:.85}
+.wsbody{padding:13px}
+.wordrow{display:grid;grid-template-columns:1fr 2fr;gap:7px;margin-bottom:8px}
+.wf label{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--go);margin-bottom:4px}
+.wf input,.wf textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:var(--bg);transition:border-color .18s}
+.wf input:focus,.wf textarea:focus{border-color:var(--go);background:#fff}
+.addrow{width:100%;padding:9px;background:var(--gol);border:2px solid var(--border);border-radius:50px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:var(--god);margin-bottom:8px}
+.wsavebtn{width:100%;padding:10px;background:var(--go);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.wsaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+/* INDIVIDUAL READ ALOUD — 20 learners */
+.lsel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.lsel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.lsel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+.ra-section{background:var(--wh);border-radius:var(--ra);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.ra-hd{background:linear-gradient(135deg,#431407,#c2410c);padding:11px 14px;color:#fff}
+.ra-hd h3{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.ra-hd p{font-size:11px;opacity:.85}
+.ra-bdy{padding:13px}
+
+/* RECORDING */
+.rslot{background:var(--bg);border-radius:9px;padding:10px;border:2px solid var(--border);margin-bottom:9px}
+.rslot.rec{border-color:var(--r);background:var(--rl);animation:pulse 1.2s infinite}
+.rslot.done{border-color:var(--g);background:var(--gl)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+.rtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.rtag{font-size:11px;font-weight:800;color:var(--sub)}
+.rtimer{font-size:11px;font-weight:800;color:var(--r)}
+.rslot.done .rtimer{color:var(--g)}
+.rbtns{display:flex;gap:6px;margin-bottom:7px}
+.rbtn{flex:1;padding:9px 4px;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+.rstart{background:var(--r);color:#fff}
+.rstart:disabled{background:#cbd5e1;cursor:not-allowed}
+.rstop{background:var(--bg);color:var(--sub);border:1.5px solid var(--border)}
+.rstop:disabled{opacity:.4;cursor:not-allowed}
+.rplay audio{width:100%;height:30px;border-radius:7px}
+.rstat{font-size:11px;color:var(--sub);text-align:center;font-weight:700;min-height:16px}
+.rslot.rec .rstat{color:var(--r)}.rslot.done .rstat{color:var(--g)}
+.ra-q{margin-bottom:9px}
+.ra-ql{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--go);margin-bottom:4px}
+.ra-qi{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;resize:none;outline:none;background:var(--bg);min-height:52px;line-height:1.6}
+.ra-qi:focus{border-color:var(--go);background:#fff}
+.ra-savebtn{width:100%;padding:10px;background:var(--g);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.ra-saved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.qopt{padding:9px 11px;border-radius:9px;border:2px solid var(--border);background:var(--wh);font-size:12.5px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;margin-bottom:6px;display:block;font-weight:700}
+.qopt:hover{border-color:var(--go)}.qopt.right{background:var(--gl);border-color:var(--g);color:var(--g)}.qopt.wrong{background:var(--rl);border-color:var(--r);color:var(--r)}
+.chkrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.chkrow:last-child{border-bottom:none}
+.chkbox{width:21px;height:21px;flex-shrink:0;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;transition:all .18s}
+.chkbox.on{background:var(--go);border-color:var(--go);color:#fff}
+.chktxt{font-size:12.5px;line-height:1.5;font-weight:700}
+.savebtn{width:100%;padding:10px;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:#fff;margin-top:9px;background:var(--g)}
+.saved-msg{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;box-shadow:0 -3px 14px rgba(0,0,0,.07);z-index:99}
+.nb{flex:1;border:none;background:none;cursor:pointer;padding:8px 2px 12px;font-family:'Nunito',sans-serif;font-size:9.5px;font-weight:800;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nb .ico{font-size:18px}
+.nb.on{color:var(--go)}
+.footer{background:#0c1222;color:rgba(255,255,255,.6);text-align:center;padding:12px 16px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.5;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📖 Grade 8 · Lesson 5 · Friday · Week 1</div>
+  <h1>Extensive Reading:<br><span>Skimming &amp; Scanning</span></h1>
+  <p>Theme: Human Rights · Reading · 9:00–9:40 AM</p>
+  <div class="roll">
+    <span class="rc">🏫 Atiaket Junior School</span>
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">👥 10 Pairs</span>
+    <span class="rc">🔵 5 Groups</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="go('intro')">🎯 Intro</button>
+  <button class="tb" onclick="go('s1')">🎬 Step 1</button>
+  <button class="tb" onclick="go('s2')">👁 Step 2</button>
+  <button class="tb" onclick="go('s3')">🔍 Step 3</button>
+  <button class="tb" onclick="go('s4')">🗣 Step 4</button>
+  <button class="tb" onclick="go('ass')">✅ Assess</button>
+</div>
+
+<!-- INTRO -->
+<div class="sec on" id="sec-intro">
+  <div class="card">
+    <div class="ch"><div class="ci">📋</div>Organisation — 20 Learners</div>
+    <div class="rollgrid">
+      <div class="rc2" style="background:#fff7ed;border:1px solid var(--border)"><div class="num" style="color:var(--go)">20</div><div class="lbl">Learners</div></div>
+      <div class="rc2" style="background:var(--tl)"><div class="num" style="color:var(--t)">10</div><div class="lbl">Pairs</div></div>
+      <div class="rc2" style="background:#fef9c3"><div class="num" style="color:#a16207">5</div><div class="lbl">Groups</div></div>
+      <div class="rc2" style="background:var(--gl)"><div class="num" style="color:var(--g)">1</div><div class="lbl">Class</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🗂</div>Steps at a Glance</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org oc">🌍 CLASS</span>Step 1 — Watch video on skimming and scanning as reading skills</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org og">🔵 5 GROUPS</span>Step 2 — Skim the information text; identify what it is about (main idea)</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org op">👥 10 PAIRS</span>Step 3 — Scan text for unfamiliar words; use dictionary to find meanings</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org oi">👤 20 INDIVIDUAL</span>Step 4 — Read the text aloud; answer questions on human rights</div>
+    </div>
+  </div>
+  <div class="bgo box"><strong>Key Inquiry Questions:</strong><br>1. How does skimming help a reader understand a text quickly?<br>2. Why is scanning a useful skill when reading for specific information?</div>
+</div>
+
+<!-- STEP 1 — CLASS video -->
+<div class="sec" id="sec-s1">
+  <div class="card">
+    <div class="sh"><div class="sn s1c">1</div><div><div class="st">Watch Video — Skimming &amp; Scanning Explained</div><div class="ss"><span class="org oc" style="font-size:10px;padding:2px 8px">🌍 WHOLE CLASS watches</span></div></div></div>
+    <p class="sd">The teacher plays the video for the whole class. Follow the presentation slides. Take notes in your exercise book as you go through each slide.</p>
+  </div>
+  <div class="vidcard">
+    <div class="vico">📽</div>
+    <h3>Video: Skimming &amp; Scanning</h3>
+    <p>Explaining what skimming and scanning are, how they are used, and why they are essential reading skills.</p>
+    <button class="vbtn" onclick="startVid()">▶ Start Presentation</button>
+  </div>
+  <div id="vidArea" style="display:none">
+    <div class="vslide" id="vs0">
+      <div class="card" style="border-left:5px solid var(--go)">
+        <div class="ch"><div class="ci">1️⃣</div>What is SKIMMING?</div>
+        <p style="font-size:13px;line-height:1.7;color:var(--sub);margin-bottom:9px"><strong>Skimming</strong> means reading a text <strong>quickly</strong> to get the general idea — what is it about? You do NOT read every word. You look at headings, the first and last sentences of paragraphs, and key words.</p>
+        <div class="bgo box">
+          <strong>When do we skim?</strong><br>
+          • Before reading a long article to decide if it is worth reading<br>
+          • To get a quick overview of what a text covers<br>
+          • To remind yourself of a text you read before
+        </div>
+        <div class="bg box" style="margin-bottom:0">
+          <strong>How to skim:</strong><br>
+          1. Read the title and any headings<br>
+          2. Read the first sentence of each paragraph<br>
+          3. Look for repeated key words<br>
+          4. Read the last paragraph
+        </div>
+      </div>
+    </div>
+    <div class="vslide" id="vs1">
+      <div class="card" style="border-left:5px solid var(--b)">
+        <div class="ch"><div class="ci">2️⃣</div>What is SCANNING?</div>
+        <p style="font-size:13px;line-height:1.7;color:var(--sub);margin-bottom:9px"><strong>Scanning</strong> means moving your eyes quickly through a text to find a <strong>specific piece of information</strong> — like a name, a date, a number, or a definition. You do NOT read every word — you hunt for the target.</p>
+        <div class="bp box">
+          <strong>When do we scan?</strong><br>
+          • When looking for the meaning of an unfamiliar word<br>
+          • When searching for a specific fact in an article<br>
+          • When looking at a dictionary or index
+        </div>
+        <div class="bt box" style="margin-bottom:0">
+          <strong>How to scan:</strong><br>
+          1. Know exactly what you are looking for<br>
+          2. Run your eyes down the page quickly<br>
+          3. Stop when you find your target word or phrase<br>
+          4. Read that section carefully
+        </div>
+      </div>
+    </div>
+    <div class="vslide" id="vs2">
+      <div class="card" style="border-left:5px solid var(--g)">
+        <div class="ch"><div class="ci">3️⃣</div>Skimming vs Scanning — Key Differences</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;border-radius:10px;overflow:hidden;margin-bottom:10px">
+          <thead><tr><th style="padding:8px 10px;background:var(--go);color:#fff;text-align:left;font-size:9.5px;text-transform:uppercase">SKIMMING</th><th style="padding:8px 10px;background:var(--b);color:#fff;text-align:left;font-size:9.5px;text-transform:uppercase">SCANNING</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Get the general idea</td><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Find specific information</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Read headings &amp; topic sentences</td><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Look for a target word or fact</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Use before detailed reading</td><td style="padding:7px 10px;border-bottom:1px solid var(--border)">Use when searching for data</td></tr>
+            <tr><td style="padding:7px 10px">Example: What is this article about?</td><td style="padding:7px 10px">Example: What does "convention" mean here?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bg box">✅ Video complete! Move to Step 2 — your group will now skim the information text on Human Rights.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2 — 5 GROUPS skim text -->
+<div class="sec" id="sec-s2">
+  <div class="card">
+    <div class="sh"><div class="sn s2c">2</div><div><div class="st">Skim the Information Text</div><div class="ss"><span class="org og" style="font-size:10px;padding:2px 8px">🔵 5 GROUPS of 4</span> — skim to identify main idea</div></div></div>
+    <p class="sd">In your group of 4, skim the information text below. Do NOT read every word — look at the title, the first sentence of each paragraph, and key words. Then select your group and answer the skim questions together.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">📄</div>Information Text — Human Rights: A Foundation for All</div>
+    <div class="bgo box" style="margin-bottom:10px"><strong>Skimming Strategy:</strong> Read the title → first sentence of each paragraph → last paragraph. Do NOT read every word. Write the main idea in one sentence in your exercise book before answering.</div>
+    <div class="article">
+      <div class="artitle">Human Rights: A Foundation for All</div>
+      <div class="arsub">Source: Adapted from UNICEF Educational Resources, 2024</div>
+      <p>Human rights are the fundamental rights and freedoms that every person is entitled to, regardless of their nationality, gender, age, religion, or social status. These rights are protected by international laws and national constitutions around the world.</p>
+      <p>The Universal Declaration of Human Rights, adopted by the United Nations in 1948, established thirty key rights for all people. These include the right to life, the right to education, the right to freedom of expression, the right to health, and the right to be free from discrimination.</p>
+      <p>In Kenya, the Constitution of 2010 includes a strong Bill of Rights that protects the rights of every citizen. Children specifically are protected under Article 53, which guarantees them the right to a name, nationality, education, healthcare, and freedom from harmful work or exploitation.</p>
+      <p>Despite these protections, millions of people around the world — including children — still face violations of their basic rights. Poverty, conflict, and lack of access to quality education remain serious barriers to the full realisation of human rights for all.</p>
+      <p>Every person has both rights and responsibilities. Respecting the rights of others, speaking up when rights are violated, and learning about the laws that protect us are important ways that young people can contribute to a just and equal society.</p>
+    </div>
+    <div class="gtabs" id="gt2">
+      <button class="gt on" onclick="sg(1,'g2')">Group 1</button>
+      <button class="gt" onclick="sg(2,'g2')">Group 2</button>
+      <button class="gt" onclick="sg(3,'g2')">Group 3</button>
+      <button class="gt" onclick="sg(4,'g2')">Group 4</button>
+      <button class="gt" onclick="sg(5,'g2')">Group 5</button>
+    </div>
+    <div id="g2panels"></div>
+  </div>
+</div>
+
+<!-- STEP 3 — 10 PAIRS scan for unfamiliar words + dictionary -->
+<div class="sec" id="sec-s3">
+  <div class="card">
+    <div class="sh"><div class="sn s3c">3</div><div><div class="st">Scan for Unfamiliar Words — Use the Dictionary</div><div class="ss"><span class="org op" style="font-size:10px;padding:2px 8px">👥 10 PAIRS</span> — scan the same text; each pair finds and defines words</div></div></div>
+    <p class="sd">With your partner, scan the information text in Step 2 for words you do not know or are unsure about. Write each word and use a dictionary to find its meaning <em>as used in the text</em>. Each pair finds their own set of words.</p>
+  </div>
+  <div class="card">
+    <div class="bt box"><strong>Scanning tip:</strong> Don't read from the beginning — run your eyes over the text quickly looking for long or unfamiliar words. When you spot one, stop and write it down. Then use the dictionary to find its meaning in this context.</div>
+    <div class="bgo box" style="margin-bottom:11px">
+      <strong>Suggested words to look up from the text:</strong><br>
+      <em>fundamental, entitled, nationality, constitution, convention, discrimination, exploitation, violation, realisation, responsibilities</em><br>
+      <span style="font-size:11px">— You can also find your own words from the text.</span>
+    </div>
+    <div class="psel"><label>Select your pair number</label>
+      <select id="pairSel3" onchange="showWordScan()">
+        <option value="">-- Select your pair --</option>
+        <option>Pair 1</option><option>Pair 2</option><option>Pair 3</option><option>Pair 4</option><option>Pair 5</option>
+        <option>Pair 6</option><option>Pair 7</option><option>Pair 8</option><option>Pair 9</option><option>Pair 10</option>
+      </select>
+    </div>
+    <div id="wordScanArea"></div>
+  </div>
+</div>
+
+<!-- STEP 4 — 20 INDIVIDUAL read aloud -->
+<div class="sec" id="sec-s4">
+  <div class="card">
+    <div class="sh"><div class="sn s4c">4</div><div><div class="st">Read the Text Aloud — Human Rights</div><div class="ss"><span class="org oi" style="font-size:10px;padding:2px 8px">👤 20 INDIVIDUALS</span> — each learner reads and answers</div></div></div>
+    <p class="sd">Read the information text from Step 2 aloud — either to yourself or to a partner. Then select your name and answer the comprehension questions on human rights. Record yourself reading a paragraph if you can.</p>
+  </div>
+  <div class="card">
+    <div class="bgo box"><strong>Reading Aloud Tips:</strong><br>
+    • Read clearly and at a steady pace — not too fast<br>
+    • Emphasise key words: <em>rights, freedom, entitled, discrimination</em><br>
+    • Pause at punctuation marks<br>
+    • Pronounce each word carefully — use your scanning work from Step 3 to help</div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🗣</div>My Read Aloud &amp; Comprehension — 20 Learners</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="raLn" onchange="showRA()">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="raArea"></div>
+  </div>
+</div>
+
+<!-- ASSESS -->
+<div class="sec" id="sec-ass">
+  <div class="card">
+    <div class="ch"><div class="ci">📝</div>Comprehension Check — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="assLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">1. What is SKIMMING used for?</div>
+      <button class="qopt" onclick="cQ(this,0,false)">A. Finding specific words or facts</button>
+      <button class="qopt" onclick="cQ(this,0,true)">B. Getting the general idea of a text quickly</button>
+      <button class="qopt" onclick="cQ(this,0,false)">C. Memorising every word in a text</button>
+      <button class="qopt" onclick="cQ(this,0,false)">D. Reading every sentence carefully</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">2. When you SCAN a text, you are:</div>
+      <button class="qopt" onclick="cQ(this,1,false)">A. Reading it from the beginning slowly</button>
+      <button class="qopt" onclick="cQ(this,1,true)">B. Looking quickly for a specific word or piece of information</button>
+      <button class="qopt" onclick="cQ(this,1,false)">C. Summarising the main idea</button>
+      <button class="qopt" onclick="cQ(this,1,false)">D. Checking for spelling errors</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">3. According to the text, the Universal Declaration of Human Rights was adopted in:</div>
+      <button class="qopt" onclick="cQ(this,2,false)">A. 1963</button>
+      <button class="qopt" onclick="cQ(this,2,true)">B. 1948</button>
+      <button class="qopt" onclick="cQ(this,2,false)">C. 2010</button>
+      <button class="qopt" onclick="cQ(this,2,false)">D. 2000</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">4. Which Kenyan constitutional article protects the rights of children?</div>
+      <button class="qopt" onclick="cQ(this,3,false)">A. Article 19</button>
+      <button class="qopt" onclick="cQ(this,3,false)">B. Article 45</button>
+      <button class="qopt" onclick="cQ(this,3,true)">C. Article 53</button>
+      <button class="qopt" onclick="cQ(this,3,false)">D. Article 60</button>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">5. What is the best first step when skimming an article?</div>
+      <button class="qopt" onclick="cQ(this,4,false)">A. Read every sentence from beginning to end</button>
+      <button class="qopt" onclick="cQ(this,4,false)">B. Look up all the unfamiliar words first</button>
+      <button class="qopt" onclick="cQ(this,4,true)">C. Read the title, headings, and first sentences of paragraphs</button>
+      <button class="qopt" onclick="cQ(this,4,false)">D. Write a summary before reading</button>
+    </div>
+    <div id="qScore" style="display:none;padding:11px;border-radius:9px;font-size:13.5px;font-weight:900;text-align:center;margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">✅</div>Self-Assessment — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="selfLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="selfList">
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain the difference between skimming and scanning.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can skim a text to identify its main idea.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can scan a text to find unfamiliar words and use a dictionary to define them.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I read the information text aloud and understood key information about human rights.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain at least two rights mentioned in the text.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I appreciate the importance of skimming and scanning as reading skills.</div></div>
+    </div>
+    <div id="selfRes" style="margin-top:10px;font-size:13px;font-weight:800;text-align:center;color:var(--go)"></div>
+    <button class="savebtn" onclick="saveSelf()">💾 Save My Self-Assessment</button>
+    <div class="saved-msg" id="selfSaved">✅ Saved!</div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🏠</div>Extended Activity</div>
+    <p style="font-size:13px;line-height:1.7;color:var(--sub);font-weight:700">Find a newspaper or online article of your choice. Practice skimming to get the main idea, then scan it for three unfamiliar words. Write the words and their meanings in your exercise book and bring it to the next lesson.</p>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="nb on" onclick="go('intro')"><span class="ico">🎯</span>Intro</button>
+  <button class="nb" onclick="go('s1')"><span class="ico">🎬</span>Step 1</button>
+  <button class="nb" onclick="go('s2')"><span class="ico">👁</span>Step 2</button>
+  <button class="nb" onclick="go('s3')"><span class="ico">🔍</span>Step 3</button>
+  <button class="nb" onclick="go('s4')"><span class="ico">🗣</span>Step 4</button>
+  <button class="nb" onclick="go('ass')"><span class="ico">✅</span>Assess</button>
+</div>
+<div style="height:8px"></div>
+<div class="footer"><strong>Developed by Tr. Sobe</strong> — Atiaket Junior School, Grade 8 English, 2026<small>© Original material. All rights reserved. Unauthorised reproduction or distribution is not permitted.</small></div>
+
+<script>
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var fdb=null;
+function fbInit(){try{if(typeof firebase==="undefined")return;if(!firebase.apps.length)firebase.initializeApp(FBC);fdb=firebase.database();}catch(e){}}
+function now(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return{t:p(n.getHours())+":"+p(n.getMinutes()),d:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())};}
+function fbSet(path,data){if(!fdb)return;fdb.ref(path).set(data).catch(function(){});}
+var SECS={intro:"sec-intro",s1:"sec-s1",s2:"sec-s2",s3:"sec-s3",s4:"sec-s4",ass:"sec-ass"};
+function go(id){Object.keys(SECS).forEach(function(k){document.getElementById(SECS[k]).classList.toggle("on",k===id);});document.querySelectorAll(".tb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});document.querySelectorAll(".nb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});window.scrollTo({top:0,behavior:"smooth"});}
+
+/* VIDEO */
+var vCur=0;
+function startVid(){document.getElementById("vidArea").style.display="block";document.getElementById("vs0").classList.add("on");document.getElementById("vidArea").scrollIntoView({behavior:"smooth"});var n=now();fbSet("L5/step1/video_started",{t:n.t,d:n.d});}
+document.addEventListener("scroll",function(){if(!document.getElementById("sec-s1").classList.contains("on"))return;if(vCur<2){var sl=document.getElementById("vs"+vCur);if(sl){var r=sl.getBoundingClientRect();if(r.bottom<window.innerHeight+100){vCur++;document.getElementById("vs"+vCur).classList.add("on");}}}});
+
+/* GROUP TAB SWITCHER */
+function sg(n,key){var tEl=document.getElementById(key.replace("g","gt"));if(!tEl)return;tEl.querySelectorAll(".gt").forEach(function(b,i){b.classList.toggle("on",i===n-1);});var pEl=document.getElementById(key+"panels");if(!pEl)return;pEl.querySelectorAll(".gpanel").forEach(function(p,i){p.classList.toggle("on",i===n-1);});}
+
+/* STEP 2 — 5 GROUP SKIM PANELS */
+var SKIMQS=["What is the TEXT mainly about? Write the main idea in ONE sentence.","List THREE key words you noticed while skimming — words that appeared often or stood out.","Which paragraph do you think is most important and why? Write your group's answer."];
+function buildG2(){var panels=document.getElementById("g2panels");for(var g=1;g<=5;g++){var p=document.createElement("div");p.className="gpanel"+(g===1?" on":"");var html="";SKIMQS.forEach(function(q,i){html+='<div class="skimq"><div class="skimql">'+q+'</div><textarea class="skiminp" id="sk'+g+'_'+i+'" placeholder="Group '+g+' answer…"></textarea></div>';});html+='<button class="gsavebtn" onclick="saveG2('+g+')">💾 Save Group '+g+' Skim Answers</button><div class="gsaved" id="gsd2_'+g+'">✅ Saved!</div>';p.innerHTML=html;panels.appendChild(p);}}
+function saveG2(g){var a=document.getElementById("sk"+g+"_0").value.trim();if(!a){alert("Please write the main idea first.");return;}document.getElementById("gsd2_"+g).style.display="block";setTimeout(function(){document.getElementById("gsd2_"+g).style.display="none";},3000);var n=now();fbSet("L5/step2/group"+g,{mainIdea:a.substring(0,100),t:n.t,d:n.d});}
+buildG2();
+
+/* STEP 3 — 10 PAIRS word scan + dictionary */
+var wordCounts={};
+function showWordScan(){var pn=document.getElementById("pairSel3").value;var area=document.getElementById("wordScanArea");if(!pn){area.innerHTML="";return;}var pk=pn.replace(" ","");wordCounts[pk]=wordCounts[pk]||3;buildWordScan(pk,pn,wordCounts[pk]);}
+function buildWordScan(pk,pn,rows){var area=document.getElementById("wordScanArea");var html='<div class="wordscan"><div class="wshd"><h3>🔍 '+pn+' — Word Scan Sheet</h3><p>Find unfamiliar words in the text; look them up in the dictionary.</p></div><div class="wsbody"><div id="wordrows_'+pk+'">';for(var i=0;i<rows;i++){html+=wordRowHTML(pk,i);}html+='</div><button class="addrow" onclick="addRow(\''+pk+'\',\''+pn+'\')">+ Add Another Word</button><button class="wsavebtn" onclick="saveWordScan(\''+pk+'\',\''+pn+'\')">💾 Save '+pn+' Word Scan</button><div class="wsaved" id="wsaved_'+pk+'">✅ Saved!</div></div></div>';area.innerHTML=html;}
+function wordRowHTML(pk,i){return '<div class="wordrow"><div class="wf"><label>Word '+(i+1)+'</label><input type="text" id="w_'+pk+'_'+i+'" placeholder="Unfamiliar word"/></div><div class="wf"><label>Meaning in text</label><input type="text" id="m_'+pk+'_'+i+'" placeholder="Definition from dictionary"/></div></div>';}
+function addRow(pk,pn){wordCounts[pk]=(wordCounts[pk]||3)+1;var container=document.getElementById("wordrows_"+pk);var div=document.createElement("div");div.innerHTML=wordRowHTML(pk,wordCounts[pk]-1);container.appendChild(div.firstChild);}
+function saveWordScan(pk,pn){var w0=document.getElementById("w_"+pk+"_0").value.trim();if(!w0){alert("Please enter at least one word.");return;}var words=[];for(var i=0;i<(wordCounts[pk]||3);i++){var w=document.getElementById("w_"+pk+"_"+i);if(w&&w.value.trim())words.push(w.value.trim());}document.getElementById("wsaved_"+pk).style.display="block";setTimeout(function(){document.getElementById("wsaved_"+pk).style.display="none";},3000);var n=now();fbSet("L5/step3/"+pn.replace(" ",""),{words:words.length,t:n.t,d:n.d});}
+
+/* STEP 4 — 20 INDIVIDUAL read aloud sections */
+var MR={},RC={},RT={};
+function showRA(){var ln=document.getElementById("raLn").value;var area=document.getElementById("raArea");if(!ln){area.innerHTML="";return;}var k=ln.replace(" ","_");area.innerHTML='<div class="ra-section"><div class="ra-hd"><h3>🗣 '+ln+' — Read Aloud &amp; Comprehension</h3><p>Record yourself reading one paragraph, then answer the questions.</p></div><div class="ra-bdy"><div class="rslot" id="rsl_'+k+'"><div class="rtop"><span class="rtag">🎙 Read a paragraph aloud and record it</span><span class="rtimer" id="rtime_'+k+'">0:00</span></div><div class="rbtns"><button class="rbtn rstart" id="rstart_'+k+'" onclick="startR(\''+k+'\')">🎙 Record</button><button class="rbtn rstop" id="rstop_'+k+'" onclick="stopR(\''+k+'\')" disabled>⏹ Stop</button></div><div id="rplay_'+k+'"></div><div class="rstat" id="rstat_'+k+'">Ready — tap Record, read a paragraph clearly, tap Stop when done</div></div><div class="ra-q"><div class="ra-ql">1. In your own words, what is this text mainly about?</div><textarea class="ra-qi" id="raq1_'+k+'" placeholder="Write your answer here…"></textarea></div><div class="ra-q"><div class="ra-ql">2. Name TWO rights mentioned in the text.</div><textarea class="ra-qi" id="raq2_'+k+'" placeholder="1. …  2. …"></textarea></div><div class="ra-q"><div class="ra-ql">3. How does this text connect to your own life?</div><textarea class="ra-qi" id="raq3_'+k+'" placeholder="What does it make you think about your own rights?"></textarea></div><button class="ra-savebtn" onclick="saveRA(\''+k+'\',\''+ln+'\')">💾 Save My Answers</button><div class="ra-saved" id="rasvd_'+k+'">✅ Saved!</div></div></div>';}
+function startR(k){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){document.getElementById("rstat_"+k).textContent="Microphone not supported.";return;}navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){var sl=document.getElementById("rsl_"+k);sl.classList.add("rec");sl.classList.remove("done");document.getElementById("rstart_"+k).disabled=true;document.getElementById("rstop_"+k).disabled=false;document.getElementById("rplay_"+k).innerHTML="";RC[k]=[];var mr=new MediaRecorder(stream);MR[k]=mr;mr.ondataavailable=function(e){if(e.data.size>0)RC[k].push(e.data);};mr.onstop=function(){stream.getTracks().forEach(function(t){t.stop();});var blob=new Blob(RC[k],{type:"audio/webm"});var au=document.createElement("audio");au.controls=true;au.src=URL.createObjectURL(blob);document.getElementById("rplay_"+k).appendChild(au);var sl2=document.getElementById("rsl_"+k);sl2.classList.remove("rec");sl2.classList.add("done");document.getElementById("rstart_"+k).disabled=false;document.getElementById("rstop_"+k).disabled=true;document.getElementById("rstat_"+k).textContent="Recording saved! Listen back and answer the questions.";clearInterval(RT[k]);var el=document.getElementById("rtime_"+k);var dur=el?el.textContent:"0:00";var pts=dur.split(":");var sec=parseInt(pts[0]||0)*60+parseInt(pts[1]||0);var n=now();fbSet("L5/step4/"+k+"/recording",{dur:sec+"s",t:n.t,d:n.d});};mr.start();var sec=0;document.getElementById("rstat_"+k).textContent="Recording… read clearly!";RT[k]=setInterval(function(){sec++;var m=Math.floor(sec/60),s2=sec%60;var el=document.getElementById("rtime_"+k);if(el)el.textContent=m+":"+(s2<10?"0":"")+s2;},1000);}).catch(function(e){document.getElementById("rstat_"+k).textContent=e.name==="NotAllowedError"?"Mic denied — use https:// URL.":"Cannot access microphone.";});}
+function stopR(k){if(MR[k]&&MR[k].state!=="inactive")MR[k].stop();clearInterval(RT[k]);}
+function saveRA(k,ln){var q1=document.getElementById("raq1_"+k).value.trim();if(!q1){alert("Please answer at least the first question.");return;}document.getElementById("rasvd_"+k).style.display="block";setTimeout(function(){document.getElementById("rasvd_"+k).style.display="none";},3000);var n=now();fbSet("L5/step4/"+k+"/answers",{learner:ln,q1len:q1.length+"ch",t:n.t,d:n.d});}
+
+var qAns={};
+function cQ(btn,n,correct){if(qAns[n]!==undefined)return;qAns[n]=correct;btn.parentElement.querySelectorAll(".qopt").forEach(function(o){o.disabled=true;});if(correct){btn.classList.add("right");}else{btn.classList.add("wrong");btn.parentElement.querySelectorAll(".qopt").forEach(function(o){if(o.getAttribute("onclick").indexOf("true")!==-1)o.classList.add("right");});}var tot=5,done=Object.keys(qAns).length,score=Object.values(qAns).filter(Boolean).length;if(done===tot){var sc=document.getElementById("qScore");sc.style.display="block";sc.style.background=score>=4?"var(--gl)":"#fff7ed";sc.style.color=score>=4?"var(--g)":"var(--god)";sc.textContent="Score: "+score+"/"+tot+" — "+(score===5?"Excellent!":score>=4?"Very good!":score>=3?"Good effort!":"Keep practising!");var ln=document.getElementById("assLn").value;var n=now();if(ln)fbSet("L5/assess/comp/"+ln.replace(" ","_"),{score:score+"/"+tot,t:n.t,d:n.d});}}
+function togSelf(row){var box=row.querySelector(".chkbox");box.classList.toggle("on");var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;var res=document.getElementById("selfRes");if(done===0)res.textContent="";else if(done===tot)res.textContent="🌟 All objectives achieved!";else res.textContent=done+"/"+tot+" objectives achieved.";}
+function saveSelf(){var ln=document.getElementById("selfLn").value;if(!ln){alert("Select your name first.");return;}var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;document.getElementById("selfSaved").style.display="block";setTimeout(function(){document.getElementById("selfSaved").style.display="none";},3000);var n=now();fbSet("L5/assess/self/"+ln.replace(" ","_"),{achieved:done+"/"+tot,t:n.t,d:n.d});}
+
+window.addEventListener("load",function(){fbInit();});
+</script>
+</body>
+</html>

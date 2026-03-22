@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>L4 Thursday | Selecting Texts & Journals | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#bbf7d0;--bg:#f0fdf4;--wh:#fff;
+--g:#15803d;--gl:#dcfce7;--gd:#052e16;--gm:#22c55e;
+--t:#0f766e;--tl:#ccfbf1;--b:#1d4ed8;--bl:#dbeafe;
+--go:#d97706;--gol:#fef3c7;--pu:#7c3aed;--pul:#ede9fe;
+--r:#dc2626;--rl:#fee2e2;--sh:0 2px 16px rgba(0,0,0,.08);--ra:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px}
+
+.hero{background:linear-gradient(135deg,#052e16,#15803d 60%,#1d4ed8);padding:24px 16px 20px;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+.hero h1{font-size:clamp(18px,5vw,25px);font-weight:900;line-height:1.22;margin-bottom:4px}
+.hero h1 span{color:#86efac}
+.hero p{font-size:12px;opacity:.86;line-height:1.6}
+.roll{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700}
+
+.tabs{display:flex;overflow-x:auto;background:var(--wh);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:90;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:0 0 auto;padding:11px 13px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;border:none;background:none;border-bottom:3px solid transparent;cursor:pointer;color:var(--sub);white-space:nowrap}
+.tb.on{color:var(--g);border-bottom-color:var(--g)}
+
+.sec{display:none;padding:14px}
+.sec.on{display:block;animation:fadeup .24s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.card{background:var(--wh);border-radius:var(--ra);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.ch{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--g);display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.ch .ci{width:23px;height:23px;background:var(--gl);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+.sh{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sn{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff}
+.s1c{background:#1d4ed8}.s2c{background:#0f766e}.s3c{background:#d97706}.s4c{background:#7c3aed}
+.st{font-size:13.5px;font-weight:800}
+.ss{font-size:11px;color:var(--sub);font-weight:700;margin-top:2px}
+.sd{font-size:12.5px;color:var(--sub);line-height:1.7;margin-bottom:10px}
+
+.org{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:800;color:#fff;margin-right:4px}
+.og{background:var(--t)}.oi{background:var(--pu)}
+
+.box{border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.7;margin-bottom:10px}
+.bgo{background:var(--gol);border-left:4px solid var(--go);color:#4a2c00}
+.bg{background:var(--gl);border-left:4px solid var(--g);color:var(--gd)}
+.bt{background:var(--tl);border-left:4px solid var(--t);color:#003b35}
+
+.rollgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;text-align:center;margin-bottom:4px}
+.rc2{border-radius:10px;padding:10px 4px}
+.rc2 .num{font-size:22px;font-weight:900}
+.rc2 .lbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+
+/* GROUP TABS */
+.gtabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.gt{padding:6px 12px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:800;cursor:pointer;color:var(--sub)}
+.gt.on{background:var(--g);border-color:var(--g);color:#fff}
+.gpanel{display:none}
+.gpanel.on{display:block}
+.gsavebtn{width:100%;padding:10px;background:var(--g);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px}
+.gsaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+/* FACTOR ITEMS */
+.flist{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.fitem{display:flex;align-items:flex-start;gap:9px;background:var(--bg);border:2px solid var(--border);border-radius:11px;padding:10px 12px;cursor:pointer;user-select:none;transition:all .18s}
+.fitem.hit{background:var(--gl);border-color:var(--g)}
+.fch{width:22px;height:22px;flex-shrink:0;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;transition:all .18s;margin-top:1px}
+.fitem.hit .fch{background:var(--g);border-color:var(--g);color:#fff}
+.fn{font-size:12.5px;font-weight:800;margin-bottom:1px}
+.fitem.hit .fn{color:var(--g)}
+.fex{font-size:11.5px;color:var(--sub);line-height:1.5}
+.fpbar{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.fpb{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden}
+.fpbf{height:100%;background:linear-gradient(90deg,var(--g),var(--t));border-radius:5px;transition:width .4s}
+.fbar-lbl{font-size:12px;font-weight:800;color:var(--sub)}
+
+/* TEXT TYPE */
+.tt2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ttcard{border-radius:11px;padding:11px;border:2px solid var(--border);cursor:pointer;transition:all .18s;text-align:center;user-select:none}
+.ttcard:hover{border-color:var(--g)}
+.ttcard.sel{border-color:var(--g);background:var(--gl)}
+.tti{font-size:26px;margin-bottom:4px}
+.ttn{font-size:12px;font-weight:800;margin-bottom:2px}
+.ttcard.sel .ttn{color:var(--g)}
+.ttd{font-size:11px;color:var(--sub);line-height:1.4}
+.ttinfo{display:none;background:var(--wh);border:2px solid var(--g);border-radius:10px;padding:11px;margin-top:7px}
+.ttinfo.on{display:block;animation:fadeup .2s ease}
+.ttin{font-size:13px;font-weight:800;color:var(--g);margin-bottom:3px}
+.ttid{font-size:12.5px;color:var(--sub);line-height:1.6}
+
+/* REASONS */
+.rlist{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.ritem{display:flex;align-items:flex-start;gap:9px;background:var(--bg);border:2px solid var(--border);border-radius:11px;padding:10px 12px;cursor:pointer;user-select:none;transition:all .18s}
+.ritem.hit{background:var(--gol);border-color:var(--go)}
+.rico{font-size:20px;flex-shrink:0;margin-top:1px}
+.rn{font-size:12.5px;font-weight:800;margin-bottom:1px}
+.ritem.hit .rn{color:var(--go)}
+.rex{font-size:11.5px;color:var(--sub);line-height:1.5}
+.rvbtn{flex-shrink:0;padding:5px 10px;border-radius:18px;border:2px solid var(--border);background:var(--wh);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer;color:var(--sub);align-self:center;white-space:nowrap}
+.ritem.hit .rvbtn{background:var(--go);border-color:var(--go);color:#fff}
+
+/* GROUP DISCUSSION */
+.dq{background:var(--gol);border-left:4px solid var(--go);border-radius:9px;padding:10px 12px;margin-bottom:9px}
+.dqt{font-size:13px;font-weight:800;color:#4a2c00;margin-bottom:5px;line-height:1.5}
+.dqi{width:100%;border:1.5px solid var(--go);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:12.5px;resize:none;outline:none;background:#fffef7;min-height:52px;line-height:1.6;font-weight:700}
+
+/* SAMPLE JOURNAL */
+.samplejnl{background:#fffdf5;border:2px dashed var(--go);border-radius:11px;padding:12px;margin-bottom:11px}
+.sjt{font-size:12px;font-weight:900;color:var(--go);margin-bottom:8px}
+.sjrow{display:flex;gap:8px;margin-bottom:4px;font-size:12px;line-height:1.5}
+.sjlbl{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);width:78px;flex-shrink:0}
+.sjstars{color:var(--go);font-size:16px}
+
+/* INDIVIDUAL JOURNAL — 20 learners */
+.lsel{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px}
+.lsel label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:5px}
+.lsel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:#fff}
+.jnlwrap{background:var(--wh);border-radius:var(--ra);overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.jnlhd{background:linear-gradient(135deg,#052e16,#15803d);padding:11px 14px;color:#fff}
+.jnlhd h3{font-size:13.5px;font-weight:900;margin-bottom:2px}
+.jnlhd p{font-size:11px;opacity:.85}
+.jnlbdy{padding:13px}
+.jf{margin-bottom:9px}
+.jf label{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--g);margin-bottom:4px}
+.jf input,.jf select,.jf textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;background:var(--bg);transition:border-color .18s}
+.jf input:focus,.jf select:focus,.jf textarea:focus{border-color:var(--g);background:#fff}
+.jf textarea{resize:none;min-height:58px;line-height:1.6}
+.stars{display:flex;gap:5px;margin-bottom:3px}
+.star{font-size:24px;cursor:pointer;background:none;border:none;padding:2px;line-height:1}
+.jnlsavebtn{width:100%;padding:10px;background:var(--g);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:4px}
+.jnlsaved{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.qopt{padding:9px 11px;border-radius:9px;border:2px solid var(--border);background:var(--wh);font-size:12.5px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;margin-bottom:6px;display:block;font-weight:700}
+.qopt:hover{border-color:var(--g)}.qopt.right{background:var(--gl);border-color:var(--g);color:var(--g)}.qopt.wrong{background:var(--rl);border-color:var(--r);color:var(--r)}
+.chkrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.chkrow:last-child{border-bottom:none}
+.chkbox{width:21px;height:21px;flex-shrink:0;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;transition:all .18s}
+.chkbox.on{background:var(--g);border-color:var(--g);color:#fff}
+.chktxt{font-size:12.5px;line-height:1.5;font-weight:700}
+.savebtn{width:100%;padding:10px;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:#fff;margin-top:9px;background:var(--g)}
+.saved-msg{display:none;background:var(--gl);border-radius:8px;padding:8px;text-align:center;color:var(--g);font-size:12.5px;font-weight:800;margin-top:7px}
+
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;box-shadow:0 -3px 14px rgba(0,0,0,.07);z-index:99}
+.nb{flex:1;border:none;background:none;cursor:pointer;padding:8px 2px 12px;font-family:'Nunito',sans-serif;font-size:9.5px;font-weight:800;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nb .ico{font-size:18px}
+.nb.on{color:var(--g)}
+.footer{background:#0c1222;color:rgba(255,255,255,.6);text-align:center;padding:12px 16px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.5;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📚 Grade 8 · Lesson 4 · Thursday · Week 1</div>
+  <h1>Extensive Reading:<br><span>Selecting Texts &amp; Journals</span></h1>
+  <p>Theme: Human Rights · Reading · 9:00–9:40 AM</p>
+  <div class="roll">
+    <span class="rc">🏫 Atiaket Junior School</span>
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">🔵 5 Groups of 4</span>
+    <span class="rc">📓 20 Journals</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="go('intro')">🎯 Intro</button>
+  <button class="tb" onclick="go('s1')">🔎 Step 1</button>
+  <button class="tb" onclick="go('s2')">📖 Step 2</button>
+  <button class="tb" onclick="go('s3')">💬 Step 3</button>
+  <button class="tb" onclick="go('s4')">📓 Step 4</button>
+  <button class="tb" onclick="go('ass')">✅ Assess</button>
+</div>
+
+<!-- INTRO -->
+<div class="sec on" id="sec-intro">
+  <div class="card">
+    <div class="ch"><div class="ci">📋</div>Organisation — 20 Learners</div>
+    <div class="rollgrid">
+      <div class="rc2" style="background:var(--gl)"><div class="num" style="color:var(--g)">20</div><div class="lbl">Learners</div></div>
+      <div class="rc2" style="background:var(--gol)"><div class="num" style="color:var(--go)">5</div><div class="lbl">Groups</div></div>
+      <div class="rc2" style="background:var(--tl)"><div class="num" style="color:var(--t)">4</div><div class="lbl">Per Group</div></div>
+      <div class="rc2" style="background:var(--bl)"><div class="num" style="color:var(--b)">20</div><div class="lbl">Journals</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🗂</div>Steps at a Glance</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org og">🔵 5 GROUPS</span>Step 1 — Search for factors to consider when selecting reading materials; take notes</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org og">🔵 5 GROUPS</span>Step 2 — Identify print and non-print texts; apply the selection factors</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org og">🔵 5 GROUPS</span>Step 3 — Discuss reasons for reading; why reading for enjoyment is important</div>
+      <div style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700"><span class="org oi">👤 20 INDIVIDUAL</span>Step 4 — Go through sample journal; each learner creates their own</div>
+    </div>
+  </div>
+  <div class="bgo box"><strong>Key Inquiry Questions:</strong><br>1. Why should one read widely?<br>2. What should one consider when selecting a reading text?</div>
+</div>
+
+<!-- STEP 1 — 5 GROUPS search factors -->
+<div class="sec" id="sec-s1">
+  <div class="card">
+    <div class="sh"><div class="sn s1c">1</div><div><div class="st">Search for Factors to Consider When Selecting Reading Materials</div><div class="ss"><span class="org og" style="font-size:10px;padding:2px 8px">🔵 5 GROUPS of 4</span> — internet and print; take notes</div></div></div>
+    <p class="sd">In your group of 4, use an internet-enabled device and print materials to search for factors one should consider when choosing a text to read. Select your group tab below, tick each factor found, then save your group's notes.</p>
+  </div>
+  <div class="card">
+    <div class="bgo box"><strong>Group Task:</strong> Search ("factors to consider when selecting reading materials") online or in your course book. Tick each factor your group finds and agrees belongs on the list. Save your findings, then write notes in your exercise books.</div>
+    <div class="gtabs" id="gt1">
+      <button class="gt on" onclick="sg(1,'g1')">Group 1</button>
+      <button class="gt" onclick="sg(2,'g1')">Group 2</button>
+      <button class="gt" onclick="sg(3,'g1')">Group 3</button>
+      <button class="gt" onclick="sg(4,'g1')">Group 4</button>
+      <button class="gt" onclick="sg(5,'g1')">Group 5</button>
+    </div>
+    <div id="g1panels"></div>
+  </div>
+</div>
+
+<!-- STEP 2 — 5 GROUPS identify texts -->
+<div class="sec" id="sec-s2">
+  <div class="card">
+    <div class="sh"><div class="sn s2c">2</div><div><div class="st">Identify Print &amp; Non-Print Texts to Read</div><div class="ss"><span class="org og" style="font-size:10px;padding:2px 8px">🔵 5 GROUPS</span> — apply the factors from Step 1</div></div></div>
+    <p class="sd">Using the selection factors your group identified in Step 1, identify texts — print and non-print — that would be interesting and appropriate to read on the theme of Human Rights. Tap each text type to learn about it. Then select your group tab and record your group's choices.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">📄</div>Print Texts — tap to learn</div>
+    <div class="tt2">
+      <div class="ttcard" onclick="selTT(this,'📰 Newspapers','Daily Nation, The Standard — current news and features on human rights, community issues, and current affairs. Reliable, affordable, and up to date.')"><div class="tti">📰</div><div class="ttn">Newspapers</div><div class="ttd">Daily Nation, The Standard</div></div>
+      <div class="ttcard" onclick="selTT(this,'📗 Storybooks','Novels and short stories — read for enjoyment and to explore human experiences. Many explore themes of dignity, justice, and rights.')"><div class="tti">📗</div><div class="ttn">Storybooks</div><div class="ttd">Novels and short stories</div></div>
+      <div class="ttcard" onclick="selTT(this,'📜 Poetry Books','Anthologies and collections — powerful language about emotions, freedom, justice, and human dignity.')"><div class="tti">📜</div><div class="ttn">Poetry Books</div><div class="ttd">Anthologies and verse</div></div>
+      <div class="ttcard" onclick="selTT(this,'📓 Magazines','Drum, youth publications — lifestyle, culture, social issues, children\'s rights, and community stories.')"><div class="tti">📓</div><div class="ttn">Magazines</div><div class="ttd">Drum, youth publications</div></div>
+    </div>
+    <div class="ch" style="margin-top:4px"><div class="ci">📱</div>Non-Print Texts — tap to learn</div>
+    <div class="tt2">
+      <div class="ttcard" onclick="selTT(this,'🌐 Online Articles','UNICEF, BBC, Daily Nation online — digital features about children\'s rights, education access, and justice from trusted websites.')"><div class="tti">🌐</div><div class="ttn">Online Articles</div><div class="ttd">UNICEF, BBC, news sites</div></div>
+      <div class="ttcard" onclick="selTT(this,'🎧 Audio Books','Books read aloud and recorded — listen on a phone or device. Builds comprehension, vocabulary, and pronunciation.')"><div class="tti">🎧</div><div class="ttn">Audio Books</div><div class="ttd">Listen on phone/device</div></div>
+      <div class="ttcard" onclick="selTT(this,'📺 Documentaries','Films about real people and events — many cover human rights issues in powerful visual ways. Found on YouTube or TV.')"><div class="tti">📺</div><div class="ttn">Documentaries</div><div class="ttd">Real-life films and videos</div></div>
+      <div class="ttcard" onclick="selTT(this,'📧 E-books','Electronic books read on phones, tablets, or computers — many free, covering human rights, stories, and reference materials.')"><div class="tti">📧</div><div class="ttn">E-books</div><div class="ttd">Digital books on any device</div></div>
+    </div>
+    <div class="ttinfo" id="ttInfo"><div class="ttin" id="ttN"></div><div class="ttid" id="ttD"></div></div>
+
+    <div class="ch" style="margin-top:11px"><div class="ci">📋</div>Group Text Choices — 5 Groups</div>
+    <div class="gtabs" id="gt2">
+      <button class="gt on" onclick="sg(1,'g2')">Group 1</button>
+      <button class="gt" onclick="sg(2,'g2')">Group 2</button>
+      <button class="gt" onclick="sg(3,'g2')">Group 3</button>
+      <button class="gt" onclick="sg(4,'g2')">Group 4</button>
+      <button class="gt" onclick="sg(5,'g2')">Group 5</button>
+    </div>
+    <div id="g2panels"></div>
+  </div>
+</div>
+
+<!-- STEP 3 — 5 GROUPS discuss reasons -->
+<div class="sec" id="sec-s3">
+  <div class="card">
+    <div class="sh"><div class="sn s3c">3</div><div><div class="st">Discuss Reasons for Reading</div><div class="ss"><span class="org og" style="font-size:10px;padding:2px 8px">🔵 5 GROUPS</span> — discuss; why reading for enjoyment matters</div></div></div>
+    <p class="sd">In groups, discuss various reasons people read and why reading for enjoyment is important. Tap the reasons your group agrees on, then select your group and answer the three discussion questions. Write answers in your exercise books.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">💡</div>Reasons for Reading — tap all your group agrees on</div>
+    <div class="rlist">
+      <div class="ritem" onclick="hitR(this)"><span class="rico">🧠</span><div><div class="rn">Reading for Information</div><div class="rex">To learn facts, understand events, and find answers — e.g. about human rights in a newspaper.</div></div><button class="rvbtn">Select</button></div>
+      <div class="ritem" onclick="hitR(this)"><span class="rico">😊</span><div><div class="rn">Reading for Enjoyment</div><div class="rex">To relax and have fun. Pleasure reading builds a lifelong love of learning and improves language naturally.</div></div><button class="rvbtn">Select</button></div>
+      <div class="ritem" onclick="hitR(this)"><span class="rico">🔤</span><div><div class="rn">Reading to Improve Language</div><div class="rex">Wide reading expands vocabulary, improves spelling, and builds confidence in speaking and writing.</div></div><button class="rvbtn">Select</button></div>
+      <div class="ritem" onclick="hitR(this)"><span class="rico">🌍</span><div><div class="rn">Reading to Understand Others</div><div class="rex">Stories build empathy and help us understand experiences very different from our own.</div></div><button class="rvbtn">Select</button></div>
+      <div class="ritem" onclick="hitR(this)"><span class="rico">⚖️</span><div><div class="rn">Reading to Know Your Rights</div><div class="rex">Reading about human rights empowers us to understand, claim, and defend our rights and others'.</div></div><button class="rvbtn">Select</button></div>
+      <div class="ritem" onclick="hitR(this)"><span class="rico">💼</span><div><div class="rn">Reading to Think Critically</div><div class="rex">Reading helps us form and defend opinions and think carefully about complex issues.</div></div><button class="rvbtn">Select</button></div>
+    </div>
+    <div id="rcount" style="font-size:12px;color:var(--sub);text-align:center;margin-bottom:10px;font-weight:800">0 reasons selected</div>
+    <div class="gtabs" id="gt3">
+      <button class="gt on" onclick="sg(1,'g3')">Group 1</button>
+      <button class="gt" onclick="sg(2,'g3')">Group 2</button>
+      <button class="gt" onclick="sg(3,'g3')">Group 3</button>
+      <button class="gt" onclick="sg(4,'g3')">Group 4</button>
+      <button class="gt" onclick="sg(5,'g3')">Group 5</button>
+    </div>
+    <div id="g3panels"></div>
+  </div>
+</div>
+
+<!-- STEP 4 — 20 INDIVIDUAL journals -->
+<div class="sec" id="sec-s4">
+  <div class="card">
+    <div class="sh"><div class="sn s4c">4</div><div><div class="st">Go Through Sample Journal &amp; Create Your Own</div><div class="ss"><span class="org oi" style="font-size:10px;padding:2px 8px">👤 20 INDIVIDUALS</span> — each learner creates their own entry</div></div></div>
+    <p class="sd">Study the sample reading journal entry carefully to understand the format. Then select your name and fill in your own personal journal entry for a text you have read or a text your group chose in Step 2.</p>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">👁</div>Sample Reading Journal Entry — study this first</div>
+    <div class="samplejnl">
+      <div class="sjt">📓 Sample Entry</div>
+      <div class="sjrow"><div class="sjlbl">Date</div><div>Thursday, 8 January 2026</div></div>
+      <div class="sjrow"><div class="sjlbl">Title</div><div>The Rights of the Child — UNICEF</div></div>
+      <div class="sjrow"><div class="sjlbl">Type</div><div>Online Article (Non-print)</div></div>
+      <div class="sjrow"><div class="sjlbl">About</div><div>Explained the 10 basic rights every child is entitled to under the UN Convention.</div></div>
+      <div class="sjrow"><div class="sjlbl">Interesting</div><div>Over 300 million children still lack clean water — a basic right in the convention.</div></div>
+      <div class="sjrow"><div class="sjlbl">New words</div><div>Convention, Ratified, Entitled</div></div>
+      <div class="sjrow"><div class="sjlbl">Rights link</div><div>Directly about children's rights — the right to education, safety, and clean water.</div></div>
+      <div class="sjrow"><div class="sjlbl">Rating</div><div class="sjstars">★★★★☆</div></div>
+      <div class="sjrow"><div class="sjlbl">Recommend?</div><div>Yes — every learner should know their rights.</div></div>
+    </div>
+    <div class="bt box" style="margin-bottom:0"><strong>Notice:</strong> A good journal is personal and honest. Write in YOUR own words — your feelings and reactions. There are no wrong answers. This is your reading story.</div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">📓</div>My Personal Reading Journal — 20 Learners</div>
+    <div class="lsel"><label>Select your name to begin your journal</label>
+      <select id="jnlLn" onchange="showJnl()">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="jnlArea"></div>
+  </div>
+</div>
+
+<!-- ASSESS -->
+<div class="sec" id="sec-ass">
+  <div class="card">
+    <div class="ch"><div class="ci">📝</div>Comprehension Check — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="assLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">1. Which is the most important factor when selecting a reading text?</div>
+      <button class="qopt" onclick="cQ(this,0,false)">A. The colour of the book cover</button>
+      <button class="qopt" onclick="cQ(this,0,true)">B. Your reading level and interest in the topic</button>
+      <button class="qopt" onclick="cQ(this,0,false)">C. How many pages it has</button>
+      <button class="qopt" onclick="cQ(this,0,false)">D. Whether your friend has read it</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">2. Which is an example of a NON-PRINT text?</div>
+      <button class="qopt" onclick="cQ(this,1,false)">A. A poetry book</button>
+      <button class="qopt" onclick="cQ(this,1,true)">B. An online article from a trusted news website</button>
+      <button class="qopt" onclick="cQ(this,1,false)">C. A magazine from the library</button>
+      <button class="qopt" onclick="cQ(this,1,false)">D. A class reader storybook</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">3. What is the purpose of a personal reading journal?</div>
+      <button class="qopt" onclick="cQ(this,2,false)">A. To copy what the teacher writes on the board</button>
+      <button class="qopt" onclick="cQ(this,2,true)">B. To record your personal thoughts and growth as a reader</button>
+      <button class="qopt" onclick="cQ(this,2,false)">C. To memorise every word in a text</button>
+      <button class="qopt" onclick="cQ(this,2,false)">D. To write a full summary of every chapter</button>
+    </div>
+    <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">4. Why is reading for enjoyment important?</div>
+      <button class="qopt" onclick="cQ(this,3,false)">A. It helps you finish exams faster</button>
+      <button class="qopt" onclick="cQ(this,3,true)">B. It builds a lifelong love of learning and improves language naturally</button>
+      <button class="qopt" onclick="cQ(this,3,false)">C. It replaces the need to study other subjects</button>
+      <button class="qopt" onclick="cQ(this,3,false)">D. It replaces listening in class</button>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:800;margin-bottom:7px">5. What does reading WIDELY mean?</div>
+      <button class="qopt" onclick="cQ(this,4,false)">A. Reading only very long books</button>
+      <button class="qopt" onclick="cQ(this,4,false)">B. Reading the same text many times</button>
+      <button class="qopt" onclick="cQ(this,4,true)">C. Reading a variety of texts from different sources, genres, and topics</button>
+      <button class="qopt" onclick="cQ(this,4,false)">D. Reading as fast as possible</button>
+    </div>
+    <div id="qScore" style="display:none;padding:11px;border-radius:9px;font-size:13.5px;font-weight:900;text-align:center;margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">✅</div>Self-Assessment — 20 Learners Individual</div>
+    <div class="lsel"><label>Select your name</label>
+      <select id="selfLn">
+        <option value="">-- Select your name --</option>
+        <option>Learner 1</option><option>Learner 2</option><option>Learner 3</option><option>Learner 4</option><option>Learner 5</option>
+        <option>Learner 6</option><option>Learner 7</option><option>Learner 8</option><option>Learner 9</option><option>Learner 10</option>
+        <option>Learner 11</option><option>Learner 12</option><option>Learner 13</option><option>Learner 14</option><option>Learner 15</option>
+        <option>Learner 16</option><option>Learner 17</option><option>Learner 18</option><option>Learner 19</option><option>Learner 20</option>
+      </select>
+    </div>
+    <div id="selfList">
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can list factors to consider when selecting a reading text.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can give examples of print and non-print texts and explain the difference.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I can explain at least two reasons why reading is important.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I understand why reading for enjoyment matters for lifelong learning.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I created my own personal reading journal entry.</div></div>
+      <div class="chkrow" onclick="togSelf(this)"><div class="chkbox">✓</div><div class="chktxt">I appreciate the importance of reading widely for information and enjoyment.</div></div>
+    </div>
+    <div id="selfRes" style="margin-top:10px;font-size:13px;font-weight:800;text-align:center;color:var(--g)"></div>
+    <button class="savebtn" onclick="saveSelf()">💾 Save My Self-Assessment</button>
+    <div class="saved-msg" id="selfSaved">✅ Saved!</div>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ci">🏠</div>Extended Activity</div>
+    <p style="font-size:13px;line-height:1.7;color:var(--sub);font-weight:700">Select one print text and one non-print text using today's factors. Read them and <strong>add new entries to your reading journal</strong>. Bring your journal to the next lesson to share with your group.</p>
+  </div>
+</div>
+
+<div class="bnav">
+  <button class="nb on" onclick="go('intro')"><span class="ico">🎯</span>Intro</button>
+  <button class="nb" onclick="go('s1')"><span class="ico">🔎</span>Step 1</button>
+  <button class="nb" onclick="go('s2')"><span class="ico">📖</span>Step 2</button>
+  <button class="nb" onclick="go('s3')"><span class="ico">💬</span>Step 3</button>
+  <button class="nb" onclick="go('s4')"><span class="ico">📓</span>Step 4</button>
+  <button class="nb" onclick="go('ass')"><span class="ico">✅</span>Assess</button>
+</div>
+<div style="height:8px"></div>
+<div class="footer"><strong>Developed by Tr. Sobe</strong> — Atiaket Junior School, Grade 8 English, 2026<small>© Original material. All rights reserved. Unauthorised reproduction or distribution is not permitted.</small></div>
+
+<script>
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var fdb=null;
+function fbInit(){try{if(typeof firebase==="undefined")return;if(!firebase.apps.length)firebase.initializeApp(FBC);fdb=firebase.database();}catch(e){}}
+function now(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return{t:p(n.getHours())+":"+p(n.getMinutes()),d:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())};}
+function fbSet(path,data){if(!fdb)return;fdb.ref(path).set(data).catch(function(){});}
+var SECS={intro:"sec-intro",s1:"sec-s1",s2:"sec-s2",s3:"sec-s3",s4:"sec-s4",ass:"sec-ass"};
+function go(id){Object.keys(SECS).forEach(function(k){document.getElementById(SECS[k]).classList.toggle("on",k===id);});document.querySelectorAll(".tb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});document.querySelectorAll(".nb").forEach(function(b){b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+id+"'")!==-1);});window.scrollTo({top:0,behavior:"smooth"});}
+
+/* GENERIC GROUP TAB SWITCHER */
+function sg(n,key){var tabs=document.getElementById(key.replace("g","gt"));if(!tabs)return;tabs.querySelectorAll(".gt").forEach(function(b,i){b.classList.toggle("on",i===n-1);});var panels=document.getElementById(key+"panels");if(!panels)return;panels.querySelectorAll(".gpanel").forEach(function(p,i){p.classList.toggle("on",i===n-1);});}
+
+/* STEP 1 — 5 GROUP PANELS with 8 factors */
+var FACTORS=[
+  {n:"📖 Reading Level",e:"Choose a text you can understand with some effort — not too easy, not overwhelming."},
+  {n:"❤️ Interest and Enjoyment",e:"You read better and remember more when the topic genuinely interests or excites you."},
+  {n:"🎯 Purpose for Reading",e:"Reading for info, enjoyment, or skill? Your purpose helps choose the right text type."},
+  {n:"✅ Reliability of the Source",e:"Is it from a trusted source? Accuracy matters especially for human rights topics."},
+  {n:"📅 Relevance and Currency",e:"For human rights topics, choose recent texts that have up-to-date information."},
+  {n:"🌍 Cultural Sensitivity",e:"A good text respects all people regardless of background. Avoid biased or disrespectful texts."},
+  {n:"📏 Length and Format",e:"A short article suits a quick session; a novel suits extended independent reading over several days."},
+  {n:"🔤 Vocabulary and Language",e:"Some new words build growth. Too many unknown words makes reading exhausting and discouraging."}
+];
+var fHits={};
+function buildG1(){var panels=document.getElementById("g1panels");for(var g=1;g<=5;g++){var p=document.createElement("div");p.className="gpanel"+(g===1?" on":"");var html='<div class="fpbar"><div class="fbar-lbl" id="fbl'+g+'">0 of 8 factors noted</div><div class="fpb"><div class="fpbf" id="fpbf'+g+'" style="width:0%"></div></div></div><div class="flist">';FACTORS.forEach(function(f,i){html+='<div class="fitem" onclick="hitF(this,'+g+','+i+')"><div class="fch">✓</div><div><div class="fn">'+f.n+'</div><div class="fex">'+f.e+'</div></div></div>';});html+='</div><button class="gsavebtn" onclick="saveG1('+g+')">💾 Save Group '+g+' Notes</button><div class="gsaved" id="gsd1-'+g+'">✅ Group '+g+' notes saved!</div>';p.innerHTML=html;panels.appendChild(p);}}
+function hitF(el,g,i){var k=g+"-"+i;el.classList.toggle("hit");if(el.classList.contains("hit")){fHits[k]=true;}else{delete fHits[k];}var cnt=Object.keys(fHits).filter(function(k2){return k2.startsWith(g+"-");}).length;document.getElementById("fbl"+g).textContent=cnt+" of 8 factors noted";document.getElementById("fpbf"+g).style.width=(cnt/8*100)+"%";}
+function saveG1(g){var cnt=Object.keys(fHits).filter(function(k){return k.startsWith(g+"-");}).length;document.getElementById("gsd1-"+g).style.display="block";setTimeout(function(){document.getElementById("gsd1-"+g).style.display="none";},3000);var n=now();fbSet("L4/step1/group"+g,{found:cnt+"/8",t:n.t,d:n.d});}
+buildG1();
+
+/* TEXT TYPE */
+function selTT(card,name,desc){document.querySelectorAll(".ttcard").forEach(function(c){c.classList.remove("sel");});card.classList.add("sel");document.getElementById("ttN").textContent=name;document.getElementById("ttD").textContent=desc;document.getElementById("ttInfo").classList.add("on");var n=now();fbSet("L4/step2/text_tapped",{type:name,t:n.t,d:n.d});}
+
+/* STEP 2 — 5 GROUP CHOICE PANELS */
+function buildG2(){var panels=document.getElementById("g2panels");for(var g=1;g<=5;g++){var p=document.createElement("div");p.className="gpanel"+(g===1?" on":"");p.innerHTML='<div class="jf"><label>Group '+g+' — Print text chosen (title or name):</label><input type="text" id="g2p'+g+'" placeholder="e.g. Daily Nation newspaper article"/></div><div class="jf"><label>Non-print text chosen:</label><input type="text" id="g2n'+g+'" placeholder="e.g. UNICEF online article about rights"/></div><div class="jf"><label>Why these texts meet your selection factors from Step 1:</label><textarea id="g2w'+g+'" style="resize:none;min-height:50px;" placeholder="Which factors do these texts satisfy?"></textarea></div><button class="gsavebtn" onclick="saveG2('+g+')">💾 Save Group '+g+' Choices</button><div class="gsaved" id="gsd2-'+g+'">✅ Saved!</div>';panels.appendChild(p);}}
+function saveG2(g){var p=document.getElementById("g2p"+g).value.trim(),n2=document.getElementById("g2n"+g).value.trim();if(!p||!n2){alert("Please enter both print and non-print text choices.");return;}document.getElementById("gsd2-"+g).style.display="block";setTimeout(function(){document.getElementById("gsd2-"+g).style.display="none";},3000);var n=now();fbSet("L4/step2/group"+g+"/choices",{print:p,nonPrint:n2,t:n.t,d:n.d});}
+buildG2();
+
+/* STEP 3 — REASONS + 5 GROUP DISCUSSION */
+var rCount=0;
+function hitR(el){el.classList.toggle("hit");var btn=el.querySelector(".rvbtn");btn.textContent=el.classList.contains("hit")?"Selected ✓":"Select";rCount=document.querySelectorAll(".ritem.hit").length;document.getElementById("rcount").textContent=rCount+" reason"+(rCount!==1?"s":"")+" selected";}
+function buildG3(){var panels=document.getElementById("g3panels");var Qs=["1. Why is reading for enjoyment important for lifelong learning? Give two reasons from your group.","2. How does reading about human rights help you as a learner and as a citizen?","3. Which reason for reading does your group consider most important and why?"];for(var g=1;g<=5;g++){var p=document.createElement("div");p.className="gpanel"+(g===1?" on":"");var html="";Qs.forEach(function(q,i){html+='<div class="dq"><div class="dqt">'+q+'</div><textarea class="dqi" id="g3q'+g+'_'+i+'" placeholder="Group '+g+' answer…"></textarea></div>';});html+='<button class="gsavebtn" onclick="saveG3('+g+')">💾 Save Group '+g+' Discussion</button><div class="gsaved" id="gsd3-'+g+'">✅ Saved!</div>';p.innerHTML=html;panels.appendChild(p);}}
+function saveG3(g){var a=document.getElementById("g3q"+g+"_0").value.trim();if(!a){alert("Please write at least the first answer.");return;}document.getElementById("gsd3-"+g).style.display="block";setTimeout(function(){document.getElementById("gsd3-"+g).style.display="none";},3000);var n=now();fbSet("L4/step3/group"+g,{reasons_selected:rCount+"/6",t:n.t,d:n.d});}
+buildG3();
+
+/* STEP 4 — 20 INDIVIDUAL JOURNALS */
+var starRatings={};
+function showJnl(){var ln=document.getElementById("jnlLn").value;var area=document.getElementById("jnlArea");if(!ln){area.innerHTML="";return;}var k=ln.replace(" ","_");area.innerHTML='<div class="jnlwrap"><div class="jnlhd"><h3>📓 '+ln+' — Reading Journal</h3><p>Fill in all sections in your own words.</p></div><div class="jnlbdy"><div class="jf"><label>Date</label><input type="text" id="jd_'+k+'" value="Thursday, 8 January 2026"/></div><div class="jf"><label>Title of Text Read</label><input type="text" id="jt_'+k+'" placeholder="e.g. The Rights of the Child — UNICEF"/></div><div class="jf"><label>Type of Text</label><select id="jty_'+k+'"><option value="">-- Select type --</option><option>Newspaper Article (Print)</option><option>Storybook (Print)</option><option>Poetry Book (Print)</option><option>Magazine Article (Print)</option><option>Online Article (Non-print)</option><option>Audio Book (Non-print)</option><option>Documentary (Non-print)</option><option>E-book (Non-print)</option></select></div><div class="jf"><label>What the Text is About</label><textarea id="ja_'+k+'" placeholder="Summarise in 2–3 sentences in your own words…"></textarea></div><div class="jf"><label>What I Found Most Interesting</label><textarea id="ji_'+k+'" placeholder="What surprised you? What caught your attention?"></textarea></div><div class="jf"><label>New Words or Ideas I Learnt</label><textarea id="jw_'+k+'" placeholder="List new vocabulary and meanings…"></textarea></div><div class="jf"><label>How This Text Connects to Human Rights</label><textarea id="jr_'+k+'" placeholder="How does this text relate to the theme of Human Rights?"></textarea></div><div class="jf"><label>My Personal Rating (tap the stars)</label><div class="stars" id="stars_'+k+'"><button class="star" onclick="rateStar(\''+k+'\',1)">☆</button><button class="star" onclick="rateStar(\''+k+'\',2)">☆</button><button class="star" onclick="rateStar(\''+k+'\',3)">☆</button><button class="star" onclick="rateStar(\''+k+'\',4)">☆</button><button class="star" onclick="rateStar(\''+k+'\',5)">☆</button></div><div id="starlbl_'+k+'" style="font-size:12px;color:var(--sub);font-weight:700">Tap stars to rate</div></div><div class="jf"><label>Would You Recommend This Text?</label><textarea id="jrec_'+k+'" placeholder="Would you tell a friend? Give a reason…"></textarea></div><button class="jnlsavebtn" onclick="saveJnl(\''+k+'\',\''+ln+'\')">💾 Save My Journal Entry</button><div class="jnlsaved" id="jnlsvd_'+k+'">✅ Journal entry saved! Keep reading and adding entries.</div></div></div>';}
+function rateStar(k,n){starRatings[k]=n;var stars=document.getElementById("stars_"+k).querySelectorAll(".star");stars.forEach(function(s,i){s.textContent=i<n?"★":"☆";});var lbs=["","Poor","Fair","Good","Very Good","Excellent"];document.getElementById("starlbl_"+k).textContent=lbs[n]+" ("+n+"/5 stars)";}
+function saveJnl(k,ln){var title=document.getElementById("jt_"+k).value.trim();var type=document.getElementById("jty_"+k).value;var about=document.getElementById("ja_"+k).value.trim();if(!title){alert("Please enter the title of the text you read.");return;}if(!type){alert("Please select the type of text.");return;}if(!about){alert("Please write what the text is about.");return;}document.getElementById("jnlsvd_"+k).style.display="block";setTimeout(function(){document.getElementById("jnlsvd_"+k).style.display="none";},4000);var n=now();fbSet("L4/step4/journals/"+k,{learner:ln,title:title,type:type,rating:(starRatings[k]||0)+"/5",t:n.t,d:n.d});}
+
+var qAns={};
+function cQ(btn,n,correct){if(qAns[n]!==undefined)return;qAns[n]=correct;btn.parentElement.querySelectorAll(".qopt").forEach(function(o){o.disabled=true;});if(correct){btn.classList.add("right");}else{btn.classList.add("wrong");btn.parentElement.querySelectorAll(".qopt").forEach(function(o){if(o.getAttribute("onclick").indexOf("true")!==-1)o.classList.add("right");});}var tot=5,done=Object.keys(qAns).length,score=Object.values(qAns).filter(Boolean).length;if(done===tot){var sc=document.getElementById("qScore");sc.style.display="block";sc.style.background=score>=4?"var(--gl)":"var(--gol)";sc.style.color=score>=4?"var(--g)":"#4a2c00";sc.textContent="Score: "+score+"/"+tot+" — "+(score===5?"Excellent!":score>=4?"Very good!":score>=3?"Good effort!":"Keep reading and practising!");var ln=document.getElementById("assLn").value;var n=now();if(ln)fbSet("L4/assess/comp/"+ln.replace(" ","_"),{score:score+"/"+tot,t:n.t,d:n.d});}}
+function togSelf(row){var box=row.querySelector(".chkbox");box.classList.toggle("on");var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;var res=document.getElementById("selfRes");if(done===0)res.textContent="";else if(done===tot)res.textContent="🌟 All objectives achieved!";else res.textContent=done+"/"+tot+" objectives achieved.";}
+function saveSelf(){var ln=document.getElementById("selfLn").value;if(!ln){alert("Select your name first.");return;}var tot=document.querySelectorAll(".chkbox").length,done=document.querySelectorAll(".chkbox.on").length;document.getElementById("selfSaved").style.display="block";setTimeout(function(){document.getElementById("selfSaved").style.display="none";},3000);var n=now();fbSet("L4/assess/self/"+ln.replace(" ","_"),{achieved:done+"/"+tot,t:n.t,d:n.d});}
+
+window.addEventListener("load",function(){fbInit();});
+</script>
+</body>
+</html>
