@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#0c1d5e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Atiaket Edu"/>
+<title>Atiaket Edu — Tr. Sobe</title>
+<link rel="manifest" href="#" id="manifestLink"/>
+<style>
+:root{
+  --ink:#0f172a;--sub:#475569;--border:#e2e8f0;--bg:#f1f5f9;--wh:#fff;
+  --b:#1d4ed8;--bl:#dbeafe;--g:#15803d;--gl:#dcfce7;
+  --go:#d97706;--gol:#fef3c7;--pu:#7c3aed;--pul:#ede9fe;
+  --r:#dc2626;--rl:#fee2e2;--t:#0f766e;--tl:#ccfbf1;
+  --nav:#0c1d5e;--sh:0 2px 12px rgba(0,0,0,.10);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+
+/* ── TOP BAR ── */
+.topbar{background:linear-gradient(135deg,#0c1d5e,#1d4ed8);padding:12px 16px 10px;color:#fff;flex-shrink:0;padding-top:max(12px,env(safe-area-inset-top))}
+.topbar-row{display:flex;justify-content:space-between;align-items:center}
+.topbar h1{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.topbar p{font-size:11px;opacity:.8;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#f87171;flex-shrink:0;transition:background .3s}
+.dot-live.on{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.sync-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:700;color:#fff;cursor:pointer}
+
+/* ── SCROLL AREA ── */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:14px 14px 80px;display:none;-webkit-overflow-scrolling:touch}
+.screen.on{display:block;animation:fadeup .2s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── BOTTOM NAV ── */
+.bnav{background:var(--wh);border-top:1px solid var(--border);display:flex;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,.07);padding-bottom:var(--safe-bottom)}
+.nb{flex:1;border:none;background:none;cursor:pointer;padding:8px 2px 10px;font-family:inherit;font-size:9.5px;font-weight:700;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .15s}
+.nb .ico{font-size:20px;line-height:1}
+.nb.on{color:var(--b)}
+.nb.on .ico{transform:scale(1.1)}
+
+/* ── CARDS ── */
+.card{background:var(--wh);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--sh)}
+.card-title{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.card-title span{font-size:12px;font-weight:900;color:var(--b)}
+
+/* ── STATS GRID ── */
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.stat{background:var(--wh);border-radius:12px;padding:12px 6px;text-align:center;box-shadow:var(--sh);border-top:3px solid var(--b)}
+.stat .n{font-size:26px;font-weight:900;line-height:1}
+.stat .l{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:3px}
+.s-b{border-top-color:var(--b)}.s-g{border-top-color:var(--g)}.s-go{border-top-color:var(--go)}.s-r{border-top-color:var(--r)}.s-pu{border-top-color:var(--pu)}
+
+/* ── TODAY LESSON ── */
+.today-card{background:linear-gradient(135deg,#0c1d5e,#1d4ed8 60%,#15803d);border-radius:16px;padding:18px;color:#fff;margin-bottom:12px}
+.today-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.75;margin-bottom:6px}
+.today-title{font-size:17px;font-weight:900;line-height:1.25;margin-bottom:4px}
+.today-sub{font-size:12px;opacity:.85;margin-bottom:12px}
+.today-chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:700}
+.open-btn{margin-top:12px;display:inline-block;background:#fff;color:var(--b);border-radius:50px;padding:8px 18px;font-size:12.5px;font-weight:800;text-decoration:none;cursor:pointer;border:none;font-family:inherit}
+
+/* ── LEARNER REGISTER ── */
+.search-box{width:100%;border:1.5px solid var(--border);border-radius:50px;padding:9px 15px;font-family:inherit;font-size:14px;outline:none;background:var(--wh);margin-bottom:12px}
+.search-box:focus{border-color:var(--b)}
+.lcard{background:var(--wh);border-radius:13px;padding:13px;margin-bottom:9px;box-shadow:var(--sh);display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative}
+.lcard:active{transform:scale(.98)}
+.lcard.selected{border:2px solid var(--b);background:var(--bl)}
+.lphoto{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--pu));flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;overflow:hidden;cursor:pointer}
+.lphoto img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.linfo{flex:1;min-width:0}
+.lname{font-size:14px;font-weight:800;margin-bottom:2px}
+.lmeta{font-size:11px;color:var(--sub);font-weight:600}
+.lbadges{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.lbadge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:10px}
+.att-dots{display:flex;gap:2px;margin-top:4px}
+.att-dot{width:7px;height:7px;border-radius:50%}
+.ad-p{background:var(--g)}.ad-a{background:var(--r)}.ad-u{background:var(--border)}
+.lscore{font-size:18px;font-weight:900;color:var(--b);flex-shrink:0}
+
+/* ── LEARNER DETAIL DRAWER ── */
+.drawer{position:fixed;inset:0;z-index:200;display:none}
+.drawer.on{display:flex;flex-direction:column}
+.drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+.drawer-panel{position:absolute;bottom:0;left:0;right:0;background:var(--wh);border-radius:20px 20px 0 0;max-height:90vh;overflow-y:auto;padding:0 0 calc(20px + var(--safe-bottom));animation:slideup .28s ease}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:none}}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:10px auto 14px}
+.drawer-head{padding:0 16px 14px;border-bottom:1px solid var(--border)}
+.drawer-body{padding:14px 16px}
+.field-row{margin-bottom:12px}
+.field-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);display:block;margin-bottom:4px}
+.field-input,.field-select,.field-ta{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:600;outline:none;background:var(--bg);transition:border-color .15s}
+.field-input:focus,.field-select:focus,.field-ta:focus{border-color:var(--b);background:#fff}
+.field-ta{resize:none;min-height:60px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.save-btn{width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:50px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;margin-top:8px}
+.save-btn.green{background:var(--g)}
+.save-btn.red{background:var(--r)}
+
+/* ── ATTENDANCE IN DRAWER ── */
+.att-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.att-row:last-child{border-bottom:none}
+.att-lesson{font-size:12.5px;font-weight:700}
+.att-controls{display:flex;gap:6px}
+.att-btn{padding:5px 10px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--sub)}
+.att-btn.p.on{background:var(--g);border-color:var(--g);color:#fff}
+.att-btn.a.on{background:var(--r);border-color:var(--r);color:#fff}
+.att-btn.h.on{background:var(--go);border-color:var(--go);color:#fff}
+
+/* ── REPORT CARD ── */
+.report-sel{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.r-sel-btn{padding:7px 14px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;color:var(--sub)}
+.r-sel-btn.on{background:var(--b);border-color:var(--b);color:#fff}
+.report-card{background:var(--wh);border-radius:14px;overflow:hidden;box-shadow:var(--sh);margin-bottom:12px}
+.rc-head{padding:16px 18px;color:#fff}
+.rc-head h2{font-size:18px;font-weight:900;margin-bottom:2px}
+.rc-head p{font-size:11.5px;opacity:.85}
+.rc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.rc-cell{padding:12px 8px;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rc-cell:last-child{border-right:none}
+.rc-cell .rcn{font-size:22px;font-weight:900}
+.rc-cell .rcl{font-size:9.5px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:2px}
+.rc-body{padding:14px 16px}
+.grade-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:900;margin-bottom:12px}
+.lesson-list{width:100%;border-collapse:collapse;font-size:11.5px}
+.lesson-list th{padding:6px 8px;font-size:9px;font-weight:800;text-transform:uppercase;background:#1e293b;color:#94a3b8;text-align:left}
+.lesson-list td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.lesson-list tr:nth-child(even) td{background:var(--bg)}
+.tick{color:var(--g);font-weight:900}.cross{color:var(--border)}.half{color:var(--go);font-weight:900}
+.comment-field{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px;font-family:inherit;font-size:13px;resize:none;min-height:70px;outline:none;line-height:1.6;background:var(--bg);margin-bottom:8px}
+.comment-field:focus{border-color:var(--b);background:#fff}
+.print-btn{padding:10px 20px;background:var(--g);color:#fff;border:none;border-radius:50px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;margin-right:8px}
+.wa-btn{padding:10px 20px;background:#25d366;color:#fff;border:none;border-radius:50px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer}
+@media print{.bnav,.topbar,.no-print{display:none!important}.screen{padding:0;overflow:visible}.report-card{box-shadow:none;border:1px solid #e2e8f0}}
+
+/* ── PLANNER ── */
+.planner-nav{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.planner-nav::-webkit-scrollbar{display:none}
+.pnav-btn{padding:6px 14px;border-radius:20px;border:2px solid var(--border);background:var(--wh);font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;color:var(--sub);flex-shrink:0}
+.pnav-btn.on{background:var(--b);border-color:var(--b);color:#fff}
+.plan-week{background:var(--wh);border-radius:13px;overflow:hidden;margin-bottom:10px;box-shadow:var(--sh)}
+.plan-week-hdr{background:#1e293b;color:#e2e8f0;padding:9px 13px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.plan-day{display:flex;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border);align-items:flex-start;cursor:pointer}
+.plan-day:last-child{border-bottom:none}
+.plan-day:active{background:var(--bg)}
+.plan-day-lbl{font-size:10px;font-weight:800;color:var(--sub);width:32px;flex-shrink:0;text-transform:uppercase;margin-top:2px}
+.plan-content{flex:1}
+.plan-strand{font-size:10px;font-weight:800;padding:1px 7px;border-radius:10px;display:inline-block;margin-bottom:3px}
+.plan-topic{font-size:13px;font-weight:700;line-height:1.4}
+.plan-empty{font-size:12px;color:var(--border);font-style:italic}
+.strand-ls{background:var(--bl);color:var(--b)}
+.strand-rd{background:var(--gl);color:var(--g)}
+.strand-wr{background:var(--pul);color:var(--pu)}
+.strand-gr{background:var(--gol);color:var(--go)}
+.strand-ad{background:var(--bg);color:var(--sub)}
+
+/* ── ANALYTICS ── */
+.chart-card{background:var(--wh);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--sh)}
+.chart-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:12px}
+.bar-chart{display:flex;flex-direction:column;gap:7px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{font-size:10.5px;font-weight:700;width:70px;flex-shrink:0;color:var(--sub)}
+.bar-track{flex:1;height:10px;background:var(--bg);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .6s}
+.bar-val{font-size:11px;font-weight:900;width:32px;text-align:right;flex-shrink:0}
+.donut-wrap{display:flex;align-items:center;gap:16px;margin-top:8px}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.dl-row{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+canvas{max-width:100%;display:block}
+.trend-grid{display:grid;grid-template-columns:repeat(11,1fr);gap:3px}
+.trend-cell{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+
+/* ── MISC ── */
+.empty-state{text-align:center;padding:40px 20px;color:var(--sub)}
+.empty-state .eico{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:13px;line-height:1.6}
+.badge-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:800}
+.section-hdr{font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin:14px 0 8px;display:flex;align-items:center;justify-content:space-between}
+.section-hdr button{font-size:11px;font-weight:800;color:var(--b);background:none;border:none;cursor:pointer;font-family:inherit}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:9px 18px;border-radius:50px;font-size:12.5px;font-weight:800;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-row">
+    <div>
+      <h1>📚 Atiaket Edu</h1>
+      <p id="topDate">Grade 8 English · Tr. Sobe</p>
+    </div>
+    <div class="topbar-right">
+      <div class="dot-live" id="liveDot"></div>
+      <button class="sync-btn" onclick="syncAll()">⟳ Sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div class="screens">
+
+  <!-- ══ HOME ══ -->
+  <div class="screen on" id="scr-home">
+    <div class="today-card" id="todayCard">
+      <div class="today-label">📅 Today's Lesson</div>
+      <div class="today-title" id="todayTitle">Loading…</div>
+      <div class="today-sub" id="todaySub"></div>
+      <div class="today-chips" id="todayChips"></div>
+      <button class="open-btn no-print" onclick="openTodayPack()">▶ Open Lesson Pack</button>
+    </div>
+
+    <div class="stats4">
+      <div class="stat s-b"><div class="n" id="hst-learners">20</div><div class="l">Learners</div></div>
+      <div class="stat s-g"><div class="n" id="hst-present">—</div><div class="l">Present Today</div></div>
+      <div class="stat s-go"><div class="n" id="hst-lessons">54</div><div class="l">Total Lessons</div></div>
+      <div class="stat s-pu"><div class="n" id="hst-week">—</div><div class="l">Current Week</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔥 Class Activity — Live <span id="liveCount">0 saved</span></div>
+      <div class="bar-chart" id="homeActivity"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Quick Actions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="go('register');markAttendance()" style="background:var(--g);color:#fff;border:none;border-radius:11px;padding:12px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer">✅ Take Attendance</button>
+        <button onclick="go('reports')" style="background:var(--b);color:#fff;border:none;border-radius:11px;padding:12px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer">📊 View Reports</button>
+        <button onclick="go('planner')" style="background:var(--go);color:#fff;border:none;border-radius:11px;padding:12px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer">📅 Lesson Planner</button>
+        <button onclick="go('analytics')" style="background:var(--pu);color:#fff;border:none;border-radius:11px;padding:12px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer">📈 Analytics</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 This Week's Lessons</div>
+      <div id="weekLessons"></div>
+    </div>
+  </div>
+
+  <!-- ══ REGISTER ══ -->
+  <div class="screen" id="scr-register">
+    <input type="text" class="search-box" placeholder="🔍 Search learner…" id="searchBox" oninput="filterLearners()"/>
+    <div class="section-hdr">
+      <span>All Learners — 20</span>
+      <button onclick="openAddLearner()">+ Edit</button>
+    </div>
+    <div id="learnerList"></div>
+  </div>
+
+  <!-- ══ REPORTS ══ -->
+  <div class="screen" id="scr-reports">
+    <div class="section-hdr">Select Learner</div>
+    <div class="report-sel" id="reportSel"></div>
+    <div id="reportContent">
+      <div class="empty-state"><div class="eico">📊</div><p>Tap a learner's name above to generate their full progress report.</p></div>
+    </div>
+  </div>
+
+  <!-- ══ PLANNER ══ -->
+  <div class="screen" id="scr-planner">
+    <div class="planner-nav" id="plannerNav"></div>
+    <div id="plannerContent"></div>
+  </div>
+
+  <!-- ══ ANALYTICS ══ -->
+  <div class="screen" id="scr-analytics">
+    <div class="stats3">
+      <div class="stat s-g"><div class="n" id="an-avg">—</div><div class="l">Avg Score</div></div>
+      <div class="stat s-b"><div class="n" id="an-top">—</div><div class="l">Top Performer</div></div>
+      <div class="stat s-r"><div class="n" id="an-risk">—</div><div class="l">Need Support</div></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">📊 Performance by Strand</div>
+      <div class="bar-chart" id="strandChart"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">👥 Learner Performance Ranking</div>
+      <div class="bar-chart" id="learnerChart"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">📅 Weekly Activity Heatmap</div>
+      <div class="trend-grid" id="heatmap"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:9.5px;color:var(--sub);font-weight:700">
+        <span>W1</span><span>W3</span><span>W5</span><span>W7</span><span>W9</span><span>W11</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">🎯 Completion by Strand</div>
+      <canvas id="donutCanvas" width="200" height="200" style="max-width:180px;margin:0 auto"></canvas>
+    </div>
+  </div>
+
+</div><!-- /screens -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="nb on" onclick="go('home')"><span class="ico">🏠</span>Home</button>
+  <button class="nb" onclick="go('register')"><span class="ico">👥</span>Register</button>
+  <button class="nb" onclick="go('reports')"><span class="ico">📊</span>Reports</button>
+  <button class="nb" onclick="go('planner')"><span class="ico">📅</span>Planner</button>
+  <button class="nb" onclick="go('analytics')"><span class="ico">📈</span>Analytics</button>
+</div>
+
+<!-- LEARNER DETAIL DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-backdrop" onclick="closeDrawer()"></div>
+  <div class="drawer-panel" id="drawerPanel"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+"use strict";
+// ── CONFIG ───────────────────────────────────────────────────
+var TEACHER = {name:"Simon Omoit Barasa",short:"Tr. Sobe",email:"sobebarasa@gmail.com",school:"Atiaket Junior School",grade:"Grade 8",subject:"English Language",term:"Term 1, 2026"};
+var FBC = {apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+var GITHUB = "https://sobebarasa-prog.github.io/g8_row3/";
+
+// ── LESSON DATA ──────────────────────────────────────────────
+var LESSONS = [
+  {idx:0,w:1,day:"Mon",lesson:"L1",strand:"admin",sub:"Term Opening",org:"class",date:"05 Jan"},
+  {idx:1,w:1,day:"Tue",lesson:"L2",strand:"listening",sub:"Telephone Etiquette: Polite Language",org:"pair",date:"06 Jan"},
+  {idx:2,w:1,day:"Wed",lesson:"L3",strand:"listening",sub:"Telephone Etiquette: Messages",org:"group",date:"07 Jan"},
+  {idx:3,w:1,day:"Thu",lesson:"L4",strand:"reading",sub:"Extensive Reading: Selecting Texts",org:"group",date:"08 Jan"},
+  {idx:4,w:1,day:"Fri",lesson:"L5",strand:"reading",sub:"Extensive Reading: Skimming & Scanning",org:"group",date:"09 Jan"},
+  {idx:5,w:2,day:"Mon",lesson:"L1",strand:"grammar",sub:"Compound Nouns",org:"group",date:"12 Jan"},
+  {idx:6,w:2,day:"Tue",lesson:"L2",strand:"grammar",sub:"Compound Nouns: Plurals",org:"pair",date:"13 Jan"},
+  {idx:7,w:2,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Stories: Events",org:"pair",date:"14 Jan"},
+  {idx:8,w:2,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Stories: Summary",org:"group",date:"15 Jan"},
+  {idx:9,w:2,day:"Fri",lesson:"L5",strand:"writing",sub:"Writing Legibly: Letter Shaping",org:"pair",date:"16 Jan"},
+  {idx:10,w:3,day:"Mon",lesson:"L1",strand:"writing",sub:"Writing Legibly: Spacing",org:"pair",date:"19 Jan"},
+  {idx:11,w:3,day:"Tue",lesson:"L2",strand:"listening",sub:"Oral Presentation: Songs (Features)",org:"group",date:"20 Jan"},
+  {idx:12,w:3,day:"Wed",lesson:"L3",strand:"listening",sub:"Oral Presentation: Songs (Performance)",org:"group",date:"21 Jan"},
+  {idx:13,w:3,day:"Thu",lesson:"L4",strand:"reading",sub:"Simple Poems: Meaning",org:"group",date:"22 Jan"},
+  {idx:14,w:3,day:"Fri",lesson:"L5",strand:"reading",sub:"Simple Poems: Messages",org:"group",date:"23 Jan"},
+  {idx:15,w:4,day:"Mon",lesson:"L1",strand:"grammar",sub:"Collective Nouns",org:"group",date:"26 Jan"},
+  {idx:16,w:4,day:"Tue",lesson:"L2",strand:"grammar",sub:"Collective Nouns: Plurals",org:"pair",date:"27 Jan"},
+  {idx:17,w:4,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Story: Setting",org:"group",date:"28 Jan"},
+  {idx:18,w:4,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Events & Setting",org:"group",date:"29 Jan"},
+  {idx:19,w:4,day:"Fri",lesson:"L5",strand:"writing",sub:"Punctuation: Comma & Apostrophe",org:"group",date:"30 Jan"},
+  {idx:20,w:5,day:"Mon",lesson:"L1",strand:"writing",sub:"Punctuation: Composing",org:"pair",date:"02 Feb"},
+  {idx:21,w:5,day:"Tue",lesson:"L2",strand:"listening",sub:"Listening Comprehension: Main Ideas",org:"group",date:"03 Feb"},
+  {idx:22,w:5,day:"Wed",lesson:"L3",strand:"listening",sub:"Listening: Specific Details",org:"group",date:"04 Feb"},
+  {idx:23,w:5,day:"Thu",lesson:"L4",strand:"reading",sub:"Comprehension: Passage",org:"group",date:"05 Feb"},
+  {idx:24,w:5,day:"Fri",lesson:"L5",strand:"reading",sub:"Inferring Meaning of Words",org:"group",date:"06 Feb"},
+  {idx:25,w:6,day:"Mon",lesson:"L1",strand:"grammar",sub:"Primary Auxiliaries",org:"group",date:"09 Feb"},
+  {idx:26,w:6,day:"Tue",lesson:"L2",strand:"grammar",sub:"Primary Auxiliaries: Functions",org:"group",date:"10 Feb"},
+  {idx:27,w:6,day:"Wed",lesson:"L3",strand:"reading",sub:"Poetry: Structure Analysis",org:"group",date:"11 Feb"},
+  {idx:28,w:6,day:"Thu",lesson:"L4",strand:"reading",sub:"Poetry: Messages & Meaning",org:"group",date:"12 Feb"},
+  {idx:29,w:6,day:"Fri",lesson:"L5",strand:"writing",sub:"Paragraphing: Conjunctions",org:"group",date:"13 Feb"},
+  {idx:30,w:7,day:"Mon",lesson:"L1",strand:"writing",sub:"Paragraphing: Sequencing Ideas",org:"pair",date:"16 Feb"},
+  {idx:31,w:7,day:"Tue",lesson:"L2",strand:"listening",sub:"Selective Listening: Consumer Rights",org:"group",date:"17 Feb"},
+  {idx:32,w:7,day:"Wed",lesson:"L3",strand:"listening",sub:"Selective Listening: Specific Info",org:"pair",date:"18 Feb"},
+  {idx:33,w:7,day:"Thu",lesson:"L4",strand:"reading",sub:"Comprehension Strategies: Mind Map",org:"group",date:"19 Feb"},
+  {idx:34,w:7,day:"Fri",lesson:"L5",strand:"reading",sub:"Comprehension Strategies: Answering",org:"pair",date:"20 Feb"},
+  {idx:35,w:7,day:"Sat",lesson:"L6",strand:"grammar",sub:"Verbs and Tense",org:"pair",date:"21 Feb"},
+  {idx:36,w:8,day:"Mon",lesson:"L1",strand:"grammar",sub:"Verbs and Tense: Digital Research",org:"group",date:"23 Feb"},
+  {idx:37,w:8,day:"Tue",lesson:"L2",strand:"reading",sub:"Short Story: Character Traits",org:"group",date:"24 Feb"},
+  {idx:38,w:8,day:"",lesson:"Half Term",strand:"admin",sub:"Half Term Break",org:"admin",date:"25–27 Feb"},
+  {idx:39,w:9,day:"Mon",lesson:"CAT",strand:"admin",sub:"Continuous Assessment Test 2",org:"indiv",date:"02 Mar"},
+  {idx:40,w:9,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Role Play Characters",org:"group",date:"05 Mar"},
+  {idx:41,w:9,day:"Fri",lesson:"",strand:"admin",sub:"Cluster Athletics",org:"admin",date:"06 Mar"},
+  {idx:42,w:10,day:"Mon",lesson:"L1",strand:"writing",sub:"Paragraphing: Connectors of Sequence",org:"group",date:"09 Mar"},
+  {idx:43,w:10,day:"Tue",lesson:"L2",strand:"writing",sub:"Paragraphing: Writing & Editing",org:"pair",date:"10 Mar"},
+  {idx:44,w:10,day:"Wed",lesson:"L3",strand:"listening",sub:"Pronunciation: Vowel Sounds",org:"pair",date:"11 Mar"},
+  {idx:45,w:10,day:"Thu",lesson:"L4",strand:"listening",sub:"Pronunciation: Emphatic Stress",org:"group",date:"12 Mar"},
+  {idx:46,w:10,day:"Fri",lesson:"L5",strand:"reading",sub:"Study Skills: Reference Materials",org:"group",date:"13 Mar"},
+  {idx:47,w:10,day:"Sat",lesson:"L6",strand:"reading",sub:"Study Skills: Encyclopaedia",org:"group",date:"14 Mar"},
+  {idx:48,w:11,day:"Mon",lesson:"L1",strand:"grammar",sub:"Adjectives: Gradable",org:"group",date:"16 Mar"},
+  {idx:49,w:11,day:"Tue",lesson:"L2",strand:"grammar",sub:"Adjectives: Crossword",org:"group",date:"17 Mar"},
+  {idx:50,w:11,day:"Wed",lesson:"L3",strand:"reading",sub:"Short Story: Dialogue",org:"group",date:"18 Mar"},
+  {idx:51,w:11,day:"Thu",lesson:"L4",strand:"reading",sub:"Short Story: Repetition",org:"group",date:"19 Mar"},
+  {idx:52,w:11,day:"Fri",lesson:"L5",strand:"writing",sub:"Functional Writing: Apology Letters",org:"group",date:"20 Mar"},
+  {idx:53,w:11,day:"Sat",lesson:"L6",strand:"writing",sub:"Functional Writing: Writing Letters",org:"group",date:"21 Mar"},
+];
+
+var STRAND_COLORS = {listening:{bg:"var(--bl)",c:"var(--b)",label:"Listening & Speaking"},reading:{bg:"var(--gl)",c:"var(--g)",label:"Reading"},writing:{bg:"var(--pul)",c:"var(--pu)",label:"Writing"},grammar:{bg:"var(--gol)",c:"var(--go)",label:"Grammar in Use"},admin:{bg:"var(--bg)",c:"var(--sub)",label:"Admin / Test"}};
+var STRAND_CLASS = {listening:"strand-ls",reading:"strand-rd",writing:"strand-wr",grammar:"strand-gr",admin:"strand-ad"};
+
+// ── STATE ────────────────────────────────────────────────────
+var db = null;
+var FB_DATA = {};
+var LEARNERS_DATA = [];
+var ATTENDANCE = {};
+var CURRENT_SCREEN = "home";
+var SELECTED_LEARNER = null;
+var PLANNER_WEEK = 1;
+var ATT_MODE = false;
+
+// ── INDEXEDDB ────────────────────────────────────────────────
+var idb = null;
+function openDB(cb) {
+  var req = indexedDB.open("AtiaketEdu", 2);
+  req.onupgradeneeded = function(e) {
+    var d = e.target.result;
+    if (!d.objectStoreNames.contains("learners")) d.createObjectStore("learners", {keyPath:"id"});
+    if (!d.objectStoreNames.contains("attendance")) d.createObjectStore("attendance", {keyPath:"key"});
+    if (!d.objectStoreNames.contains("planner")) d.createObjectStore("planner", {keyPath:"key"});
+    if (!d.objectStoreNames.contains("settings")) d.createObjectStore("settings", {keyPath:"key"});
+  };
+  req.onsuccess = function(e) { idb = e.target.result; if(cb) cb(); };
+  req.onerror = function() { if(cb) cb(); };
+}
+
+function dbGet(store, key, cb) {
+  if (!idb) { cb(null); return; }
+  var tx = idb.transaction(store, "readonly");
+  var req = tx.objectStore(store).get(key);
+  req.onsuccess = function() { cb(req.result || null); };
+  req.onerror = function() { cb(null); };
+}
+function dbGetAll(store, cb) {
+  if (!idb) { cb([]); return; }
+  var tx = idb.transaction(store, "readonly");
+  var req = tx.objectStore(store).getAll();
+  req.onsuccess = function() { cb(req.result || []); };
+  req.onerror = function() { cb([]); };
+}
+function dbPut(store, data) {
+  if (!idb) return;
+  var tx = idb.transaction(store, "readwrite");
+  tx.objectStore(store).put(data);
+}
+
+// ── FIREBASE ─────────────────────────────────────────────────
+function initFirebase() {
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(FBC);
+    db = firebase.database();
+    db.ref(".info/connected").on("value", function(s) {
+      var on = s.val();
+      document.getElementById("liveDot").classList.toggle("on", on);
+    });
+    db.ref("/").on("value", function(s) {
+      FB_DATA = s.val() || {};
+      renderHome();
+      renderAnalytics();
+    });
+  } catch(e) {}
+}
+
+function syncAll() {
+  toast("🔄 Syncing…");
+  if (db) {
+    db.ref("/").once("value", function(s) {
+      FB_DATA = s.val() || {};
+      renderHome();
+      renderAnalytics();
+      if (SELECTED_LEARNER !== null) renderReport(SELECTED_LEARNER);
+      toast("✅ Sync complete");
+    });
+  } else {
+    toast("⚠️ No connection");
+  }
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function go(id) {
+  CURRENT_SCREEN = id;
+  document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("on"); });
+  document.querySelectorAll(".nb").forEach(function(b) { b.classList.toggle("on", b.getAttribute("onclick").indexOf("'"+id+"'") > -1); });
+  document.getElementById("scr-"+id).classList.add("on");
+  window.scrollTo(0, 0);
+  if (id === "register") renderRegister();
+  if (id === "planner") renderPlanner();
+  if (id === "analytics") renderAnalytics();
+  if (id === "reports") renderReportSelector();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function toast(msg, dur) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.remove("on"); }, dur || 2200);
+}
+
+// ── HOME ─────────────────────────────────────────────────────
+function renderHome() {
+  // Today's lesson
+  var today = new Date();
+  var dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var todayDay = dayNames[today.getDay()];
+  var todayLesson = null;
+  // Find lesson for today (by day name match, within current approximate week)
+  var dayOrder = {Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5};
+  var currentWeekLessons = LESSONS.filter(function(l) {
+    return l.day === todayDay && l.strand !== "admin";
+  });
+  if (currentWeekLessons.length > 0) todayLesson = currentWeekLessons[0];
+  else {
+    // Show next upcoming lesson
+    var upcoming = LESSONS.filter(function(l){ return l.strand !== "admin"; });
+    todayLesson = upcoming[0];
+  }
+
+  if (todayLesson) {
+    var sc = STRAND_COLORS[todayLesson.strand] || STRAND_COLORS.admin;
+    document.getElementById("todayTitle").textContent = todayLesson.sub;
+    document.getElementById("todaySub").textContent = "Week "+todayLesson.w+" · "+todayLesson.day+" · "+todayLesson.lesson+" · "+todayLesson.date;
+    var chips = '<span class="chip">'+todayLesson.strand+'</span>';
+    chips += '<span class="chip">'+todayLesson.org+'</span>';
+    document.getElementById("todayChips").innerHTML = chips;
+    document.getElementById("todayCard").style.background = "linear-gradient(135deg,#0c1d5e,"+sc.c.replace("var(--","#").replace(")","")+" 60%,#15803d)";
+  }
+
+  // Current week — find which week is nearest to today
+  var currentWeek = 1;
+  var months = {Jan:0,Feb:1,Mar:2,Apr:3};
+  var now = new Date();
+  LESSONS.forEach(function(l) {
+    if (!l.date || !l.date.includes(" ")) return;
+    var parts = l.date.split(" ");
+    if (parts.length >= 2) {
+      var mo = months[parts[1]];
+      if (mo !== undefined) {
+        var d = new Date(2026, mo, parseInt(parts[0]));
+        if (d <= now) currentWeek = l.w;
+      }
+    }
+  });
+  document.getElementById("hst-week").textContent = "W"+currentWeek;
+
+  // Live activity count
+  var actCount = 0;
+  Object.keys(FB_DATA).forEach(function(lk) {
+    var d = FB_DATA[lk] || {};
+    var assess = d.assess || {};
+    actCount += Object.keys(assess.comp || {}).length;
+  });
+  document.getElementById("liveCount").textContent = actCount + " saved";
+  document.getElementById("hst-present").textContent = getTodayPresent();
+
+  // Activity bars — top 5 most active lessons
+  var lessonActivity = LESSONS.filter(function(l){ return l.strand !== "admin"; }).map(function(l) {
+    var ldata = FB_DATA["L"+l.idx] || {};
+    var cnt = Object.keys((ldata.assess||{}).comp||{}).length;
+    return {sub:l.sub.substring(0,22), cnt:cnt, strand:l.strand};
+  }).filter(function(x){ return x.cnt > 0; }).sort(function(a,b){ return b.cnt-a.cnt; }).slice(0,5);
+
+  var maxAct = Math.max.apply(null, lessonActivity.map(function(x){return x.cnt;})) || 1;
+  document.getElementById("homeActivity").innerHTML = lessonActivity.length ? lessonActivity.map(function(l) {
+    var sc = STRAND_COLORS[l.strand] || STRAND_COLORS.admin;
+    var pct = Math.round(l.cnt/20*100);
+    return '<div class="bar-row"><div class="bar-label">'+l.sub+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+sc.c+'"></div></div><div class="bar-val" style="color:'+sc.c+'">'+l.cnt+'/20</div></div>';
+  }).join("") : '<div style="color:var(--sub);font-size:12px;padding:8px 0">No Firebase data yet. Learners need to save responses in lesson packs.</div>';
+
+  // This week's lessons
+  var wkLessons = LESSONS.filter(function(l){ return l.w == currentWeek && l.strand !== "admin"; });
+  document.getElementById("weekLessons").innerHTML = wkLessons.map(function(l) {
+    var sc = STRAND_COLORS[l.strand] || STRAND_COLORS.admin;
+    var cnt = Object.keys(((FB_DATA["L"+l.idx]||{}).assess||{}).comp||{}).length;
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">' +
+      '<span style="font-size:10px;font-weight:800;color:var(--sub);width:28px">'+l.day+'</span>' +
+      '<span class="badge-pill '+STRAND_CLASS[l.strand]+'" style="font-size:9.5px">'+l.lesson+'</span>' +
+      '<span style="flex:1;font-size:12.5px;font-weight:700">'+l.sub+'</span>' +
+      '<span style="font-size:11px;font-weight:900;color:'+(cnt>=15?"var(--g)":cnt>=8?"var(--go)":"var(--sub)")+'">'+cnt+'/20</span>' +
+      '</div>';
+  }).join("") || '<div style="color:var(--sub);font-size:12px">No lessons this week.</div>';
+}
+
+function getTodayPresent() {
+  var today = new Date().toDateString();
+  var cnt = 0;
+  dbGetAll("attendance", function(recs) {
+    cnt = recs.filter(function(r){ return r.date === today && r.present === "P"; }).length;
+    document.getElementById("hst-present").textContent = cnt;
+  });
+  return "—";
+}
+
+function openTodayPack() {
+  window.open(GITHUB, "_blank");
+}
+
+// ── LEARNER REGISTER ─────────────────────────────────────────
+function initLearners() {
+  dbGetAll("learners", function(stored) {
+    if (stored.length === 0) {
+      // Seed default learners
+      LEARNERS_DATA = Array.from({length:20}, function(_,i) {
+        var n = i+1;
+        return {
+          id: n, name: "Learner "+n,
+          gmail: "atiaketg8.learner"+n+"@gmail.com",
+          pair: Math.ceil(n/2), group: Math.ceil(n/4),
+          parentName: "", parentPhone: "", parentContact: "WhatsApp",
+          photo: "", notes: "", initials: "L"+n
+        };
+      });
+      LEARNERS_DATA.forEach(function(l) { dbPut("learners", l); });
+    } else {
+      LEARNERS_DATA = stored.sort(function(a,b){ return a.id-b.id; });
+    }
+    renderRegister();
+  });
+}
+
+function renderRegister() {
+  var search = document.getElementById("searchBox").value.toLowerCase();
+  var filtered = LEARNERS_DATA.filter(function(l) {
+    return l.name.toLowerCase().includes(search) || (l.parentName||"").toLowerCase().includes(search);
+  });
+
+  document.getElementById("learnerList").innerHTML = filtered.map(function(l) {
+    var fbKey = l.name.replace(" ","_");
+    var scores = [];
+    LESSONS.forEach(function(les) {
+      var comp = ((FB_DATA["L"+les.idx]||{}).assess||{}).comp||{};
+      if (comp[fbKey]) {
+        var num = parseInt((comp[fbKey].score||"0/4").split("/")[0]);
+        scores.push(num);
+      }
+    });
+    var avgScore = scores.length ? (scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(1) : "—";
+    var pct = scores.length ? Math.round(scores.reduce(function(a,b){return a+b;},0)/(scores.length*4)*100) : 0;
+    var scoreColor = pct >= 75 ? "var(--g)" : pct >= 50 ? "var(--go)" : pct > 0 ? "var(--r)" : "var(--sub)";
+
+    // Attendance dots — last 5 lessons
+    var lastFive = LESSONS.filter(function(x){return x.strand!=="admin";}).slice(-5);
+    var dots = lastFive.map(function(les) {
+      var att = ATTENDANCE[l.id+"_"+les.idx];
+      var cls = att === "P" ? "ad-p" : att === "A" ? "ad-a" : "ad-u";
+      return '<div class="att-dot '+cls+'"></div>';
+    }).join("");
+
+    return '<div class="lcard" onclick="openLearner('+l.id+')">' +
+      '<div class="lphoto" style="background:linear-gradient(135deg,'+scoreColor+',var(--pu))">' +
+      (l.photo ? '<img src="'+l.photo+'" alt=""/>' : '<span>'+l.initials+'</span>') +
+      '</div>' +
+      '<div class="linfo">' +
+        '<div class="lname">'+l.name+'</div>' +
+        '<div class="lmeta">Pair '+l.pair+' · Group '+l.group+(l.parentName?' · '+l.parentName:'')+'</div>' +
+        '<div class="lbadges">' +
+          '<span class="lbadge" style="background:var(--bl);color:var(--b)">P'+l.pair+'</span>' +
+          '<span class="lbadge" style="background:var(--gl);color:var(--g)">G'+l.group+'</span>' +
+        '</div>' +
+        '<div class="att-dots">'+dots+'</div>' +
+      '</div>' +
+      '<div class="lscore" style="color:'+scoreColor+'">'+(avgScore==="—"?"—":avgScore)+'</div>' +
+    '</div>';
+  }).join("") || '<div class="empty-state"><div class="eico">🔍</div><p>No learners found.</p></div>';
+}
+
+function filterLearners() { renderRegister(); }
+
+function openLearner(id) {
+  var l = LEARNERS_DATA.find(function(x){ return x.id === id; });
+  if (!l) return;
+  SELECTED_LEARNER = id;
+
+  // Build drawer
+  var html = '<div class="drawer-handle"></div>';
+  html += '<div class="drawer-head">';
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">';
+  html += '<div class="lphoto" style="width:56px;height:56px;font-size:22px;cursor:pointer" onclick="capturePhoto('+id+')">';
+  html += l.photo ? '<img src="'+l.photo+'" alt=""/>' : '<span>'+l.initials+'</span>';
+  html += '</div>';
+  html += '<div><div style="font-size:17px;font-weight:900">'+l.name+'</div>';
+  html += '<div style="font-size:11.5px;color:var(--sub)">'+l.gmail+'</div></div></div>';
+  html += '</div>';
+
+  html += '<div class="drawer-body">';
+
+  // Edit fields
+  html += '<div class="row2"><div class="field-row"><label class="field-label">Full Name</label><input class="field-input" id="dl-name" value="'+l.name+'"/></div>';
+  html += '<div class="field-row"><label class="field-label">Gmail Address</label><input class="field-input" id="dl-gmail" value="'+l.gmail+'"/></div></div>';
+
+  html += '<div class="row2"><div class="field-row"><label class="field-label">Pair Number</label><select class="field-select" id="dl-pair">';
+  for(var p=1;p<=10;p++) html += '<option value="'+p+'"'+(l.pair==p?" selected":"")+'>Pair '+p+'</option>';
+  html += '</select></div>';
+  html += '<div class="field-row"><label class="field-label">Group Number</label><select class="field-select" id="dl-group">';
+  for(var g=1;g<=5;g++) html += '<option value="'+g+'"'+(l.group==g?" selected":"")+'>Group '+g+'</option>';
+  html += '</select></div></div>';
+
+  html += '<div class="row2"><div class="field-row"><label class="field-label">Parent / Guardian Name</label><input class="field-input" id="dl-parent" value="'+(l.parentName||'')+'"/></div>';
+  html += '<div class="field-row"><label class="field-label">Parent Phone</label><input class="field-input" id="dl-phone" value="'+(l.parentPhone||'')+'"/></div></div>';
+
+  html += '<div class="field-row"><label class="field-label">Contact Preference</label><select class="field-select" id="dl-contact">';
+  ["WhatsApp","SMS","Phone Call"].forEach(function(c){ html+='<option'+(l.parentContact===c?" selected":"")+'>'+c+'</option>'; });
+  html += '</select></div>';
+
+  html += '<div class="field-row"><label class="field-label">Teacher Notes</label><textarea class="field-ta" id="dl-notes">'+(l.notes||'')+'</textarea></div>';
+
+  // Attendance quick-mark
+  html += '<div class="field-row"><label class="field-label">Today\'s Attendance</label>';
+  var today = new Date().toDateString();
+  var todayLesson = LESSONS.find(function(l){ return l.strand!=="admin"; }) || LESSONS[1];
+  var attKey = id+"_"+todayLesson.idx;
+  var curAtt = ATTENDANCE[attKey] || "";
+  html += '<div style="display:flex;gap:8px;margin-top:4px">';
+  html += '<button class="att-btn p'+(curAtt==="P"?" on":"")+'" onclick="markAtt('+id+','+todayLesson.idx+',\'P\',this)">✅ Present</button>';
+  html += '<button class="att-btn a'+(curAtt==="A"?" on":"")+'" onclick="markAtt('+id+','+todayLesson.idx+',\'A\',this)">❌ Absent</button>';
+  html += '<button class="att-btn h'+(curAtt==="H"?" on":"")+'" onclick="markAtt('+id+','+todayLesson.idx+',\'H\',this)">⚡ Half</button>';
+  html += '</div></div>';
+
+  html += '<button class="save-btn green" onclick="saveLearner('+id+')">💾 Save Changes</button>';
+  html += '<button class="save-btn" style="margin-top:8px" onclick="closeDrawer();go(\'reports\');setTimeout(function(){showReport('+id+');},300)">📊 View Full Report</button>';
+
+  html += '</div>';
+
+  document.getElementById("drawerPanel").innerHTML = html;
+  document.getElementById("drawer").classList.add("on");
+}
+
+function saveLearner(id) {
+  var l = LEARNERS_DATA.find(function(x){ return x.id === id; });
+  if (!l) return;
+  l.name = document.getElementById("dl-name").value.trim() || l.name;
+  l.gmail = document.getElementById("dl-gmail").value.trim();
+  l.pair = parseInt(document.getElementById("dl-pair").value);
+  l.group = parseInt(document.getElementById("dl-group").value);
+  l.parentName = document.getElementById("dl-parent").value.trim();
+  l.parentPhone = document.getElementById("dl-phone").value.trim();
+  l.parentContact = document.getElementById("dl-contact").value;
+  l.notes = document.getElementById("dl-notes").value.trim();
+  l.initials = l.name.split(" ").map(function(w){return w[0];}).join("").substring(0,2).toUpperCase();
+  dbPut("learners", l);
+  closeDrawer();
+  renderRegister();
+  toast("✅ "+l.name+" saved");
+}
+
+function capturePhoto(id) {
+  var input = document.createElement("input");
+  input.type = "file"; input.accept = "image/*"; input.capture = "environment";
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var l = LEARNERS_DATA.find(function(x){ return x.id === id; });
+      if (l) { l.photo = ev.target.result; dbPut("learners", l); }
+      var img = document.querySelector(".drawer-panel .lphoto");
+      if (img) img.innerHTML = '<img src="'+ev.target.result+'" alt=""/>';
+      toast("📸 Photo saved");
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function markAtt(learnerId, lessonIdx, status, btn) {
+  var key = learnerId+"_"+lessonIdx;
+  ATTENDANCE[key] = status;
+  var today = new Date().toDateString();
+  dbPut("attendance", {key:key, learnerId:learnerId, lessonIdx:lessonIdx, present:status, date:today});
+  btn.parentElement.querySelectorAll(".att-btn").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  toast(status === "P" ? "✅ Marked Present" : status === "A" ? "❌ Marked Absent" : "⚡ Half Day");
+  document.getElementById("hst-present").textContent = "—";
+  getTodayPresent();
+}
+
+function markAttendance() {} // triggered from home quick action
+function closeDrawer() { document.getElementById("drawer").classList.remove("on"); }
+
+function openAddLearner() { toast("Tap any learner card to edit their details."); }
+
+// ── REPORTS ──────────────────────────────────────────────────
+function renderReportSelector() {
+  var html = LEARNERS_DATA.map(function(l) {
+    return '<button class="r-sel-btn'+(SELECTED_LEARNER===l.id?" on":"")+'" onclick="showReport('+l.id+')">'+l.name.replace("Learner","L")+'</button>';
+  }).join("");
+  document.getElementById("reportSel").innerHTML = html;
+  if (SELECTED_LEARNER !== null) renderReport(SELECTED_LEARNER);
+}
+
+function showReport(id) {
+  SELECTED_LEARNER = id;
+  document.querySelectorAll(".r-sel-btn").forEach(function(b,i){ b.classList.toggle("on", LEARNERS_DATA[i] && LEARNERS_DATA[i].id === id); });
+  renderReport(id);
+}
+
+function renderReport(id) {
+  var l = LEARNERS_DATA.find(function(x){ return x.id === id; });
+  if (!l) return;
+  var fbKey = l.name.replace(" ","_");
+
+  // Gather scores
+  var scores = [], totalScore = 0, totalPossible = 0, completed = 0;
+  var lessonRows = "";
+  LESSONS.forEach(function(les) {
+    if (les.strand === "admin") return;
+    var ldata = FB_DATA["L"+les.idx] || {};
+    var comp = (ldata.assess||{}).comp||{};
+    var self = (ldata.assess||{}).self||{};
+    var sc = comp[fbKey] ? comp[fbKey].score : null;
+    var selfD = self[fbKey] ? self[fbKey].achieved : null;
+    var tick = sc ? '<span class="tick">✓</span>' : '<span class="cross">—</span>';
+    var scoreDisp = sc || "—";
+    var selfDisp = selfD || "—";
+    if (sc) {
+      var num = parseInt(sc.split("/")[0]);
+      var den = parseInt(sc.split("/")[1]) || 4;
+      totalScore += num; totalPossible += den; completed++;
+    }
+    var rowBg = les.idx%2===0?"":"background:var(--bg)";
+    lessonRows += '<tr style="'+rowBg+'"><td style="font-weight:700">W'+les.w+' '+les.day+'</td><td>'+les.lesson+'</td>';
+    lessonRows += '<td><span class="badge-pill '+STRAND_CLASS[les.strand]+'" style="font-size:9px">'+les.strand.substring(0,4)+'</span></td>';
+    lessonRows += '<td style="max-width:120px;font-size:11px">'+les.sub.substring(0,25)+'</td>';
+    lessonRows += '<td style="text-align:center">'+tick+'</td>';
+    lessonRows += '<td style="text-align:center;font-weight:800">'+scoreDisp+'</td>';
+    lessonRows += '<td style="text-align:center">'+selfDisp+'</td></tr>';
+  });
+
+  var pct = totalPossible > 0 ? Math.round(totalScore/totalPossible*100) : 0;
+  var grade = pct>=80?"Excellent 🌟":pct>=65?"Very Good ✅":pct>=50?"Good 👍":pct>0?"Needs Support ⚠️":"No Data Yet —";
+  var gradeColor = pct>=80?"var(--g)":pct>=65?"var(--b)":pct>=50?"var(--go)":"var(--r)";
+  var heroBg = pct>=80?"linear-gradient(135deg,#052e16,#15803d)":pct>=65?"linear-gradient(135deg,#0c1d5e,#1d4ed8)":pct>=50?"linear-gradient(135deg,#431407,#d97706)":"linear-gradient(135deg,#7c1d1d,#dc2626)";
+
+  var autoComment = pct>=80 ? l.name+" has demonstrated outstanding commitment to learning. They consistently complete their lesson packs and perform well across all strands. Keep up the excellent work!" :
+    pct>=65 ? l.name+" is making very good progress. They engage well with activities and show understanding across most strands. Some areas still need consolidation." :
+    pct>=50 ? l.name+" is making progress but needs additional support in some strands. Please encourage regular completion of lesson activities and review at home." :
+    pct>0 ? l.name+" needs closer attention and support. There are significant gaps in lesson completion. Please arrange a meeting to discuss how we can best support them." :
+    l.name+" has not yet saved data from the digital lesson packs. They may be completing work on paper or have connectivity challenges.";
+
+  var html = '<div class="report-card">';
+  html += '<div class="rc-head" style="background:'+heroBg+'">';
+  html += '<h2>'+l.name+'</h2>';
+  html += '<p>'+TEACHER.school+' · '+TEACHER.grade+' English · '+TEACHER.term+'</p>';
+  html += '<p style="margin-top:4px;font-weight:900;font-size:14px">'+TEACHER.short+' · '+TEACHER.email+'</p>';
+  html += '</div>';
+  html += '<div class="rc-grid">';
+  html += '<div class="rc-cell"><div class="rcn" style="color:var(--b)">'+completed+'</div><div class="rcl">Lessons Done</div></div>';
+  html += '<div class="rc-cell"><div class="rcn" style="color:'+gradeColor+'">'+pct+'%</div><div class="rcl">Performance</div></div>';
+  html += '<div class="rc-cell"><div class="rcn" style="color:var(--pu)">'+totalScore+'/'+totalPossible+'</div><div class="rcl">Total Score</div></div>';
+  html += '</div>';
+  html += '<div class="rc-body">';
+  html += '<span class="grade-badge" style="background:'+gradeColor+';color:#fff">'+grade+'</span>';
+  html += '<div style="overflow-x:auto;margin-bottom:14px"><table class="lesson-list"><thead><tr><th>Day</th><th>L#</th><th>Strand</th><th>Topic</th><th style="text-align:center">Done</th><th style="text-align:center">Score</th><th style="text-align:center">Self</th></tr></thead><tbody>'+lessonRows+'</tbody></table></div>';
+  html += '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:6px">Teacher\'s Comment</div>';
+  html += '<textarea class="comment-field" id="rc-comment">'+autoComment+'</textarea>';
+  html += '<div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap">';
+  html += '<button class="print-btn" onclick="window.print()">🖨 Print Report</button>';
+  html += '<button class="wa-btn" onclick="waReport('+id+','+pct+','+completed+')">💬 WhatsApp</button>';
+  html += '</div>';
+  html += '</div></div>';
+
+  document.getElementById("reportContent").innerHTML = html;
+}
+
+function waReport(id, pct, completed) {
+  var l = LEARNERS_DATA.find(function(x){ return x.id===id; });
+  if (!l) return;
+  var comment = document.getElementById("rc-comment") ? document.getElementById("rc-comment").value : "";
+  var text = "*"+TEACHER.grade+" English Progress Report*\n*"+TEACHER.school+" — "+TEACHER.term+"*\n\nDear Parent/Guardian of *"+l.name+"*,\n\n📊 *Performance: "+pct+"%*\n📚 Lessons completed: "+completed+"\n\n"+comment+"\n\n— "+TEACHER.short+"\n"+TEACHER.school+"\n📧 "+TEACHER.email;
+  if (navigator.share) {
+    navigator.share({title:"Progress Report — "+l.name, text:text}).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(text).then(function(){ toast("✅ Copied for WhatsApp"); });
+  }
+}
+
+// ── PLANNER ──────────────────────────────────────────────────
+function renderPlannerNav() {
+  var html = "";
+  for (var w=1; w<=11; w++) {
+    html += '<button class="pnav-btn'+(PLANNER_WEEK===w?" on":"")+'" onclick="setPlanWeek('+w+')">Week '+w+'</button>';
+  }
+  document.getElementById("plannerNav").innerHTML = html;
+}
+
+function setPlanWeek(w) {
+  PLANNER_WEEK = w;
+  renderPlanner();
+}
+
+function renderPlanner() {
+  renderPlannerNav();
+  var weekLessons = LESSONS.filter(function(l){ return l.w == PLANNER_WEEK; });
+  if (!weekLessons.length) {
+    document.getElementById("plannerContent").innerHTML = '<div class="empty-state"><div class="eico">📅</div><p>No lessons for Week '+PLANNER_WEEK+'.</p></div>';
+    return;
+  }
+
+  // Group by day
+  var days = {};
+  weekLessons.forEach(function(l) {
+    var d = l.day || "Other";
+    if (!days[d]) days[d] = [];
+    days[d].push(l);
+  });
+
+  var html = '<div class="plan-week"><div class="plan-week-hdr">📅 Week '+PLANNER_WEEK+' — '+TEACHER.term+'</div>';
+  Object.keys(days).forEach(function(day) {
+    days[day].forEach(function(l) {
+      var sc = STRAND_COLORS[l.strand] || STRAND_COLORS.admin;
+      var cnt = Object.keys(((FB_DATA["L"+l.idx]||{}).assess||{}).comp||{}).length;
+      html += '<div class="plan-day" onclick="openLessonDetail('+l.idx+')">';
+      html += '<div class="plan-day-lbl">'+l.day+'</div>';
+      html += '<div class="plan-content">';
+      if (l.strand !== "admin") {
+        html += '<span class="plan-strand '+STRAND_CLASS[l.strand]+'">'+sc.label+'</span>';
+        html += '<div class="plan-topic">'+l.lesson+' · '+l.sub+'</div>';
+        html += '<div style="font-size:10.5px;color:var(--sub);margin-top:3px">'+l.date+' · '+l.org+' · '+cnt+'/20 saved</div>';
+      } else {
+        html += '<span class="plan-strand strand-ad">Admin</span>';
+        html += '<div class="plan-topic">'+l.sub+'</div>';
+        html += '<div style="font-size:10.5px;color:var(--sub);margin-top:3px">'+l.date+'</div>';
+      }
+      html += '</div>';
+      html += '<div style="font-size:18px;color:var(--border)">›</div>';
+      html += '</div>';
+    });
+  });
+  html += '</div>';
+
+  // Notes section
+  var notesKey = "planner_w"+PLANNER_WEEK;
+  html += '<div class="card"><div class="card-title">📝 Week '+PLANNER_WEEK+' Notes & Preparation</div>';
+  html += '<textarea class="field-ta" id="planner-notes" placeholder="Add your preparation notes, materials to gather, reminders for this week…" style="min-height:80px" oninput="savePlannerNotes(this.value)"></textarea></div>';
+
+  document.getElementById("plannerContent").innerHTML = html;
+
+  // Load saved notes
+  dbGet("planner", notesKey, function(d) {
+    var ta = document.getElementById("planner-notes");
+    if (ta && d && d.notes) ta.value = d.notes;
+  });
+}
+
+function savePlannerNotes(val) {
+  dbPut("planner", {key:"planner_w"+PLANNER_WEEK, notes:val, updated:new Date().toISOString()});
+}
+
+function openLessonDetail(idx) {
+  var l = LESSONS.find(function(x){ return x.idx===idx; });
+  if (!l || l.strand==="admin") return;
+  var cnt = Object.keys(((FB_DATA["L"+idx]||{}).assess||{}).comp||{}).length;
+  toast("W"+l.w+" "+l.day+" "+l.lesson+" · "+cnt+"/20 saved · "+l.date);
+}
+
+// ── ANALYTICS ────────────────────────────────────────────────
+function renderAnalytics() {
+  // Per-learner scores
+  var learnerScores = LEARNERS_DATA.map(function(l) {
+    var fbKey = l.name.replace(" ","_");
+    var total = 0, possible = 0;
+    LESSONS.forEach(function(les) {
+      var comp = ((FB_DATA["L"+les.idx]||{}).assess||{}).comp||{};
+      if (comp[fbKey]) {
+        total += parseInt((comp[fbKey].score||"0/4").split("/")[0]);
+        possible += parseInt((comp[fbKey].score||"0/4").split("/")[1])||4;
+      }
+    });
+    var pct = possible > 0 ? Math.round(total/possible*100) : 0;
+    return {name:l.name, pct:pct, total:total, possible:possible, id:l.id};
+  }).filter(function(x){ return x.possible > 0; });
+
+  // Summary stats
+  if (learnerScores.length > 0) {
+    var sorted = learnerScores.slice().sort(function(a,b){return b.pct-a.pct;});
+    var avg = Math.round(sorted.reduce(function(s,x){return s+x.pct;},0)/sorted.length);
+    var atRisk = sorted.filter(function(x){return x.pct<60;}).length;
+    document.getElementById("an-avg").textContent = avg+"%";
+    document.getElementById("an-top").textContent = sorted[0] ? sorted[0].name.replace("Learner","L") : "—";
+    document.getElementById("an-risk").textContent = atRisk;
+  } else {
+    document.getElementById("an-avg").textContent = "—";
+    document.getElementById("an-top").textContent = "—";
+    document.getElementById("an-risk").textContent = "—";
+  }
+
+  // Strand performance
+  var strandData = {};
+  Object.keys(STRAND_COLORS).forEach(function(k){ if(k!=="admin") strandData[k]={total:0,possible:0}; });
+  LESSONS.forEach(function(les) {
+    if (les.strand==="admin" || !strandData[les.strand]) return;
+    var ldata = FB_DATA["L"+les.idx] || {};
+    var comp = (ldata.assess||{}).comp||{};
+    Object.values(comp).forEach(function(v) {
+      var sc = v.score||"0/4";
+      strandData[les.strand].total += parseInt(sc.split("/")[0]);
+      strandData[les.strand].possible += parseInt(sc.split("/")[1])||4;
+    });
+  });
+
+  var strandHTML = Object.keys(strandData).map(function(k) {
+    var d = strandData[k]; var sc = STRAND_COLORS[k];
+    var pct = d.possible > 0 ? Math.round(d.total/d.possible*100) : 0;
+    return '<div class="bar-row"><div class="bar-label" style="font-size:10px">'+sc.label.substring(0,10)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+sc.c+'"></div></div><div class="bar-val" style="color:'+sc.c+'">'+pct+'%</div></div>';
+  }).join("") || '<div style="color:var(--sub);font-size:12px">No data yet.</div>';
+  document.getElementById("strandChart").innerHTML = strandHTML;
+
+  // Learner ranking chart (top 10)
+  var top10 = learnerScores.slice().sort(function(a,b){return b.pct-a.pct;}).slice(0,10);
+  var lcHTML = top10.map(function(l) {
+    var col = l.pct>=80?"var(--g)":l.pct>=60?"var(--go)":"var(--r)";
+    return '<div class="bar-row"><div class="bar-label">'+l.name.replace("Learner","L")+'</div><div class="bar-track"><div class="bar-fill" style="width:'+l.pct+'%;background:'+col+'"></div></div><div class="bar-val" style="color:'+col+'">'+l.pct+'%</div></div>';
+  }).join("") || '<div style="color:var(--sub);font-size:12px">No data yet. Learners need to complete and save lesson activities.</div>';
+  document.getElementById("learnerChart").innerHTML = lcHTML;
+
+  // Heatmap — 11 weeks
+  var heatHTML = "";
+  for (var w=1; w<=11; w++) {
+    var weekLessons = LESSONS.filter(function(l){ return l.w==w && l.strand!=="admin"; });
+    var wCnt = 0, wMax = 0;
+    weekLessons.forEach(function(l) {
+      var cnt = Object.keys(((FB_DATA["L"+l.idx]||{}).assess||{}).comp||{}).length;
+      wCnt += cnt; wMax += 20;
+    });
+    var wPct = wMax > 0 ? wCnt/wMax : 0;
+    var bg = wPct >= .7 ? "#15803d" : wPct >= .4 ? "#d97706" : wPct > 0 ? "#1d4ed8" : "#e2e8f0";
+    var tc = wPct > 0 ? "#fff" : "#94a3b8";
+    heatHTML += '<div class="trend-cell" style="background:'+bg+';color:'+tc+'">'+w+'</div>';
+  }
+  document.getElementById("heatmap").innerHTML = heatHTML;
+
+  // Donut chart
+  drawDonut(strandData);
+}
+
+function drawDonut(strandData) {
+  var canvas = document.getElementById("donutCanvas");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+  var cx = 100, cy = 100, r = 75, ir = 45;
+  ctx.clearRect(0, 0, 200, 200);
+
+  var colors = {listening:"#1d4ed8",reading:"#15803d",writing:"#7c3aed",grammar:"#d97706"};
+  var total = 0;
+  Object.keys(strandData).forEach(function(k){ total += strandData[k].possible; });
+
+  if (total === 0) {
+    ctx.fillStyle = "#e2e8f0"; ctx.beginPath();
+    ctx.arc(cx,cy,r,0,Math.PI*2); ctx.arc(cx,cy,ir,0,Math.PI*2,true);
+    ctx.fill();
+    ctx.fillStyle = "#64748b"; ctx.font = "bold 12px Arial"; ctx.textAlign = "center";
+    ctx.fillText("No data", cx, cy+5);
+    return;
+  }
+
+  var start = -Math.PI/2;
+  Object.keys(strandData).forEach(function(k) {
+    var d = strandData[k];
+    if (!d.possible) return;
+    var angle = (d.possible/total) * Math.PI*2;
+    ctx.fillStyle = colors[k] || "#94a3b8";
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+angle);
+    ctx.closePath(); ctx.fill();
+    start += angle;
+  });
+
+  // Inner hole
+  ctx.fillStyle = "#fff";
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#0f172a"; ctx.font = "bold 14px Arial"; ctx.textAlign = "center";
+  ctx.fillText("By", cx, cy-4); ctx.fillText("Strand", cx, cy+12);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+openDB(function() {
+  initLearners();
+  initFirebase();
+  renderHome();
+  renderPlannerNav();
+
+  // Set date
+  var now = new Date();
+  var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  document.getElementById("topDate").textContent = days[now.getDay()]+" "+now.getDate()+" "+months[now.getMonth()]+" · "+TEACHER.short;
+
+  // Load attendance from DB
+  dbGetAll("attendance", function(recs) {
+    recs.forEach(function(r){ ATTENDANCE[r.key] = r.present; });
+  });
+});
+
+// ── SERVICE WORKER (inline) ───────────────────────────────────
+if ("serviceWorker" in navigator) {
+  var swCode = `
+    var CACHE = "atiaket-edu-v1";
+    var ASSETS = ["/"];
+    self.addEventListener("install", function(e) {
+      e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }));
+      self.skipWaiting();
+    });
+    self.addEventListener("activate", function(e) {
+      e.waitUntil(caches.keys().then(function(keys) {
+        return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));
+      }));
+      self.clients.claim();
+    });
+    self.addEventListener("fetch", function(e) {
+      e.respondWith(caches.match(e.request).then(function(r){ return r || fetch(e.request).catch(function(){ return r; }); }));
+    });
+  `;
+  var blob = new Blob([swCode], {type:"application/javascript"});
+  var swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(function(){});
+}
+
+// ── PWA MANIFEST ─────────────────────────────────────────────
+var manifest = {
+  name: "Atiaket Edu — Tr. Sobe",
+  short_name: "Atiaket Edu",
+  description: "Grade 8 English Teaching Companion",
+  start_url: ".",
+  display: "standalone",
+  theme_color: "#0c1d5e",
+  background_color: "#f1f5f9",
+  icons: [{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230c1d5e'/><text y='72' font-size='60' text-anchor='middle' x='50'>📚</text></svg>",sizes:"192x192",type:"image/svg+xml"}]
+};
+var mBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+document.getElementById("manifestLink").href = URL.createObjectURL(mBlob);
+</script>
+</body>
+</html>
