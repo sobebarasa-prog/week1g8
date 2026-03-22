@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Teacher Dashboard | L2 Tuesday | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#cbd5e1;--bg:#f1f5f9;--wh:#fff;
+--b:#1d4ed8;--bl:#dbeafe;--t:#0f766e;--tl:#ccfbf1;
+--g:#15803d;--gl:#dcfce7;--r:#dc2626;--rl:#fee2e2;
+--go:#d97706;--gol:#fef3c7;--sh:0 2px 16px rgba(0,0,0,.08);--ra:13px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink)}
+.hero{background:linear-gradient(135deg,#0c1d5e,#1d4ed8 60%,#0f766e);padding:20px 16px 16px;color:#fff}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.hero h1{font-size:clamp(16px,4vw,22px);font-weight:900;line-height:1.2}
+.hero p{font-size:11.5px;opacity:.85;margin-top:3px}
+.status-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.on{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.dot.off{background:#f87171}
+.roll-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;color:#fff}
+.prog-bar{background:rgba(255,255,255,.18);border-radius:10px;height:7px;margin-top:12px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#34d399,#7dd3fc);border-radius:10px;transition:width .6s}
+.prog-lbl{font-size:10.5px;opacity:.82;margin-top:4px;text-align:right}
+
+.wrap{padding:14px}
+.sec-title{font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--sub);margin-bottom:8px;margin-top:4px;display:flex;align-items:center;gap:7px}
+.sec-title .stag{font-size:10px;font-weight:800;border-radius:20px;padding:2px 9px;color:#fff}
+.tag-c{background:var(--b)}
+.tag-p{background:var(--go)}
+.tag-g{background:var(--t)}
+.tag-i{background:#7c3aed}
+
+.card{background:var(--wh);border-radius:var(--ra);padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.ch{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--b);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.ch span{font-size:12px;font-weight:900;color:var(--g)}
+
+/* SUMMARY STATS ROW */
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.stat{background:var(--wh);border-radius:11px;padding:10px;text-align:center;box-shadow:var(--sh);border-top:3px solid transparent}
+.stat .n{font-size:24px;font-weight:900;line-height:1}
+.stat .l{font-size:9.5px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:3px}
+.s-b{border-top-color:var(--b)}.s-g{border-top-color:var(--g)}.s-go{border-top-color:var(--go)}.s-pu{border-top-color:#7c3aed}
+
+/* LEARNER GRID — 20 cells */
+.grid20{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
+.lcell{border-radius:8px;padding:7px 3px;text-align:center;border:2px solid var(--border);background:var(--bg);transition:all .3s}
+.lcell .ln{font-size:9.5px;font-weight:800;color:var(--sub)}
+.lcell .lv{font-size:11px;font-weight:900;color:var(--ink);margin-top:1px}
+.lcell .ls{font-size:8.5px;color:var(--sub);margin-top:1px}
+.lcell.done{background:var(--gl);border-color:var(--g)}
+.lcell.done .ln{color:var(--g)}
+.lcell.done .lv{color:var(--g)}
+.lcell.part{background:var(--gol);border-color:var(--go)}
+.lcell.part .ln{color:var(--go)}
+.lcell.none{background:var(--bg);border-color:var(--border)}
+
+/* PAIR GRID — 10 cells */
+.grid10{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
+.pcell{border-radius:8px;padding:7px 4px;text-align:center;border:2px solid var(--border);background:var(--bg);transition:all .3s}
+.pcell .pn{font-size:9.5px;font-weight:800;color:var(--sub)}
+.pcell .pv{font-size:10px;font-weight:900;color:var(--ink);margin-top:1px;line-height:1.3}
+.pcell.done{background:var(--gl);border-color:var(--g)}
+.pcell.done .pn{color:var(--g)}
+.pcell.part{background:var(--gol);border-color:var(--go)}
+.pcell.part .pn{color:var(--go)}
+.pcell.rec{background:var(--rl);border-color:var(--r)}
+
+/* GROUP GRID — 5 cells */
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px}
+.gcell{border-radius:9px;padding:9px 5px;text-align:center;border:2px solid var(--border);background:var(--bg);transition:all .3s}
+.gcell .gn{font-size:10px;font-weight:800;color:var(--sub)}
+.gcell .gv{font-size:13px;font-weight:900;margin-top:2px}
+.gcell.done{background:var(--gl);border-color:var(--g)}
+.gcell.done .gn{color:var(--g)}
+
+/* SCORE BAR */
+.score-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.score-row:last-child{border-bottom:none}
+.score-ln{width:72px;font-weight:800;flex-shrink:0;font-size:11.5px}
+.score-bar{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden}
+.score-fill{height:100%;border-radius:5px;transition:width .5s}
+.score-lbl{font-size:11.5px;font-weight:900;width:30px;text-align:right;flex-shrink:0}
+
+/* ACTIVITY LOG */
+.log{background:var(--bg);border-radius:9px;padding:10px;max-height:160px;overflow-y:auto;font-size:11.5px;line-height:1.8}
+.log-item{display:flex;gap:7px;padding:3px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-t{font-size:10px;font-weight:800;color:var(--sub);flex-shrink:0;width:42px}
+.log-m{font-weight:700}
+.empty{color:var(--sub);font-style:italic;text-align:center;padding:14px;font-size:12px}
+
+.refreshbtn{width:100%;padding:10px;background:var(--b);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:12px}
+.refreshbtn:active{background:#1e3a8a}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:9px;font-size:11px;font-weight:800}
+.leg{display:flex;align-items:center;gap:4px}
+.legdot{width:10px;height:10px;border-radius:3px}
+
+.last-upd{font-size:10.5px;color:var(--sub);font-weight:700;text-align:right;margin-bottom:5px}
+.footer{background:#0c1222;color:rgba(255,255,255,.55);text-align:center;padding:12px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.45;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <h1>📊 Teacher Dashboard<br>L2 Tuesday — Telephone Etiquette</h1>
+      <p>Grade 8 · Atiaket Junior School · Term 1 2026 · Tr. Sobe</p>
+    </div>
+    <div class="status-pill"><div class="dot off" id="dot"></div><span id="statusTxt">Connecting…</span></div>
+  </div>
+  <div class="roll-strip">
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">👥 10 Pairs</span>
+    <span class="rc">🔵 5 Groups</span>
+    <span class="rc">📞 Telephone Etiquette</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="prog-lbl" id="progLbl">Loading…</div>
+</div>
+
+<div class="wrap">
+<button class="refreshbtn" onclick="refreshAll()">🔄 Refresh All Data</button>
+
+<!-- SUMMARY STATS -->
+<div class="stats4">
+  <div class="stat s-b"><div class="n" id="stat-pw">—</div><div class="l">Polite Word Lists Saved</div></div>
+  <div class="stat s-go"><div class="n" id="stat-fc">—</div><div class="l">Pairs Matched Cards</div></div>
+  <div class="stat s-g"><div class="n" id="stat-rp">—</div><div class="l">Pairs Performed</div></div>
+  <div class="stat s-pu"><div class="n" id="stat-as">—</div><div class="l">Assessments Done</div></div>
+</div>
+
+<!-- STEP 1 — CLASS (no individual tracking, just audio played log) -->
+<div class="sec-title">Step 1 <span class="stag tag-c">🌍 CLASS</span> Observe Picture &amp; Share</div>
+<div class="card">
+  <div class="ch">Class Activity — no individual tracking <span id="s1-log-count"></span></div>
+  <div class="log" id="s1log"><div class="empty">Waiting for class activity…</div></div>
+</div>
+
+<!-- STEP 2 — CLASS listen; 20 individual polite word lists -->
+<div class="sec-title">Step 2 <span class="stag tag-c">🌍 CLASS / 👤 20 INDIVIDUAL</span> Listen &amp; Tap Polite Words</div>
+<div class="card">
+  <div class="ch">Polite Word Lists — 20 Learners <span id="s2-count">0/20 saved</span></div>
+  <div class="legend">
+    <div class="leg"><div class="legdot" style="background:var(--gl);border:1.5px solid var(--g)"></div>Saved (5+ words)</div>
+    <div class="leg"><div class="legdot" style="background:var(--gol);border:1.5px solid var(--go)"></div>Saved (&lt;5 words)</div>
+    <div class="leg"><div class="legdot" style="background:var(--bg);border:1.5px solid var(--border)"></div>Not saved</div>
+  </div>
+  <div class="grid20" id="s2grid"></div>
+  <div class="log" id="s2log"><div class="empty">No polite word lists saved yet.</div></div>
+</div>
+
+<!-- STEP 3 — 10 PAIRS flashcard match -->
+<div class="sec-title">Step 3 <span class="stag tag-p">👥 10 PAIRS</span> Match Flashcards</div>
+<div class="card">
+  <div class="ch">Flashcard Completion — 10 Pairs <span id="s3-count">0/10 completed</span></div>
+  <div class="legend">
+    <div class="leg"><div class="legdot" style="background:var(--gl);border:1.5px solid var(--g)"></div>Completed</div>
+    <div class="leg"><div class="legdot" style="background:var(--gol);border:1.5px solid var(--go)"></div>Started</div>
+    <div class="leg"><div class="legdot" style="background:var(--bg);border:1.5px solid var(--border)"></div>Not started</div>
+  </div>
+  <div class="grid10" id="s3grid"></div>
+</div>
+
+<!-- STEP 4 — 10 PAIRS role play recording -->
+<div class="sec-title">Step 4 <span class="stag tag-p">👥 10 PAIRS</span> Role Play Performance</div>
+<div class="card">
+  <div class="ch">Role Play Recordings — 10 Pairs (2 recordings each) <span id="s4-count">0/10 pairs done</span></div>
+  <div class="legend">
+    <div class="leg"><div class="legdot" style="background:var(--gl);border:1.5px solid var(--g)"></div>Both recorded</div>
+    <div class="leg"><div class="legdot" style="background:var(--gol);border:1.5px solid var(--go)"></div>1 recorded</div>
+    <div class="leg"><div class="legdot" style="background:var(--bg);border:1.5px solid var(--border)"></div>Not started</div>
+  </div>
+  <div class="grid10" id="s4grid"></div>
+  <div class="log" id="s4log"><div class="empty">No role play recordings yet.</div></div>
+</div>
+
+<!-- ASSESSMENT — 20 learners -->
+<div class="sec-title">Assessment <span class="stag tag-i">👤 20 INDIVIDUAL</span> Comprehension + Self-Assessment</div>
+<div class="card">
+  <div class="ch">Comprehension Scores — 20 Learners <span id="ass-count">0/20</span></div>
+  <div id="scoreGrid"></div>
+</div>
+<div class="card">
+  <div class="ch">Self-Assessment — 20 Learners <span id="self-count">0/20 submitted</span></div>
+  <div class="grid20" id="selfgrid"></div>
+</div>
+
+<!-- ACTIVITY LOG -->
+<div class="sec-title">📋 Recent Activity Log</div>
+<div class="card">
+  <div class="last-upd" id="lastUpd">Last updated: —</div>
+  <div class="log" id="actLog"><div class="empty">Activity will appear here as learners work…</div></div>
+</div>
+</div>
+
+<div class="footer"><strong>Tr. Sobe — Teacher Dashboard</strong> · Atiaket Junior School · Grade 8 · L2 Tuesday<small>© Original material. All rights reserved.</small></div>
+
+<script>
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+if(!firebase.apps.length)firebase.initializeApp(FBC);
+var db=firebase.database();
+
+var D={s2:{},s3:{},s4:{},assess:{}};
+var LOGS=[];
+var LEARNERS=["Learner_1","Learner_2","Learner_3","Learner_4","Learner_5","Learner_6","Learner_7","Learner_8","Learner_9","Learner_10","Learner_11","Learner_12","Learner_13","Learner_14","Learner_15","Learner_16","Learner_17","Learner_18","Learner_19","Learner_20"];
+var PAIRS=["Pair1","Pair2","Pair3","Pair4","Pair5","Pair6","Pair7","Pair8","Pair9","Pair10"];
+var PAIRS_DISP=["Pair 1","Pair 2","Pair 3","Pair 4","Pair 5","Pair 6","Pair 7","Pair 8","Pair 9","Pair 10"];
+
+function nowStr(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());}
+function addLog(msg){LOGS.unshift({t:nowStr(),m:msg});if(LOGS.length>40)LOGS.length=40;renderLog();}
+function renderLog(){var el=document.getElementById("actLog");if(!LOGS.length){el.innerHTML='<div class="empty">Activity will appear here as learners work…</div>';return;}el.innerHTML=LOGS.map(function(l){return '<div class="log-item"><span class="log-t">'+l.t+'</span><span class="log-m">'+l.m+'</span></div>';}).join("");}
+
+/* CONNECTION */
+db.ref(".info/connected").on("value",function(s){var on=s.val();document.getElementById("dot").className="dot "+(on?"on":"off");document.getElementById("statusTxt").textContent=on?"🟢 Live — updates automatically":"🔴 Disconnected — check internet";});
+
+/* STEP 2 — polite words, 20 learners */
+db.ref("L2/step2").on("value",function(s){D.s2=s.val()||{};rS2();addLog("Step 2 data updated");updateProg();});
+/* STEP 3 — flashcards, 10 pairs */
+db.ref("L2/step3").on("value",function(s){D.s3=s.val()||{};rS3();addLog("Step 3 data updated");updateProg();});
+/* STEP 4 — role play, 10 pairs */
+db.ref("L2/step4").on("value",function(s){D.s4=s.val()||{};rS4();addLog("Step 4 data updated");updateProg();});
+/* ASSESS */
+db.ref("L2/assess").on("value",function(s){D.assess=s.val()||{};rAss();addLog("Assessment data updated");updateProg();});
+/* S1 log */
+db.ref("L2/step1").on("value",function(s){rS1(s.val()||{});});
+
+function rS1(data){var logs=[];Object.keys(data).forEach(function(k){var v=data[k];if(v&&v.t)logs.push({t:v.t,m:"Audio played at "+v.t});});var el=document.getElementById("s1log");if(!logs.length){el.innerHTML='<div class="empty">Class audio not yet played.</div>';return;}el.innerHTML=logs.map(function(l){return '<div class="log-item"><span class="log-t">'+l.t+'</span><span class="log-m">'+l.m+'</span></div>';}).join("");}
+
+function rS2(){var pw=D.s2.polite_words||{};var done=Object.keys(pw).length;document.getElementById("s2-count").textContent=done+"/20 saved";document.getElementById("stat-pw").textContent=done;
+var grid=document.getElementById("s2grid");grid.innerHTML="";
+LEARNERS.forEach(function(ln){var k=ln.replace(" ","_");var d=pw[k];var cell=document.createElement("div");cell.className="lcell";var count=d?d.count||0:0;cell.className="lcell "+(d?count>=5?"done":"part":"none");cell.innerHTML='<div class="ln">'+ln.replace("Learner ","L")+'</div><div class="lv">'+(d?count+" 📝":"—")+'</div><div class="ls">'+(d?d.t||"":"")+'</div>';grid.appendChild(cell);});
+var logEl=document.getElementById("s2log");var entries=Object.entries(pw);if(!entries.length){logEl.innerHTML='<div class="empty">No polite word lists saved yet.</div>';return;}var html=entries.sort(function(a,b){return (a[1].t||"")>(b[1].t||"")?-1:1;}).map(function(e){var v=e[1];return '<div class="log-item"><span class="log-t">'+(v.t||"?")+'</span><span class="log-m"><strong>'+(v.learner||e[0])+'</strong> saved '+v.count+' polite word'+(v.count!==1?"s:":" —")+' '+v.words+'</span></div>';}).join("");logEl.innerHTML=html;}
+
+function rS3(){var s3=D.s3;var done=0,started=0;var grid=document.getElementById("s3grid");grid.innerHTML="";
+PAIRS.forEach(function(p,i){var d=s3[p];var cell=document.createElement("div");cell.className="pcell";var cls="none",status="—";if(d&&d.completed){cls="done";status="✅ Done";done++;}else if(d&&d.started){cls="part";status="⏳ Started";started++;}cell.className="pcell "+cls;cell.innerHTML='<div class="pn">'+PAIRS_DISP[i]+'</div><div class="pv">'+status+'</div>'+(d&&d.completed?'<div style="font-size:9px;color:var(--g);font-weight:800">'+d.completed.t+'</div>':'');grid.appendChild(cell);});
+document.getElementById("s3-count").textContent=done+"/10 completed";document.getElementById("stat-fc").textContent=done;}
+
+function rS4(){var s4=D.s4;var donePairs=0;var grid=document.getElementById("s4grid");grid.innerHTML="";var logs=[];
+PAIRS.forEach(function(p,i){var pKey="pair"+p.replace("Pair","");var d=s4[pKey];var cell=document.createElement("div");cell.className="pcell";var caller=d&&d.Caller,recvr=d&&d.Receiver;var cnt=(caller?1:0)+(recvr?1:0);var cls=cnt===2?"done":cnt===1?"part":"none";cell.className="pcell "+cls;cell.innerHTML='<div class="pn">'+PAIRS_DISP[i]+'</div><div class="pv">'+(cnt===2?"✅ Both":(cnt===1?"1/2 done":"—"))+'</div><div style="font-size:8.5px;color:var(--sub)">'+(caller?'📞'+caller.dur:"")+(recvr?' 📱'+recvr.dur:"")+'</div>';grid.appendChild(cell);if(cnt===2){donePairs++;}if(caller||recvr){logs.push({t:(caller||recvr).t||"",m:PAIRS_DISP[i]+": "+(cnt===2?"both recorded":"1 recording — "+(caller?"Caller":"Receiver")+" done")});}});
+document.getElementById("s4-count").textContent=donePairs+"/10 pairs done";document.getElementById("stat-rp").textContent=donePairs;
+var logEl=document.getElementById("s4log");if(!logs.length){logEl.innerHTML='<div class="empty">No role play recordings yet.</div>';return;}logEl.innerHTML=logs.sort(function(a,b){return (a.t>b.t)?-1:1;}).map(function(l){return '<div class="log-item"><span class="log-t">'+l.t+'</span><span class="log-m">'+l.m+'</span></div>';}).join("");}
+
+function rAss(){var comp=D.assess.comp||{},self=D.assess.self||{};var doneComp=Object.keys(comp).length,doneSelf=Object.keys(self).length;document.getElementById("ass-count").textContent=doneComp+"/20";document.getElementById("self-count").textContent=doneSelf+"/20 submitted";document.getElementById("stat-as").textContent=doneComp+"/20";
+// Score bars
+var sg=document.getElementById("scoreGrid");if(!Object.keys(comp).length){sg.innerHTML='<div class="empty">No comprehension scores yet.</div>';}else{var html="";LEARNERS.forEach(function(ln){var k=ln.replace(" ","_");var d=comp[k];if(!d)return;var score=d.score||"0/5";var num=parseInt(score.split("/")[0]);var pct=num/5*100;var col=num>=4?"var(--g)":num>=3?"var(--go)":"var(--r)";html+='<div class="score-row"><div class="score-ln">'+ln.replace("Learner ","L")+'</div><div class="score-bar"><div class="score-fill" style="width:'+pct+'%;background:'+col+'"></div></div><div class="score-lbl" style="color:'+col+'">'+score+'</div></div>';});sg.innerHTML=html||'<div class="empty">No scores yet.</div>';}
+// Self assessment grid
+var selfGrid=document.getElementById("selfgrid");selfGrid.innerHTML="";LEARNERS.forEach(function(ln){var k=ln.replace(" ","_");var d=self[k];var cell=document.createElement("div");var achieved=d?d.achieved||"0/6":"";var num=achieved?parseInt(achieved.split("/")[0]):0;var cls=d?num>=6?"done":num>0?"part":"none":"none";cell.className="lcell "+cls;cell.innerHTML='<div class="ln">'+ln.replace("Learner ","L")+'</div><div class="lv">'+(d?achieved:"—")+'</div><div class="ls">'+(d?d.t||"":"")+'</div>';selfGrid.appendChild(cell);});}
+
+function updateProg(){var pw=D.s2.polite_words||{};var s3=D.s3;var s4=D.s4;var comp=D.assess.comp||{};var p1=Object.keys(pw).length/20;var p2=PAIRS.filter(function(p){return s3[p]&&s3[p].completed;}).length/10;var p3=PAIRS.filter(function(p){var pKey="pair"+p.replace("Pair","");return s4[pKey]&&s4[pKey].Caller&&s4[pKey].Receiver;}).length/10;var p4=Object.keys(comp).length/20;var pct=Math.round((p1+p2+p3+p4)/4*100);document.getElementById("progFill").style.width=pct+"%";document.getElementById("progLbl").textContent="Overall class progress: "+pct+"% complete";document.getElementById("lastUpd").textContent="Last updated: "+nowStr();}
+
+function refreshAll(){document.getElementById("statusTxt").textContent="⏳ Refreshing…";setTimeout(function(){document.getElementById("statusTxt").textContent="🟢 Live";},1500);}
+
+// Init grids
+(function(){
+  var g2=document.getElementById("s2grid");g2.innerHTML="";LEARNERS.forEach(function(ln){var cell=document.createElement("div");cell.className="lcell none";cell.innerHTML='<div class="ln">'+ln.replace("Learner ","L")+'</div><div class="lv">—</div>';g2.appendChild(cell);});
+  var g3=document.getElementById("s3grid");g3.innerHTML="";PAIRS_DISP.forEach(function(p){var cell=document.createElement("div");cell.className="pcell none";cell.innerHTML='<div class="pn">'+p+'</div><div class="pv">—</div>';g3.appendChild(cell);});
+  var g4=document.getElementById("s4grid");g4.innerHTML="";PAIRS_DISP.forEach(function(p){var cell=document.createElement("div");cell.className="pcell none";cell.innerHTML='<div class="pn">'+p+'</div><div class="pv">—</div>';g4.appendChild(cell);});
+})();
+</script>
+</body>
+</html>

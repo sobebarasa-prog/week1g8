@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Teacher Dashboard | L4 Thursday | Grade 8</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0f172a;--sub:#475569;--border:#bbf7d0;--bg:#f0fdf4;--wh:#fff;
+--g:#15803d;--gl:#dcfce7;--gd:#052e16;--gm:#22c55e;
+--t:#0f766e;--tl:#ccfbf1;--b:#1d4ed8;--bl:#dbeafe;
+--go:#d97706;--gol:#fef3c7;--pu:#7c3aed;--pul:#ede9fe;
+--r:#dc2626;--rl:#fee2e2;--sh:0 2px 16px rgba(0,0,0,.08);--ra:13px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink)}
+.hero{background:linear-gradient(135deg,#052e16,#15803d 60%,#1d4ed8);padding:20px 16px 16px;color:#fff}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.hero h1{font-size:clamp(16px,4vw,22px);font-weight:900;line-height:1.2}
+.hero p{font-size:11.5px;opacity:.85;margin-top:3px}
+.status-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.on{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.dot.off{background:#f87171}
+.roll-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rc{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;color:#fff}
+.prog-bar{background:rgba(255,255,255,.18);border-radius:10px;height:7px;margin-top:12px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#86efac,#67e8f9);border-radius:10px;transition:width .6s}
+.prog-lbl{font-size:10.5px;opacity:.82;margin-top:4px;text-align:right}
+.wrap{padding:14px}
+.sec-title{font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--sub);margin-bottom:8px;margin-top:4px;display:flex;align-items:center;gap:7px}
+.stag{font-size:10px;font-weight:800;border-radius:20px;padding:2px 9px;color:#fff}
+.tag-g{background:var(--t)}.tag-i{background:var(--pu)}
+.card{background:var(--wh);border-radius:var(--ra);padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.ch{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--g);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.ch span{font-size:12px;font-weight:900;color:var(--gm)}
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.stat{background:var(--wh);border-radius:11px;padding:10px;text-align:center;box-shadow:var(--sh);border-top:3px solid transparent}
+.stat .n{font-size:24px;font-weight:900;line-height:1}
+.stat .l{font-size:9.5px;font-weight:800;text-transform:uppercase;color:var(--sub);margin-top:3px}
+.s-b{border-top-color:var(--t)}.s-g{border-top-color:var(--g)}.s-go{border-top-color:var(--go)}.s-pu{border-top-color:var(--pu)}
+.grid20{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px}
+.lcell,.gcell{border-radius:8px;padding:7px 4px;text-align:center;border:2px solid var(--border);background:var(--bg);transition:all .3s}
+.cell-n{font-size:9.5px;font-weight:800;color:var(--sub)}
+.cell-v{font-size:11px;font-weight:900;color:var(--ink);margin-top:1px}
+.cell-s{font-size:8.5px;color:var(--sub);margin-top:1px}
+.gcell .cell-v{font-size:13px}
+.c-done{background:var(--gl);border-color:var(--g)}.c-done .cell-n{color:var(--g)}.c-done .cell-v{color:var(--g)}
+.c-part{background:var(--gol);border-color:var(--go)}.c-part .cell-n{color:var(--go)}
+.c-none{background:var(--bg);border-color:var(--border)}
+.score-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.score-row:last-child{border-bottom:none}
+.score-ln{width:72px;font-weight:800;flex-shrink:0;font-size:11.5px}
+.score-bar{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden}
+.score-fill{height:100%;border-radius:5px;transition:width .5s}
+.score-lbl{font-size:11.5px;font-weight:900;width:30px;text-align:right;flex-shrink:0}
+.log{background:var(--bg);border-radius:9px;padding:10px;max-height:160px;overflow-y:auto;font-size:11.5px;line-height:1.8}
+.log-item{display:flex;gap:7px;padding:3px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-t{font-size:10px;font-weight:800;color:var(--sub);flex-shrink:0;width:42px}
+.log-m{font-weight:700}
+.empty{color:var(--sub);font-style:italic;text-align:center;padding:14px;font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:9px;font-size:11px;font-weight:800}
+.leg{display:flex;align-items:center;gap:4px}
+.legdot{width:10px;height:10px;border-radius:3px}
+.refreshbtn{width:100%;padding:10px;background:var(--g);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:12px}
+.last-upd{font-size:10.5px;color:var(--sub);font-weight:700;text-align:right;margin-bottom:5px}
+
+/* JOURNAL TABLE */
+.jnl-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:8px}
+.jnl-table th{padding:7px 8px;background:var(--g);color:#fff;font-size:9.5px;font-weight:800;text-transform:uppercase;text-align:left}
+.jnl-table td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.jnl-table tr:last-child td{border-bottom:none}
+.jnl-table tr:nth-child(even) td{background:#f0fdf4}
+.stars{color:var(--go);font-size:12px}
+.journal-count{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:8px}
+
+.footer{background:#0c1222;color:rgba(255,255,255,.55);text-align:center;padding:12px;font-size:11.5px;line-height:1.7}
+.footer strong{color:#fff}
+.footer small{display:block;font-size:9.5px;opacity:.45;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <h1>📊 Teacher Dashboard<br>L4 Thursday — Selecting Texts &amp; Journals</h1>
+      <p>Grade 8 · Atiaket Junior School · Term 1 2026 · Tr. Sobe</p>
+    </div>
+    <div class="status-pill"><div class="dot off" id="dot"></div><span id="statusTxt">Connecting…</span></div>
+  </div>
+  <div class="roll-strip">
+    <span class="rc">👤 20 Learners</span>
+    <span class="rc">🔵 5 Groups of 4</span>
+    <span class="rc">📓 20 Journals</span>
+    <span class="rc">📚 Extensive Reading</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="prog-lbl" id="progLbl">Loading…</div>
+</div>
+
+<div class="wrap">
+<button class="refreshbtn" onclick="refreshAll()">🔄 Refresh All Data</button>
+
+<div class="stats4">
+  <div class="stat s-b"><div class="n" id="stat-s1">—</div><div class="l">Groups: Factors</div></div>
+  <div class="stat s-g"><div class="n" id="stat-s2">—</div><div class="l">Groups: Text Choices</div></div>
+  <div class="stat s-go"><div class="n" id="stat-s3">—</div><div class="l">Groups: Discussion</div></div>
+  <div class="stat s-pu"><div class="n" id="stat-jnl">—</div><div class="l">Journals Saved</div></div>
+</div>
+
+<!-- STEP 1 — 5 GROUPS search factors -->
+<div class="sec-title">Step 1 <span class="stag tag-g">🔵 5 GROUPS</span> Search Selection Factors</div>
+<div class="card">
+  <div class="ch">Group Factor Search — 5 Groups <span id="s1-count">0/5 saved</span></div>
+  <div class="legend">
+    <div class="leg"><div class="legdot" style="background:var(--gl);border:1.5px solid var(--g)"></div>8/8 factors</div>
+    <div class="leg"><div class="legdot" style="background:var(--gol);border:1.5px solid var(--go)"></div>Some found</div>
+    <div class="leg"><div class="legdot" style="background:var(--bg);border:1.5px solid var(--border)"></div>Not saved</div>
+  </div>
+  <div class="grid5" id="s1grid"></div>
+</div>
+
+<!-- STEP 2 — 5 GROUPS text choices -->
+<div class="sec-title">Step 2 <span class="stag tag-g">🔵 5 GROUPS</span> Identify Print &amp; Non-Print Texts</div>
+<div class="card">
+  <div class="ch">Group Text Choices — 5 Groups <span id="s2-count">0/5 saved</span></div>
+  <div class="grid5" id="s2grid"></div>
+  <div class="log" id="s2log"><div class="empty">No group text choices saved yet.</div></div>
+</div>
+
+<!-- STEP 3 — 5 GROUPS discussion -->
+<div class="sec-title">Step 3 <span class="stag tag-g">🔵 5 GROUPS</span> Discuss Reasons for Reading</div>
+<div class="card">
+  <div class="ch">Group Discussion — 5 Groups <span id="s3-count">0/5 saved</span></div>
+  <div class="grid5" id="s3grid"></div>
+</div>
+
+<!-- STEP 4 — 20 INDIVIDUAL journals -->
+<div class="sec-title">Step 4 <span class="stag tag-i">👤 20 INDIVIDUAL</span> Personal Reading Journals</div>
+<div class="card">
+  <div class="ch">Reading Journals — 20 Learners <span id="s4-count">0/20 saved</span></div>
+  <div class="journal-count" id="jnl-summary">Waiting for journal entries…</div>
+  <div class="grid20" id="s4grid"></div>
+  <div style="overflow-x:auto;margin-top:8px">
+    <table class="jnl-table" id="jnlTable">
+      <thead><tr><th>Learner</th><th>Title</th><th>Type</th><th>Rating</th><th>Time</th></tr></thead>
+      <tbody id="jnlBody"><tr><td colspan="5" class="empty">No journals saved yet.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ASSESS — 20 individual -->
+<div class="sec-title">Assessment <span class="stag tag-i">👤 20 INDIVIDUAL</span> Comprehension + Self-Assessment</div>
+<div class="card">
+  <div class="ch">Comprehension Scores — 20 Learners <span id="ass-count">0/20</span></div>
+  <div id="scoreGrid"></div>
+</div>
+<div class="card">
+  <div class="ch">Self-Assessment — 20 Learners <span id="self-count">0/20 submitted</span></div>
+  <div class="grid20" id="selfgrid"></div>
+</div>
+
+<div class="sec-title">📋 Activity Log</div>
+<div class="card">
+  <div class="last-upd" id="lastUpd">Last updated: —</div>
+  <div class="log" id="actLog"><div class="empty">Activity will appear here as learners work…</div></div>
+</div>
+</div>
+
+<div class="footer"><strong>Tr. Sobe — Teacher Dashboard</strong> · Atiaket Junior School · Grade 8 · L4 Thursday<small>© Original material. All rights reserved.</small></div>
+
+<script>
+var FBC={apiKey:"AIzaSyDXzydewPT2ng5ve6II9PAUAHP4pew2GXI",authDomain:"g8lessonstracker.firebaseapp.com",databaseURL:"https://g8lessonstracker-default-rtdb.firebaseio.com",projectId:"g8lessonstracker",storageBucket:"g8lessonstracker.firebasestorage.app",messagingSenderId:"718966061631",appId:"1:718966061631:web:93ae137616991183e0568a"};
+if(!firebase.apps.length)firebase.initializeApp(FBC);
+var db=firebase.database();
+var D={s1:{},s2:{},s3:{},s4:{},assess:{}};
+var LOGS=[];
+var LNS=["Learner_1","Learner_2","Learner_3","Learner_4","Learner_5","Learner_6","Learner_7","Learner_8","Learner_9","Learner_10","Learner_11","Learner_12","Learner_13","Learner_14","Learner_15","Learner_16","Learner_17","Learner_18","Learner_19","Learner_20"];
+var GD=["Group 1","Group 2","Group 3","Group 4","Group 5"];
+var GKEYS=["group1","group2","group3","group4","group5"];
+
+function nowStr(){var n=new Date(),p=function(x){return x<10?"0"+x:x;};return p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());}
+function addLog(msg){LOGS.unshift({t:nowStr(),m:msg});if(LOGS.length>40)LOGS.length=40;renderLog();}
+function renderLog(){var el=document.getElementById("actLog");if(!LOGS.length){el.innerHTML='<div class="empty">Activity will appear here…</div>';return;}el.innerHTML=LOGS.map(function(l){return '<div class="log-item"><span class="log-t">'+l.t+'</span><span class="log-m">'+l.m+'</span></div>';}).join("");}
+
+db.ref(".info/connected").on("value",function(s){var on=s.val();document.getElementById("dot").className="dot "+(on?"on":"off");document.getElementById("statusTxt").textContent=on?"🟢 Live — updates automatically":"🔴 Disconnected";});
+db.ref("L4/step1").on("value",function(s){D.s1=s.val()||{};rS1();addLog("Step 1 group factors updated");updateProg();});
+db.ref("L4/step2").on("value",function(s){D.s2=s.val()||{};rS2();addLog("Step 2 text choices updated");updateProg();});
+db.ref("L4/step3").on("value",function(s){D.s3=s.val()||{};rS3();addLog("Step 3 discussions updated");updateProg();});
+db.ref("L4/step4/journals").on("value",function(s){D.s4=s.val()||{};rS4();addLog("Journal entry saved");updateProg();});
+db.ref("L4/assess").on("value",function(s){D.assess=s.val()||{};rAss();addLog("Assessment updated");updateProg();});
+
+function buildGroupGrid(gridId,data,countId,statId,statMax){var grid=document.getElementById(gridId);grid.innerHTML="";var done=0;GKEYS.forEach(function(gk,i){var d=data[gk];var cell=document.createElement("div");var found=d?d.found||"?":"";var num=d?parseInt((found).split("/")[0]):0;var max=parseInt((found||"0/8").split("/")[1])||8;var cls=d?(num>=max?"c-done":"c-part"):"c-none";cell.className="gcell "+cls;cell.innerHTML='<div class="cell-n">'+GD[i]+'</div><div class="cell-v">'+(d?found:"—")+'</div><div class="cell-s">'+(d?d.t||"":"")+'</div>';grid.appendChild(cell);if(d&&num>=max)done++;});if(countId)document.getElementById(countId).textContent=done+"/5 saved";if(statId)document.getElementById(statId).textContent=done;return done;}
+
+function rS1(){buildGroupGrid("s1grid",D.s1,"s1-count","stat-s1");}
+
+function rS2(){var done=buildGroupGrid("s2grid",D.s2,"s2-count","stat-s2");var logs=[];GKEYS.forEach(function(gk,i){var d=D.s2[gk];if(d&&d.choices){logs.push({t:d.choices.t||"",m:GD[i]+": print="+d.choices.print+", non-print="+d.choices.nonPrint});}});var logEl=document.getElementById("s2log");logEl.innerHTML=logs.length?logs.sort(function(a,b){return(a.t>b.t)?-1:1;}).map(function(l){return '<div class="log-item"><span class="log-t">'+l.t+'</span><span class="log-m">'+l.m+'</span></div>';}).join(""):'<div class="empty">No text choices saved yet.</div>';}
+
+function rS3(){buildGroupGrid("s3grid",D.s3,"s3-count","stat-s3");}
+
+function rS4(){var jnls=D.s4;var entries=Object.entries(jnls);var done=entries.length;document.getElementById("s4-count").textContent=done+"/20 saved";document.getElementById("stat-jnl").textContent=done;document.getElementById("jnl-summary").textContent=done+" of 20 learners have saved journal entries"+(done===20?" — 🎉 All done!":"");
+var grid=document.getElementById("s4grid");grid.innerHTML="";LNS.forEach(function(ln){var k=ln.replace(" ","_");var d=jnls[k];var cls=d?"c-done":"c-none";var cell=document.createElement("div");cell.className="lcell "+cls;cell.innerHTML='<div class="cell-n">'+ln.replace("Learner ","L")+'</div><div class="cell-v">'+(d?"✅ Done":"—")+'</div><div class="cell-s">'+(d?d.rating||"":"")+'</div>';grid.appendChild(cell);});
+var tbody=document.getElementById("jnlBody");if(!entries.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No journals yet.</td></tr>';return;}tbody.innerHTML=entries.sort(function(a,b){return(a[1].t||"")>(b[1].t||"")?-1:1;}).map(function(e){var v=e[1];var stars=v.rating||"";var n=parseInt(stars);var starStr="";for(var i=0;i<5;i++){starStr+=i<n?"★":"☆";}return '<tr><td style="font-weight:800">'+v.learner+'</td><td>'+(v.title||"—")+'</td><td style="font-size:10.5px">'+(v.type||"—")+'</td><td class="stars">'+starStr+'</td><td>'+v.t+'</td></tr>';}).join("");}
+
+function rAss(){var comp=D.assess.comp||{},self=D.assess.self||{};var dc=Object.keys(comp).length,ds=Object.keys(self).length;document.getElementById("ass-count").textContent=dc+"/20";document.getElementById("self-count").textContent=ds+"/20 submitted";
+var sg=document.getElementById("scoreGrid");var html="";LNS.forEach(function(ln){var k=ln.replace(" ","_");var d=comp[k];if(!d)return;var score=d.score||"0/5";var num=parseInt(score.split("/")[0]);var pct=num/5*100;var col=num>=4?"var(--g)":num>=3?"var(--go)":"var(--r)";html+='<div class="score-row"><div class="score-ln">'+ln.replace("Learner ","L")+'</div><div class="score-bar"><div class="score-fill" style="width:'+pct+'%;background:'+col+'"></div></div><div class="score-lbl" style="color:'+col+'">'+score+'</div></div>';});sg.innerHTML=html||'<div class="empty">No scores yet.</div>';
+var selfGrid=document.getElementById("selfgrid");selfGrid.innerHTML="";LNS.forEach(function(ln){var k=ln.replace(" ","_");var d=self[k];var num=d?parseInt((d.achieved||"0/6").split("/")[0]):0;var cls=d?num>=6?"c-done":num>0?"c-part":"c-none":"c-none";var cell=document.createElement("div");cell.className="lcell "+cls;cell.innerHTML='<div class="cell-n">'+ln.replace("Learner ","L")+'</div><div class="cell-v">'+(d?d.achieved:"—")+'</div><div class="cell-s">'+(d?d.t||"":"")+'</div>';selfGrid.appendChild(cell);});}
+
+function updateProg(){var s1d=GKEYS.filter(function(g){return D.s1[g];}).length/5;var s2d=GKEYS.filter(function(g){return D.s2[g];}).length/5;var s3d=GKEYS.filter(function(g){return D.s3[g];}).length/5;var jd=Object.keys(D.s4).length/20;var pct=Math.round((s1d+s2d+s3d+jd)/4*100);document.getElementById("progFill").style.width=pct+"%";document.getElementById("progLbl").textContent="Overall class progress: "+pct+"% complete";document.getElementById("lastUpd").textContent="Last updated: "+nowStr();}
+
+function refreshAll(){document.getElementById("statusTxt").textContent="⏳ Refreshing…";setTimeout(function(){document.getElementById("statusTxt").textContent="🟢 Live";},1500);}
+
+(function(){
+  ["s1grid","s2grid","s3grid"].forEach(function(id){var g=document.getElementById(id);g.innerHTML="";GD.forEach(function(gn){var c=document.createElement("div");c.className="gcell c-none";c.innerHTML='<div class="cell-n">'+gn+'</div><div class="cell-v">—</div>';g.appendChild(c);});});
+  var g4=document.getElementById("s4grid");g4.innerHTML="";LNS.forEach(function(ln){var c=document.createElement("div");c.className="lcell c-none";c.innerHTML='<div class="cell-n">'+ln.replace("Learner ","L")+'</div><div class="cell-v">—</div>';g4.appendChild(c);});
+  var sg=document.getElementById("selfgrid");sg.innerHTML="";LNS.forEach(function(ln){var c=document.createElement("div");c.className="lcell c-none";c.innerHTML='<div class="cell-n">'+ln.replace("Learner ","L")+'</div><div class="cell-v">—</div>';sg.appendChild(c);});
+})();
+</script>
+</body>
+</html>
